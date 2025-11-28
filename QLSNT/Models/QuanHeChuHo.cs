@@ -1,7 +1,12 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
     public class QuanHeChuHo
     {
+        [Key]
+        [Required]
+        [StringLength(10)]
         public string MaQHCH { get; set; } = default!;     // PK
         public string TenQHCH { get; set; } = default!;
         public string? MoTa { get; set; }

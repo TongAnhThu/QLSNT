@@ -1,0 +1,54 @@
+﻿@model QLSNT.Models.ThuongTru
+
+@{
+    ViewData["Title"] = "Sửa Thường trú";
+}
+
+<h1>Sửa Thường trú</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <!-- PK: giữ nguyên, không cho sửa -->
+            <div class="mb-3">
+                <label asp-for="MaXaMoi" class="form-label"></label>
+                <input asp-for="MaXaMoi" class="form-control" readonly />
+                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MaCCCD" class="form-label"></label>
+                <input asp-for="MaCCCD" class="form-control" readonly />
+                <span asp-validation-for="MaCCCD" class="text-danger"></span>
+            </div>
+
+            <!-- Hidden để chắc chắn post đủ key -->
+            <input type="hidden" asp-for="MaXaMoi" />
+            <input type="hidden" asp-for="MaCCCD" />
+
+            <div class="mb-3">
+                <label asp-for="DiaChi" class="form-label"></label>
+                <textarea asp-for="DiaChi" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="DiaChi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NgayDangKy" class="form-label"></label>
+                <input asp-for="NgayDangKy" type="date" class="form-control" />
+                <span asp-validation-for="NgayDangKy" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

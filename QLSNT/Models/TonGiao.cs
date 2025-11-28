@@ -1,7 +1,12 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
     public class TonGiao
     {
+        [Key]
+        [Required]
+        [StringLength(10)]
         public string MaTonGiao { get; set; } = default!;  // PK
         public string TenTonGiao { get; set; } = default!;
         public string? TenKhac { get; set; }

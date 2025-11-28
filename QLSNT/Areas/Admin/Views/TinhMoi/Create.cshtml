@@ -1,0 +1,59 @@
+﻿@model QLSNT.Models.TinhMoi
+
+@{
+    ViewData["Title"] = "Thêm Tỉnh mới";
+}
+
+<h1>Thêm Tỉnh mới</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaTinhMoi" class="form-label"></label>
+                <input asp-for="MaTinhMoi" class="form-control" />
+                <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TenTinhMoi" class="form-label"></label>
+                <input asp-for="TenTinhMoi" class="form-control" />
+                <span asp-validation-for="TenTinhMoi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LoaiTinh" class="form-label"></label>
+                <select asp-for="LoaiTinh" class="form-select">
+                    <option value="">-- Chọn loại tỉnh --</option>
+                    <option value="Tỉnh">Tỉnh</option>
+                    <option value="Thành phố">Thành phố</option>
+                </select>
+                <span asp-validation-for="LoaiTinh" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TrangThai" class="form-label"></label>
+                <input asp-for="TrangThai" class="form-control" placeholder="VD: Đang hoạt động" />
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="GhiChu" class="form-label"></label>
+                <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="GhiChu" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

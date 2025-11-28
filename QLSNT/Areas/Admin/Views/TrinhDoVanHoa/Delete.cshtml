@@ -1,0 +1,39 @@
+﻿@model QLSNT.Models.TrinhDoVanHoa
+
+@{
+    ViewData["Title"] = "Xóa trình độ văn hóa";
+}
+
+<h1>Xóa trình độ văn hóa</h1>
+
+<h4>Bạn có chắc chắn muốn xóa bản ghi sau?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.MaTDVH)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.MaTDVH)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.TenTDVH)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.TenTDVH)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.MoTa)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.MoTa)
+    </dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="MaTDVH" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

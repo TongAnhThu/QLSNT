@@ -1,12 +1,16 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
     public class TinhCu
     {
-        // Khóa chính
+        [Key]
+        [Required]
+        [StringLength(10)]
         public string MaTinhCu { get; set; } = default!;
 
         // Thuộc tính
-        public string TenTinh { get; set; } = default!;
+        public string TenTinhCu { get; set; } = default!;
         public double? DienTich { get; set; }
         public long? DanSo { get; set; }
         public string? TrangThai { get; set; }

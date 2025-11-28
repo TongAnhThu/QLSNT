@@ -1,0 +1,50 @@
+﻿@model QLSNT.Models.LssnXa
+
+@{
+    var lssn = ViewBag.LichSuSapNhap as QLSNT.Models.LichSuSapNhap;
+    ViewData["Title"] = "Thêm xã trong lần sáp nhập " + (lssn?.MaLSSN ?? "");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-controller="LichSuSapNhap"
+       asp-action="Details"
+       asp-route-id="@lssn?.MaLSSN"
+       class="btn btn-secondary btn-sm">
+        ← Quay lại lịch sử sáp nhập
+    </a>
+</div>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="MaLSSN" />
+
+    <div class="mb-3">
+        <label class="form-label">Mã LSSN</label>
+        <input class="form-control" value="@Model.MaLSSN" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaXaCu" class="form-label">Xã cũ</label>
+        <select asp-for="MaXaCu" class="form-select" asp-items="ViewBag.XaCuList">
+            <option value="">-- Chọn xã cũ --</option>
+        </select>
+        <span asp-validation-for="MaXaCu" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
+        <select asp-for="MaXaMoi" class="form-select" asp-items="ViewBag.XaMoiList">
+            <option value="">-- Chọn xã mới --</option>
+        </select>
+        <span asp-validation-for="MaXaMoi" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

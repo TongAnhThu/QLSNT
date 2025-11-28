@@ -1,0 +1,37 @@
+﻿@model QLSNT.Models.QuanHeChuHo
+
+@{
+    ViewData["Title"] = "Chi tiết Quan hệ chủ hộ";
+}
+
+<h1>Chi tiết Quan hệ chủ hộ</h1>
+
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">
+        Mã quan hệ
+    </dt>
+    <dd class="col-sm-9">
+        @Model.MaQHCH
+    </dd>
+
+    <dt class="col-sm-3">
+        Tên quan hệ
+    </dt>
+    <dd class="col-sm-9">
+        @Model.TenQHCH
+    </dd>
+
+    <dt class="col-sm-3">
+        Mô tả
+    </dt>
+    <dd class="col-sm-9">
+        @Model.MoTa
+    </dd>
+</dl>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MaQHCH" class="btn btn-warning">Sửa</a>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</div>

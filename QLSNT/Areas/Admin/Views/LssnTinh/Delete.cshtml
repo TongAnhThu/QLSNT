@@ -1,0 +1,26 @@
+﻿@model QLSNT.Models.LssnTinh
+
+@{
+    ViewData["Title"] = "Xóa lịch sử sáp nhập tỉnh";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="alert alert-danger">
+    Bạn có chắc chắn muốn xóa bản ghi sáp nhập tỉnh với
+    <strong>Mã LSSN: @Model.MaLSSN</strong> không?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Tỉnh cũ</dt>
+    <dd class="col-sm-9">@Model.MaTinhCu - @Model.TinhCu?.TenTinhCu</dd>
+
+    <dt class="col-sm-3">Tỉnh mới</dt>
+    <dd class="col-sm-9">@Model.MaTinhMoi - @Model.TinhMoi?.TenTinhMoi</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="MaLSSN" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

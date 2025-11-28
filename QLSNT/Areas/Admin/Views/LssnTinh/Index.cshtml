@@ -1,0 +1,53 @@
+﻿@model IEnumerable<QLSNT.Models.LssnTinh>
+
+@{
+    ViewData["Title"] = "Lịch sử sáp nhập tỉnh";
+}
+
+<h1 class="mb-3">Lịch sử sáp nhập tỉnh</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        + Thêm bản ghi sáp nhập tỉnh
+    </a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Mã LSSN</th>
+                <th>Mã tỉnh cũ</th>
+                <th>Tỉnh cũ</th>
+                <th>Mã tỉnh mới</th>
+                <th>Tỉnh mới</th>
+                <th style="width: 200px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MaLSSN</td>
+                    <td>@item.MaTinhCu</td>
+                    <td>@item.TinhCu?.TenTinhCu</td>
+                    <td>@item.MaTinhMoi</td>
+                    <td>@item.TinhMoi?.TenTinhMoi</td>
+                    <td class="text-nowrap">
+                        <a asp-action="Details" asp-route-id="@item.MaLSSN"
+                           class="btn btn-sm btn-info">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaLSSN"
+                           class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaLSSN"
+                           class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Chưa có bản ghi lịch sử sáp nhập tỉnh nào.</em></p>
+}

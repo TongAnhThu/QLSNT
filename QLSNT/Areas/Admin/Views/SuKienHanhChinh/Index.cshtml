@@ -1,0 +1,41 @@
+﻿@model IEnumerable<QLSNT.Models.SuKienHanhChinh>
+
+<h1 class="mb-3">Sự kiện hành chính</h1>
+
+<form method="get" class="d-flex mb-3">
+    <input type="text" name="search" value="@ViewBag.Search"
+           class="form-control me-2"
+           placeholder="Tìm theo số nghị định, tên, loại hoặc cơ quan ban hành" />
+    <button class="btn btn-primary">Tìm kiếm</button>
+</form>
+
+<a asp-action="Create" class="btn btn-success mb-3">+ Thêm sự kiện</a>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Số nghị định</th>
+            <th>Tên sự kiện</th>
+            <th>Loại sự kiện</th>
+            <th>Ngày ban hành</th>
+            <th>Trạng thái</th>
+            <th width="180">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SoNghiDinh</td>
+                <td>@item.TenSK</td>
+                <td>@item.NgayBanHanh</td>
+                <td>@item.TrangThai</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.SoNghiDinh" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@item.SoNghiDinh" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.SoNghiDinh" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

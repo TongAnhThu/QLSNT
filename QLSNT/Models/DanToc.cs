@@ -1,8 +1,16 @@
-﻿namespace QLSNT.Models
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
+   
     public class DanToc
     {
-        public string MaDanToc { get; set; } = default!;   // PK
+        [Key]
+        [Required]
+        [StringLength(10)]
+
+        public int MaDanToc { get; set; } = default! ;   
         public string TenDanToc { get; set; } = default!;
         public string? TenKhac { get; set; }
         public string? MoTa { get; set; }

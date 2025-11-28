@@ -1,14 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using QLSNT.Models;   // chỗ này chứa TinhCu, HuyenCu, XaCu
 
 namespace QLSNT.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
         public DbSet<TinhCu> TinhCus { get; set; } = default!;
         public DbSet<HuyenCu> HuyenCus { get; set; } = default!;
         public DbSet<XaCu> XaCus { get; set; } = default!;
@@ -35,5 +37,4 @@ namespace QLSNT.Data
         public DbSet<QuanHeChuHo> QuanHeChuHos { get; set; } = default!;
         public DbSet<TrinhDoVanHoa> TrinhDoVanHoas { get; set; } = default!;
     }
-    }
-
+}

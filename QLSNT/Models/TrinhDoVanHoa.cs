@@ -1,7 +1,12 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
     public class TrinhDoVanHoa
     {
+        [Key]
+        [Required]
+        [StringLength(10)]
         public string MaTDVH { get; set; } = default!;     // PK
         public string TenTDVH { get; set; } = default!;
         public string? MoTa { get; set; }

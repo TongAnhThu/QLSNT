@@ -1,0 +1,43 @@
+﻿@model QLSNT.Models.LssnTinh
+
+@{
+    ViewData["Title"] = "Thêm lịch sử sáp nhập tỉnh";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+</div>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="MaLSSN" class="form-label">Mã LSSN</label>
+        <input asp-for="MaLSSN" class="form-control" />
+        <span asp-validation-for="MaLSSN" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaTinhCu" class="form-label">Tỉnh cũ</label>
+        <select asp-for="MaTinhCu" class="form-select" asp-items="ViewBag.TinhCuList">
+            <option value="">-- Chọn tỉnh cũ --</option>
+        </select>
+        <span asp-validation-for="MaTinhCu" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaTinhMoi" class="form-label">Tỉnh mới</label>
+        <select asp-for="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhMoiList">
+            <option value="">-- Chọn tỉnh mới --</option>
+        </select>
+        <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

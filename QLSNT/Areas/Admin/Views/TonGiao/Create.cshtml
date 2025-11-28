@@ -1,0 +1,34 @@
+﻿@model QLSNT.Models.TonGiao
+
+@{
+    ViewData["Title"] = "Thêm Tôn giáo";
+}
+
+<h1>Thêm Tôn giáo</h1>
+
+<hr />
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaTonGiao" class="form-label"></label>
+        <input asp-for="MaTonGiao" class="form-control" />
+        <span asp-validation-for="MaTonGiao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TenTonGiao" class="form-label"></label>
+        <input asp-for="TenTonGiao" class="form-control" />
+        <span asp-validation-for="TenTonGiao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label"></label>
+        <textarea asp-for="GhiChu" rows="3" class="form-control"></textarea>
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</form>

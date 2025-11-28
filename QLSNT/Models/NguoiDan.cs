@@ -1,7 +1,13 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace QLSNT.Models
 {
     public class NguoiDan
     {
+        [Key]
+        [Required]
+        [StringLength(12)]
         public string MaCCCD { get; set; } = default!;   // PK
         public string HoTen { get; set; } = default!;
         public string? HoTenKhongDau { get; set; }
@@ -15,12 +21,16 @@
 
         public string? MaQHCH { get; set; }
         public string? MaTonGiao { get; set; }
-        public string? MaDanToc { get; set; }
+        public int? MaDanToc { get; set; }
         public string? MaTDVH { get; set; }
 
+        [ForeignKey(nameof(MaQHCH))]
         public QuanHeChuHo? QuanHeChuHo { get; set; }
+        [ForeignKey(nameof(MaTonGiao))]
         public TonGiao? TonGiao { get; set; }
+        [ForeignKey(nameof(MaDanToc))]
         public DanToc? DanToc { get; set; }
+        [ForeignKey(nameof(MaTDVH))]
         public TrinhDoVanHoa? TrinhDoVanHoa { get; set; }
 
         public ICollection<ThuongTru> ThuongTrus { get; set; } = new List<ThuongTru>();

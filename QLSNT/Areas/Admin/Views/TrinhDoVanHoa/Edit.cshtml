@@ -1,0 +1,44 @@
+﻿@model QLSNT.Models.TrinhDoVanHoa
+
+@{
+    ViewData["Title"] = "Sửa trình độ văn hóa";
+}
+
+<h1>Sửa trình độ văn hóa</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaTDVH" class="form-label"></label>
+                <input asp-for="MaTDVH" class="form-control" readonly />
+                <span asp-validation-for="MaTDVH" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TenTDVH" class="form-label"></label>
+                <input asp-for="TenTDVH" class="form-control" />
+                <span asp-validation-for="TenTDVH" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MoTa" class="form-label"></label>
+                <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="MoTa" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

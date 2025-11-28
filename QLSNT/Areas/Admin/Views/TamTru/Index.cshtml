@@ -1,0 +1,73 @@
+﻿@model IEnumerable<QLSNT.Models.TamTru>
+
+@{
+    ViewData["Title"] = "Quản lý Tạm trú";
+}
+
+<h1 class="mb-3">Danh sách Tạm trú</h1>
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <form method="get" class="d-flex">
+            <input type="text"
+                   name="keyword"
+                   value="@ViewBag.Keyword"
+                   class="form-control me-2"
+                   placeholder="Tìm theo CCCD, mã xã, địa chỉ, lý do..." />
+            <button class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        <a asp-action="Create" class="btn btn-success">
+            + Thêm tạm trú
+        </a>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã xã</th>
+                    <th>CCCD</th>
+                    <th>Địa chỉ tạm trú</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>ThoiHan</th>
+                    <th style="width:220px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>@item.MaXaMoi</td>
+                        <td>@item.MaCCCD</td>
+                        <td>@item.DiaChi</td>
+                        <td>@item.NgayDangKy?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.ThoiHan</td>
+                        <td>
+                            <a asp-action="Details"
+                               asp-route-maXaMoi="@item.MaXaMoi"
+                               asp-route-maCCCD="@item.MaCCCD"
+                               class="btn btn-sm btn-info">Chi tiết</a>
+
+                            <a asp-action="Edit"
+                               asp-route-maXaMoi="@item.MaXaMoi"
+                               asp-route-maCCCD="@item.MaCCCD"
+                               class="btn btn-sm btn-warning">Sửa</a>
+
+                            <a asp-action="Delete"
+                               asp-route-maXaMoi="@item.MaXaMoi"
+                               asp-route-maCCCD="@item.MaCCCD"
+                               class="btn btn-sm btn-danger">Xóa</a>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+}
+else
+{
+        <p><em>Chưa có bản ghi tạm trú nào.</em></p>
+}

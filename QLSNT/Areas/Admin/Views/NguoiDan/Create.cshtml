@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model QLSNT.Models.NguoiDan
+
+@{
+    ViewData["Title"] = "Thêm Người dân";
+}
+
+<h1 class="h3 fw-bold text-primary mb-3">Thêm Người dân</h1>
+<hr />
+
+<div class="row">
+    <div class="col-lg-7">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaCCCD" class="form-label"></label>
+                <input asp-for="MaCCCD" class="form-control" />
+                <span asp-validation-for="MaCCCD" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="HoTen" class="form-label"></label>
+                <input asp-for="HoTen" class="form-control" />
+                <span asp-validation-for="HoTen" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label asp-for="NgaySinh" class="form-label"></label>
+                    <input asp-for="NgaySinh" type="date" class="form-control" />
+                    <span asp-validation-for="NgaySinh" class="text-danger"></span>
+                </div>
+                <div class="mb-3 col-md-4">
+                    <label asp-for="GioiTinh" class="form-label"></label>
+                    <select asp-for="GioiTinh" class="form-select">
+                        <option value="">-- Chọn --</option>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                    <span asp-validation-for="GioiTinh" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Dân tộc</label>
+                    <select asp-for="MaDanToc"
+                            class="form-select"
+                            asp-items="@(ViewBag.DanTocList as SelectList)">
+                        <option value="">-- Chọn dân tộc --</option>
+                    </select>
+                    <span asp-validation-for="MaDanToc" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Tôn giáo</label>
+                    <select asp-for="MaTonGiao"
+                            class="form-select"
+                            asp-items="@(ViewBag.TonGiaoList as SelectList)">
+                        <option value="">-- Chọn tôn giáo --</option>
+                    </select>
+                    <span asp-validation-for="MaTonGiao" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Trình độ văn hóa</label>
+                    <select asp-for="MaTDVH"
+                            class="form-select"
+                            asp-items="@(ViewBag.TrinhDoList as SelectList)">
+                        <option value="">-- Chọn trình độ --</option>
+                    </select>
+                    <span asp-validation-for="MaTDVH" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 col-md-6">
+                    <label class="form-label">Quan hệ với chủ hộ</label>
+                    <select asp-for="MaQHCH"
+                            class="form-select"
+                            asp-items="@(ViewBag.QuanHeChuHoList as SelectList)">
+                        <option value="">-- Chọn quan hệ --</option>
+                    </select>
+                    <span asp-validation-for="MaQHCH" class="text-danger"></span>
+                </div>
+            </div>
+
+            
+
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

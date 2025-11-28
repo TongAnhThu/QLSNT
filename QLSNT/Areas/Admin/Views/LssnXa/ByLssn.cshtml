@@ -1,0 +1,66 @@
+﻿@model IEnumerable<QLSNT.Models.LssnXa>
+
+@{
+    var lssn = ViewBag.LichSuSapNhap as QLSNT.Models.LichSuSapNhap;
+    ViewData["Title"] = "Danh sách xã trong lần sáp nhập " + (lssn?.MaLSSN ?? "");
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-controller="LichSuSapNhap"
+       asp-action="Details"
+       asp-route-id="@lssn?.MaLSSN"
+       class="btn btn-secondary btn-sm">
+        ← Quay lại lịch sử sáp nhập
+    </a>
+
+    <a asp-action="Create"
+       asp-route-maLssn="@lssn?.MaLSSN"
+       class="btn btn-success btn-sm">
+        + Thêm xã sáp nhập
+    </a>
+</div>
+
+<table class="table table-bordered table-sm align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Xã cũ</th>
+            <th>Huyện cũ</th>
+            <th>Tỉnh cũ</th>
+            <th>Xã mới</th>
+            <th>Huyện mới</th>
+            <th>Tỉnh mới</th>
+            <th style="width: 130px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="7" class="text-center text-muted">
+                    Chưa có bản ghi xã nào cho lần sáp nhập này.
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var x in Model)
+            {
+                <tr>
+                    <td>@x.XaCu?.TenXaCu (@x.MaXaCu)</td>
+                    <td>@x.XaCu?.HuyenCu?.TenHuyenCu</td>
+                    <td>@x.XaCu?.HuyenCu?.TinhCu?.TenTinhCu</td>
+
+                    <td>@x.XaMoi?.TenXaMoi (@x.MaXaMoi)</td>
+                    <td>@x.XaMoi?.TinhMoi?.TenTinhMoi</td>
+
+                    <td class="text-nowrap">
+                        <a asp-action="Edit" asp-route-id="@x.MaLSSN" class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@x.MaLSSN" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

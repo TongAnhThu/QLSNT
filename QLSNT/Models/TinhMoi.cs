@@ -1,9 +1,14 @@
-﻿namespace QLSNT.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QLSNT.Models
 {
     public class TinhMoi
     {
-        public string MaTinh { get; set; } = default!;   // PK
-        public string TenTinh { get; set; } = default!;
+        [Key]
+        [Required]
+        [StringLength(10)]
+        public string MaTinhMoi { get; set; } = default!;   // PK
+        public string TenTinhMoi { get; set; } = default!;
         public double? DienTich { get; set; }
         public long? DanSo { get; set; }
         public string? TrangThai { get; set; }
