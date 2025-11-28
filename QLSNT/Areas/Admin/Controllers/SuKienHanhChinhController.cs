@@ -48,11 +48,22 @@ namespace QLSNT.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SuKienHanhChinh model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                // nếu view có dropdown thì nhớ load lại ở đây (nếu có)
+                return View(model);
+            }
+
+            // Gán người tạo + thời gian tạo
+            model.NguoiTao = User.Identity?.Name;
+            model.NgayTao = DateTime.Now;
 
             await _repo.AddAsync(model);
+
+            TempData["SuccessMessage"] = "Thêm sự kiện hành chính thành công.";
             return RedirectToAction(nameof(Index));
         }
+
 
         public async Task<IActionResult> Edit(string id)
         {
@@ -66,13 +77,36 @@ namespace QLSNT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(SuKienHanhChinh model)
+        public async Task<IActionResult> Edit(int id, SuKienHanhChinh model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (id != model.MaSuKien) return NotFound();
 
-            await _repo.UpdateAsync(model);
+            if (!ModelState.IsValid)
+            {
+                // load dropdown nếu có
+                return View(model);
+            }
+
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null) return NotFound();
+
+            // map các trường cho phép sửa
+            entity.TenSuKien = model.TenSuKien;
+            entity.NgayBatDau = model.NgayBatDau;
+            entity.NgayKetThuc = model.NgayKetThuc;
+            entity.NoiDung = model.NoiDung;
+            // ... các trường khác ...
+
+            // thông tin cập nhật
+            entity.NguoiCapNhat = User.Identity?.Name;
+            entity.NgayCapNhat = DateTime.Now;
+
+            await _repo.UpdateAsync(entity);
+
+            TempData["SuccessMessage"] = "Cập nhật sự kiện hành chính thành công.";
             return RedirectToAction(nameof(Index));
         }
+
 
         public async Task<IActionResult> Delete(string id)
         {

@@ -1,0 +1,35 @@
+﻿@model QLSNT.Models.XaCu
+
+@{
+    ViewData["Title"] = "Xoá xã cũ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-3 text-danger">Xoá xã cũ</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xoá xã này không?
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mã xã</dt>
+            <dd class="col-sm-9">@Model.MaXaCu</dd>
+
+            <dt class="col-sm-3">Tên xã</dt>
+            <dd class="col-sm-9">@Model.TenXaCu</dd>
+
+            <dt class="col-sm-3">Mã huyện cũ</dt>
+            <dd class="col-sm-9">@Model.MaHuyenCu</dd>
+        </dl>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaXaCu" />
+
+    <button type="submit" class="btn btn-danger">Xoá</button>
+    <a asp-action="Index" class="btn btn-secondary">Huỷ</a>
+</form>

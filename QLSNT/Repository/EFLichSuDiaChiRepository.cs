@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using QLSNT.Data;
 using QLSNT.Models;
 
@@ -13,59 +16,57 @@ namespace QLSNT.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<LichSuDiaChi>> GetAllAsync()
+        public async Task<IEnumerable<LichSuDiaChi>> GetAllAsync(string? keyword = null)
         {
-            return await _context.LichSuDiaChis
-                .AsNoTracking()
+            var query = _context.LichSuDiaChis
+                .Include(x => x.NguoiDan)  // navigation sang Người dân
+                .Include(x => x.XaCu)      // hoặc XaMoi tùy bạn map
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.Trim();
+
+                query = query.Where(x =>
+                    x.MaCCCD.Contains(keyword) ||
+                    (x.NguoiDan != null && x.NguoiDan.HoTen.Contains(keyword)));
+            }
+
+            // Mới nhất lên trước
+            return await query
+                .OrderByDescending(x => x.NgayHieuLuc)
+                .ThenByDescending(x => x.MaLichSuCuTru)
                 .ToListAsync();
         }
 
-        public async Task<LichSuDiaChi?> GetByIdAsync(string maLsdc)
+        public async Task<LichSuDiaChi?> GetByIdAsync(string id)
         {
             return await _context.LichSuDiaChis
-                .FirstOrDefaultAsync(x => x.MaLichSuCuTru == maLsdc);
-        }
-
-        public async Task<IEnumerable<LichSuDiaChi>> GetByNguoiDanAsync(string maCccd)
-        {
-            return await _context.LichSuDiaChis
-                .Where(x => x.MaCCCD == maCccd)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<LichSuDiaChi>> GetByXaMoiAsync(string maXaMoi)
-        {
-            return await _context.LichSuDiaChis
-                .Where(x => x.MaXaCu == maXaMoi)
-                .AsNoTracking()
-                .ToListAsync();
+                .Include(x => x.NguoiDan)
+                .Include(x => x.XaCu)   // hoặc XaMoi
+                .FirstOrDefaultAsync(x => x.MaLichSuCuTru == id);
         }
 
         public async Task AddAsync(LichSuDiaChi entity)
         {
-            await _context.LichSuDiaChis.AddAsync(entity);
+            _context.LichSuDiaChis.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(LichSuDiaChi entity)
         {
-            _context.LichSuDiaChis.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
-            await Task.CompletedTask;
+            _context.LichSuDiaChis.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string maLsdc)
+        public async Task DeleteAsync(String id)
         {
-            var entity = await GetByIdAsync(maLsdc);
+            var entity = await _context.LichSuDiaChis.FindAsync(id);
             if (entity != null)
             {
                 _context.LichSuDiaChis.Remove(entity);
+                await _context.SaveChangesAsync();
             }
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
         }
     }
 }

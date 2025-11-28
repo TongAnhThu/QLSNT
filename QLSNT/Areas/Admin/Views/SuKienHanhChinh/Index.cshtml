@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<QLSNT.Models.SuKienHanhChinh>
-
+@{
+    ViewData["Title"] = "Sự kiện hành chính";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <h1 class="mb-3">Sự kiện hành chính</h1>
+
 
 <form method="get" class="d-flex mb-3">
     <input type="text" name="search" value="@ViewBag.Search"

@@ -1,0 +1,53 @@
+﻿@model QLSNT.Models.XaCu
+
+@{
+    ViewData["Title"] = "Thêm xã cũ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-3">Thêm xã cũ</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaXaCu" class="form-label">Mã xã</label>
+                <input asp-for="MaXaCu" class="form-control" />
+                <span asp-validation-for="MaXaCu" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TenXaCu" class="form-label">Tên xã</label>
+                <input asp-for="TenXaCu" class="form-control" />
+                <span asp-validation-for="TenXaCu" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MaHuyenCu" class="form-label">Huyện cũ</label>
+                <select asp-for="MaHuyenCu"
+                        asp-items="ViewBag.HuyenCuList"
+                        class="form-select">
+                    <option value="">-- Chọn huyện cũ --</option>
+                </select>
+                <span asp-validation-for="MaHuyenCu" class="text-danger"></span>
+            </div>
+
+            @* Nếu bạn có thêm thuộc tính (GhiChu, LoaiXa, ...) thì thêm field ở đây *@
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

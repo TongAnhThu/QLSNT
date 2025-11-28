@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using QLSNT.Models;
 using QLSNT.Repositories;
 
@@ -8,6 +9,9 @@ namespace QLSNT.Controllers
     public class LichSuSapNhapController : Controller
     {
         private readonly ILichSuSapNhapRepository _repo;
+        private readonly ILssnTinhRepository _lssnTinhRepo;
+        private readonly ILssnXaRepository _lssnXaRepo;
+        private readonly ISuKienHanhChinhRepository _suKienRepo;
 
         public LichSuSapNhapController(ILichSuSapNhapRepository repo)
         {
@@ -63,37 +67,87 @@ namespace QLSNT.Controllers
                 return View(model);
             }
 
+            // Gán người tạo + thời gian tạo
+            model.NguoiTao = User.Identity?.Name;
+            model.NgayTao = DateTime.Now;
+
             await _repo.AddAsync(model);
+
+            TempData["SuccessMessage"] = "Thêm lịch sử sáp nhập thành công.";
             return RedirectToAction(nameof(Index));
         }
 
+
         // GET: /LichSuSapNhap/Edit/LS001
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
                 return NotFound();
 
-            // Edit chỉ cần bản ghi nhẹ, không cần include
-            var item = await _repo.GetByIdAsync(id);
-            if (item == null)
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null)
                 return NotFound();
 
-            return View(item);
+            await LoadDropdowns(entity.SoNghiDinh);  // nếu có dropdown Sự kiện hành chính
+
+            return View(entity);
         }
+
+        // Hàm load dropdown Sự kiện / Nghị định
+        private async Task LoadDropdowns(string? selectedSoNghiDinh = null)
+        {
+            var suKienList = await _suKienRepo.GetAllAsync(); // repo sự kiện hành chính
+            ViewBag.SuKienList = new SelectList(
+                suKienList,
+                "SoNghiDinh",   // value
+                "TenSuKien",    // text hiển thị
+                selectedSoNghiDinh
+            );
+        }
+
 
         // POST: /LichSuSapNhap/Edit/LS001
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(LichSuSapNhap model)
+        public async Task<IActionResult> Edit(string id, LichSuSapNhap model)
         {
+            // 1. Đảm bảo id trên URL trùng với id trong form
+            if (id != model.MaLSSN)
+                return NotFound();
+
+            // 2. Nếu dữ liệu form không hợp lệ -> trả lại view cho user sửa
             if (!ModelState.IsValid)
             {
+                await LoadDropdowns(model.SoNghiDinh);
                 return View(model);
             }
 
-            await _repo.UpdateAsync(model);
+            // 3. Lấy bản ghi gốc từ database
+            var entity = await _repo.GetByIdAsync(id);
+            if (entity == null)
+                return NotFound();
+
+            // 4. Cập nhật các trường cho phép sửa
+            entity.SoNghiDinh = model.SoNghiDinh;
+            entity.GhiChu = model.GhiChu;
+
+            // 5. Ghi log người cập nhật + thời gian cập nhật
+            entity.NguoiCapNhat = User.Identity?.Name;
+            entity.NgayCapNhat = DateTime.Now;
+
+            // KHÔNG đụng tới:
+            //  - entity.MaLSSN  (khóa chính)
+            //  - entity.NguoiTao / entity.NgayTao (lịch sử tạo ban đầu)
+
+            // 6. Lưu xuống DB
+            await _repo.UpdateAsync(entity);
+
+            TempData["SuccessMessage"] = "Cập nhật lịch sử sáp nhập thành công.";
             return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: /LichSuSapNhap/Delete/LS001
         public async Task<IActionResult> Delete(string id)

@@ -17,14 +17,16 @@ namespace QLSNT.Models
         public string? DiaChiCu { get; set; }
         public string? DiaChiMoi { get; set; }
         public string? NguoiCapNhat { get; set; }
+        public string? NguoiTao { get; set; }
         public DateTime? NgayTao { get; set; }
         public DateTime? NgayCapNhat { get; set; }
         public string? GhiChu { get; set; }
 
-        public string MaCCCD { get; set; } = default!;  // FK → NguoiDan
-        public string MaXaCu { get; set; } = default!;  // FK → XaCu
+        public string MaCCCD { get; set; } = default!;  // FK → NguoiDan  // FK → XaCu
         [ForeignKey(nameof(MaCCCD))]
         public NguoiDan NguoiDan { get; set; } = default!;
+
+        public string MaXaCu { get; set; } = default!;
         [ForeignKey(nameof(MaXaCu))]
         public XaCu XaCu { get; set; } = default!;
 
