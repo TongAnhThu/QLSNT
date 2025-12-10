@@ -1,57 +1,90 @@
-﻿@model QLSNT.Models.LichSuSapNhap
+﻿@model QLSNT.Areas.Admin.ViewModel.CreateLSSN
 
 @{
     ViewData["Title"] = "Thêm lịch sử sáp nhập";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="fw-bold text-primary mb-4">Thêm lịch sử sáp nhập</h2>
 
-<div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+<div class="card shadow-sm p-4">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <!-- Mã LSSN hidden -->
+        <input asp-for="MaLSSN" type="hidden" />
+
+        <!-- Số nghị định -->
+        <div class="mb-3">
+            <label asp-for="SoNghiDinh" class="form-label"></label>
+            <input asp-for="SoNghiDinh" class="form-control" />
+            <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
+        </div>
+
+        <!-- Loại sáp nhập -->
+        <div class="mb-3">
+            <label asp-for="Loai" class="form-label"></label>
+            <select asp-for="Loai" class="form-select" id="loaiSelect">
+                <option value="">-- Chọn loại --</option>
+                <option value="Tinh">Tỉnh</option>
+                <option value="Xa">Xã</option>
+            </select>
+            <span asp-validation-for="Loai" class="text-danger"></span>
+        </div>
+
+        <!-- Nếu chọn Tỉnh -->
+        <div id="tinhSection" class="mb-3" style="display:none;">
+            <h5 class="text-info">Thông tin Tỉnh</h5>
+            <div class="mb-2">
+                <label asp-for="MaTinhCu" class="form-label"></label>
+                <select asp-for="MaTinhCu" class="form-select" asp-items="ViewBag.TinhCuList">
+                    <option value="">-- Chọn tỉnh cũ --</option>
+                </select>
+                <span asp-validation-for="MaTinhCu" class="text-danger"></span>
+            </div>
+            <div class="mb-2">
+                <label asp-for="MaTinhMoi" class="form-label"></label>
+                <select asp-for="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhMoiList">
+                    <option value="">-- Chọn tỉnh mới --</option>
+                </select>
+                <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Nếu chọn Xã -->
+        <div id="xaSection" class="mb-3" style="display:none;">
+            <h5 class="text-success">Thông tin Xã</h5>
+            <div class="mb-2">
+                <label asp-for="MaXaCu" class="form-label"></label>
+                <select asp-for="MaXaCu" class="form-select" asp-items="ViewBag.XaCuList">
+                    <option value="">-- Chọn xã cũ --</option>
+                </select>
+                <span asp-validation-for="MaXaCu" class="text-danger"></span>
+            </div>
+            <div class="mb-2">
+                <label asp-for="MaXaMoi" class="form-label"></label>
+                <select asp-for="MaXaMoi" class="form-select" asp-items="ViewBag.XaMoiList">
+                    <option value="">-- Chọn xã mới --</option>
+                </select>
+                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Nút submit -->
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
 </div>
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="MaLSSN" class="form-label"></label>
-        <input asp-for="MaLSSN" class="form-control" />
-        <span asp-validation-for="MaLSSN" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="SoNghiDinh" class="form-label">Số nghị định</label>
-        <select asp-for="SoNghiDinh"
-                class="form-select"
-                asp-items="ViewBag.SoNghiDinhList">
-            <option value="">-- Chọn số nghị định --</option>
-        </select>
-        <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NguoiTao" class="form-label"></label>
-        <input asp-for="NguoiTao" class="form-control" />
-        <span asp-validation-for="NguoiTao" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NgayTao" class="form-label"></label>
-        <input asp-for="NgayTao" class="form-control" type="datetime-local"
-               value="@Model.NgayTao" />
-        <span asp-validation-for="NgayTao" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="GhiChu" class="form-label"></label>
-        <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="GhiChu" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Lưu</button>
-</form>
-
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Hiển thị section theo loại sáp nhập
+        document.getElementById("loaiSelect").addEventListener("change", function () {
+            var loai = this.value;
+            document.getElementById("tinhSection").style.display = (loai === "Tinh") ? "block" : "none";
+            document.getElementById("xaSection").style.display = (loai === "Xa") ? "block" : "none";
+        });
+    </script>
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLSNT.Models
 {
@@ -8,7 +9,7 @@ namespace QLSNT.Models
     {
         [Key]
         [Required]
-        [StringLength(10)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 
         public int MaDanToc { get; set; } = default! ;   
         public string TenDanToc { get; set; } = default!;

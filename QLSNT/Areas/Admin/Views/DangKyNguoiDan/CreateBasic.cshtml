@@ -1,0 +1,92 @@
+﻿@model QLSNT.Models.NguoiDan
+@{
+    ViewData["Title"] = "Đăng ký người dân - Thông tin cơ bản";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="fw-bold text-primary mb-4">Đăng ký người dân - Bước 1</h2>
+
+<div class="card shadow-sm p-4">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- CCCD -->
+        <div class="mb-3">
+            <label asp-for="MaCCCD" class="form-label"></label>
+            <input asp-for="MaCCCD" class="form-control" />
+            <span asp-validation-for="MaCCCD" class="text-danger"></span>
+        </div>
+
+        <!-- Họ tên -->
+        <div class="mb-3">
+            <label asp-for="HoTen" class="form-label"></label>
+            <input asp-for="HoTen" class="form-control" />
+            <span asp-validation-for="HoTen" class="text-danger"></span>
+        </div>
+
+        <!-- Ngày sinh -->
+        <div class="mb-3">
+            <label asp-for="NgaySinh" class="form-label"></label>
+            <input asp-for="NgaySinh" type="date" class="form-control" />
+            <span asp-validation-for="NgaySinh" class="text-danger"></span>
+        </div>
+
+        <!-- Giới tính -->
+        <div class="mb-3">
+            <label asp-for="GioiTinh" class="form-label"></label>
+            <select asp-for="GioiTinh" class="form-select">
+                <option value="">-- Chọn giới tính --</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+            </select>
+            <span asp-validation-for="GioiTinh" class="text-danger"></span>
+        </div>
+
+        <!-- Dân tộc -->
+        <div class="mb-3">
+            <label asp-for="MaDanToc" class="form-label"></label>
+            <select asp-for="MaDanToc" class="form-select" asp-items="ViewBag.DanTocList">
+                <option value="">-- Chọn dân tộc --</option>
+            </select>
+        </div>
+
+        <!-- Tôn giáo -->
+        <div class="mb-3">
+            <label asp-for="MaTonGiao" class="form-label"></label>
+            <select asp-for="MaTonGiao" class="form-select" asp-items="ViewBag.TonGiaoList">
+                <option value="">-- Chọn tôn giáo --</option>
+            </select>
+        </div>
+
+        <!-- Trình độ văn hóa -->
+        <div class="mb-3">
+            <label asp-for="MaTDVH" class="form-label"></label>
+            <select asp-for="MaTDVH" class="form-select" asp-items="ViewBag.TrinhDoList">
+                <option value="">-- Chọn trình độ --</option>
+            </select>
+        </div>
+
+        <!-- Tình trạng hôn nhân -->
+        <div class="mb-3">
+            <label asp-for="TinhTrangHonNhan" class="form-label"></label>
+            <select asp-for="TinhTrangHonNhan" class="form-select" asp-items="ViewBag.TinhTrangHonNhanList">
+                <option value="">-- Chọn tình trạng --</option>
+            </select>
+        </div>
+
+        <!-- Trạng thái công dân -->
+        <div class="mb-3">
+            <label asp-for="TrangThaiCongDan" class="form-label"></label>
+            <select asp-for="TrangThaiCongDan" class="form-select" asp-items="ViewBag.TrangThaiCongDanList">
+                <option value="">-- Chọn trạng thái --</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tiếp tục</button>
+        <a asp-action="Index" asp-controller="NguoiDan" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

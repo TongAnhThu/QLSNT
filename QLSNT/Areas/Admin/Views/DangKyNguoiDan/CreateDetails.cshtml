@@ -1,0 +1,47 @@
+﻿@model QLSNT.ViewModels.NguoiDanCreateViewModel
+
+@{
+    ViewData["Title"] = "Đăng ký người dân - Địa chỉ thường trú";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="fw-bold text-primary mb-4">Đăng ký người dân - Bước 2</h2>
+
+<div class="card shadow-sm p-4">
+    <form asp-action="CreateDetails" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- Hidden CCCD -->
+        <input asp-for="MaCCCD" type="hidden" />
+
+        <!-- Tỉnh -->
+        <div class="mb-3">
+            <label class="form-label">Tỉnh</label>
+            <select asp-for="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhList">
+                <option value="">-- Chọn tỉnh --</option>
+            </select>
+        </div>
+
+        <!-- Xã -->
+        <div class="mb-3">
+            <label class="form-label">Xã</label>
+            <select asp-for="MaXaMoi" class="form-select" asp-items="ViewBag.XaList">
+                <option value="">-- Chọn xã --</option>
+            </select>
+        </div>
+
+        <!-- Địa chỉ thường trú -->
+        <div class="mb-3">
+            <label asp-for="DiaChiThuongTru" class="form-label"></label>
+            <input asp-for="DiaChiThuongTru" class="form-control" />
+            <span asp-validation-for="DiaChiThuongTru" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Hoàn tất</button>
+        <a asp-action="Index" asp-controller="NguoiDan" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

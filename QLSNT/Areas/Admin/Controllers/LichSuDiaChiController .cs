@@ -9,24 +9,27 @@ using QLSNT.Repositories;
 namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize] // nếu chưa dùng phân quyền thì có thể bỏ
+    [Authorize] // If you are not using role-based authorization, this can be removed
     public class LichSuDiaChiController : Controller
     {
         private readonly ILichSuDiaChiRepository _lsctRepo;
         private readonly INguoiDanRepository _nguoiDanRepo;
         private readonly IXaCuRepository _xaCuRepo;
+        private readonly IXaMoiRepository _xaMoiRepo; // Added for new district
 
         public LichSuDiaChiController(
             ILichSuDiaChiRepository lsctRepo,
             INguoiDanRepository nguoiDanRepo,
-            IXaCuRepository xaCuRepo)
+            IXaCuRepository xaCuRepo,
+            IXaMoiRepository xaMoiRepo)
         {
             _lsctRepo = lsctRepo;
             _nguoiDanRepo = nguoiDanRepo;
             _xaCuRepo = xaCuRepo;
+            _xaMoiRepo = xaMoiRepo; // Inject the new repository for XaMoi
         }
 
-        // GET: Admin/LichSuCuTru
+        // GET: Admin/LichSuDiaChi
         public async Task<IActionResult> Index(string? searchCccd)
         {
             var list = await _lsctRepo.GetAllAsync(searchCccd);
@@ -34,9 +37,12 @@ namespace QLSNT.Areas.Admin.Controllers
             return View(list);
         }
 
-        // GET: Admin/LichSuCuTru/Details/5
+        // GET: Admin/LichSuDiaChi/Details/5
         public async Task<IActionResult> Details(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
             var item = await _lsctRepo.GetByIdAsync(id);
             if (item == null)
                 return NotFound();
@@ -44,32 +50,35 @@ namespace QLSNT.Areas.Admin.Controllers
             return View(item);
         }
 
-        // GET: Admin/LichSuCuTru/Create
+        // GET: Admin/LichSuDiaChi/Create
         public async Task<IActionResult> Create(string? maCccd)
         {
+            // Load both old and new districts dropdowns
             await LoadDropdowns(maCccd: maCccd);
 
             var model = new LichSuDiaChi
             {
-                MaCCCD = maCccd,           // nếu tạo từ màn chi tiết Người dân
+                MaCCCD = maCccd,           // Create from "NguoiDan" details if needed
                 NgayHieuLuc = DateTime.Today
             };
 
             return View(model);
         }
 
-        // POST: Admin/LichSuCuTru/Create
+        // POST: Admin/LichSuDiaChi/Create        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LichSuDiaChi model)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(LichSuDiaChi model)
         {
             if (!ModelState.IsValid)
             {
-                await LoadDropdowns(model.MaCCCD, model.MaXaCu);
+                await LoadDropdowns(model.MaCCCD, model.MaXaCu, model.MaXaMoi);
                 return View(model);
             }
 
-            // Lấy tên user đăng nhập
+            // Sinh mã tự động khi thêm bằng tay
+            model.MaLichSuCuTru = Guid.NewGuid().ToString();
+
             model.NguoiTao = User.Identity?.Name;
             model.NgayTao = DateTime.Now;
 
@@ -79,18 +88,23 @@ namespace QLSNT.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { searchCccd = model.MaCCCD });
         }
 
-        // GET: Admin/LichSuCuTru/Edit/5
+
+        // GET: Admin/LichSuDiaChi/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
             var entity = await _lsctRepo.GetByIdAsync(id);
             if (entity == null)
                 return NotFound();
 
-            await LoadDropdowns(entity.MaCCCD, entity.MaXaCu);
+            // Load both old and new districts dropdowns for editing
+            await LoadDropdowns(entity.MaCCCD, entity.MaXaCu, entity.MaXaMoi);
             return View(entity);
         }
 
-        // POST: Admin/LichSuCuTru/Edit/5
+        // POST: Admin/LichSuDiaChi/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, LichSuDiaChi model)
@@ -100,7 +114,8 @@ namespace QLSNT.Areas.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                await LoadDropdowns(model.MaCCCD, model.MaXaCu);
+                // Load dropdowns for both old and new districts if model is not valid
+                await LoadDropdowns(model.MaCCCD, model.MaXaCu, model.MaXaMoi);
                 return View(model);
             }
 
@@ -108,7 +123,7 @@ namespace QLSNT.Areas.Admin.Controllers
             if (entity == null)
                 return NotFound();
 
-            // Cập nhật các trường cho phép sửa
+            // Update editable fields
             entity.LoaiThayDoi = model.LoaiThayDoi;
             entity.SoQuyetDinh = model.SoQuyetDinh;
             entity.LyDoThayDoi = model.LyDoThayDoi;
@@ -119,8 +134,9 @@ namespace QLSNT.Areas.Admin.Controllers
             entity.GhiChu = model.GhiChu;
             entity.MaCCCD = model.MaCCCD;
             entity.MaXaCu = model.MaXaCu;
+            entity.MaXaMoi = model.MaXaMoi; // Added for new district code
 
-            // Thông tin cập nhật
+            // Record update info
             entity.NguoiCapNhat = User.Identity?.Name;
             entity.NgayCapNhat = DateTime.Now;
 
@@ -130,9 +146,12 @@ namespace QLSNT.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { searchCccd = model.MaCCCD });
         }
 
-        // GET: Admin/LichSuCuTru/Delete/5
+        // GET: Admin/LichSuDiaChi/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
             var entity = await _lsctRepo.GetByIdAsync(id);
             if (entity == null)
                 return NotFound();
@@ -140,11 +159,14 @@ namespace QLSNT.Areas.Admin.Controllers
             return View(entity);
         }
 
-        // POST: Admin/LichSuCuTru/Delete/5
+        // POST: Admin/LichSuDiaChi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
             var entity = await _lsctRepo.GetByIdAsync(id);
             if (entity == null)
                 return NotFound();
@@ -156,15 +178,17 @@ namespace QLSNT.Areas.Admin.Controllers
         }
 
         /// <summary>
-        /// Load dropdown Người dân + Xã cũ
+        /// Load dropdown for NguoiDan and XaCu + XaMoi (new district)
         /// </summary>
-        private async Task LoadDropdowns(string? maCccd = null, string? maXaCu = null)
+        private async Task LoadDropdowns(string? maCccd = null, int? maXaCu = null, int? maXaMoi = null)
         {
             var nguoiDans = await _nguoiDanRepo.GetAllAsync();
-            var xas = await _xaCuRepo.GetAllAsync();
+            var xasCu = await _xaCuRepo.GetAllAsync();
+            var xasMoi = await _xaMoiRepo.GetAllAsync(); // Added for new district dropdown
 
             ViewBag.NguoiDanList = new SelectList(nguoiDans, "MaCCCD", "HoTen", maCccd);
-            ViewBag.XaCuList = new SelectList(xas, "MaXaCu", "TenXaCu", maXaCu);
+            ViewBag.XaCuList = new SelectList(xasCu, "MaXaCu", "TenXaCu", maXaCu);
+            ViewBag.XaMoiList = new SelectList(xasMoi, "MaXaMoi", "TenXaMoi", maXaMoi); // Added for new district dropdown
         }
     }
 }

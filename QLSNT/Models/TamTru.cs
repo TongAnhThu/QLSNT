@@ -7,7 +7,7 @@ namespace QLSNT.Models
     public class TamTru
     {
         // Composite key: MaXaMoi + MaCCCD
-        public string MaXaMoi { get; set; } = default!;
+        public int MaXaMoi { get; set; } = default!;
         public string MaCCCD { get; set; } = default!;
 
         public string? DiaChi { get; set; }

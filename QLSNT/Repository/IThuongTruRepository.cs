@@ -6,15 +6,16 @@ namespace QLSNT.Repositories
     {
         // Lấy tất cả
         Task<IEnumerable<ThuongTru>> GetAllAsync();
+        Task<ThuongTru?> GetByCCCDAsync(string maCCCD);
 
         // Tìm kiếm theo CCCD, mã xã, địa chỉ...
         Task<IEnumerable<ThuongTru>> SearchAsync(string? keyword);
 
         // Lấy 1 bản ghi theo composite key
-        Task<ThuongTru?> GetByIdAsync(string maXaMoi, string maCccd);
+        Task<ThuongTru?> GetByIdAsync(int maXaMoi, string maCccd);
 
         // Lấy tất cả thường trú trong 1 xã
-        Task<IEnumerable<ThuongTru>> GetByXaMoiAsync(string maXaMoi);
+        Task<IEnumerable<ThuongTru>> GetByXaMoiAsync(int maXaMoi);
 
         // Lấy tất cả nơi thường trú của 1 người dân
         Task<IEnumerable<ThuongTru>> GetByNguoiDanAsync(string maCccd);
@@ -26,6 +27,6 @@ namespace QLSNT.Repositories
         Task UpdateAsync(ThuongTru entity);
 
         // Xóa (tự SaveChanges bên trong)
-        Task DeleteAsync(string maXaMoi, string maCccd);
+        Task DeleteAsync(int maXaMoi, string maCccd);
     }
 }

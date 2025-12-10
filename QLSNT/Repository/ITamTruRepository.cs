@@ -11,7 +11,7 @@ namespace QLSNT.Repositories
         Task<List<TamTru>> SearchAsync(string? keyword);
 
         // Lấy 1 bản ghi theo composite key (MaXaMoi + MaCCCD)
-        Task<TamTru?> GetByIdAsync(string maXaMoi, string maCCCD);
+        Task<TamTru?> GetByIdAsync(int maXaMoi, string maCCCD);
 
         // Thêm mới
         Task AddAsync(TamTru entity);
@@ -20,6 +20,6 @@ namespace QLSNT.Repositories
         Task UpdateAsync(TamTru entity);
 
         // Xóa
-        Task DeleteAsync(string maXaMoi, string maCCCD);
+        Task DeleteAsync(int maXaMoi, string maCCCD);
     }
 }

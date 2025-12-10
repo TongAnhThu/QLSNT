@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLSNT.Models;
 using QLSNT.Repositories;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace QLSNT.Controllers
 {
@@ -33,9 +35,10 @@ namespace QLSNT.Controllers
         }
 
         // GET: /TamTru/Details
-        public async Task<IActionResult> Details(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Details(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
+            // Check for invalid or missing IDs
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
@@ -64,8 +67,12 @@ namespace QLSNT.Controllers
         }
 
         // GET: /TamTru/Edit
-        public async Task<IActionResult> Edit(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Edit(int maXaMoi, string maCCCD)
         {
+            // Check for invalid or missing IDs
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
+                return NotFound();
+
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
             if (item == null)
                 return NotFound();
@@ -86,8 +93,12 @@ namespace QLSNT.Controllers
         }
 
         // GET: /TamTru/Delete
-        public async Task<IActionResult> Delete(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Delete(int maXaMoi, string maCCCD)
         {
+            // Check for invalid or missing IDs
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
+                return NotFound();
+
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
             if (item == null)
                 return NotFound();
@@ -98,7 +109,7 @@ namespace QLSNT.Controllers
         // POST: /TamTru/DeleteConfirmed
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> DeleteConfirmed(int maXaMoi, string maCCCD)
         {
             await _repo.DeleteAsync(maXaMoi, maCCCD);
             return RedirectToAction(nameof(Index));

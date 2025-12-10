@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using QLSNT.Models;
 using QLSNT.Repositories;
 
-namespace QLSNT.Controllers
+namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class LssnTinhController : Controller
@@ -26,7 +26,7 @@ namespace QLSNT.Controllers
         }
 
         // ================== INDEX ==================
-        // GET: /LssnTinh
+        // GET: /Admin/LssnTinh
         public async Task<IActionResult> Index()
         {
             var list = await _lssnTinhRepo.GetAllAsync();
@@ -34,7 +34,7 @@ namespace QLSNT.Controllers
         }
 
         // ================== DETAILS ==================
-        // GET: /LssnTinh/Details/LS001
+        // GET: /Admin/LssnTinh/Details/LS001
         public async Task<IActionResult> Details(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
@@ -46,26 +46,26 @@ namespace QLSNT.Controllers
         }
 
         // ================== CREATE ==================
-        // GET: /LssnTinh/Create
-        // (nếu muốn tạo theo từng LSSN, bạn có thể dùng Create?maLssn=LS001 rồi gán sẵn)
-        public async Task<IActionResult> Create(string? maLssn)
+        // GET: /Admin/LssnTinh/Create?maLssn=LS001
+        [HttpGet]
+        public async Task<IActionResult> Create(string maLssn)
         {
+            if (string.IsNullOrWhiteSpace(maLssn)) return NotFound();
+
             await LoadTinhDropDownsAsync();
 
-            var model = new LssnTinh();
-
-            if (!string.IsNullOrWhiteSpace(maLssn))
+            var model = new LssnTinh
             {
-                model.MaLSSN = maLssn.Trim();
-                // optional: kiểm tra tồn tại LichSuSapNhap
-                var lssn = await _lssnRepo.GetByIdAsync(model.MaLSSN);
-                ViewBag.LichSuSapNhap = lssn;
-            }
+                MaLSSN = maLssn   // MaLSSN là string
+            };
+
+            var lssn = await _lssnRepo.GetByIdAsync(model.MaLSSN);
+            ViewBag.LichSuSapNhap = lssn;
 
             return View(model);
         }
 
-        // POST: /LssnTinh/Create
+        // POST: /Admin/LssnTinh/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LssnTinh model)
@@ -73,23 +73,19 @@ namespace QLSNT.Controllers
             if (!ModelState.IsValid)
             {
                 await LoadTinhDropDownsAsync(model.MaTinhCu, model.MaTinhMoi);
-                // nếu có LichSuSapNhap thì nạp lại để hiển thị
                 var lssn = await _lssnRepo.GetByIdAsync(model.MaLSSN);
                 ViewBag.LichSuSapNhap = lssn;
                 return View(model);
             }
 
             await _lssnTinhRepo.AddAsync(model);
-
-            // Nếu bạn muốn quay về chi tiết lịch sử sáp nhập:
-            // return RedirectToAction("Details", "LichSuSapNhap", new { id = model.MaLSSN });
-
-            // Còn nếu chỉ quay về danh sách LssnTinh:
-            return RedirectToAction(nameof(Index));
+            // Hợp lý hơn là quay về chi tiết lần sáp nhập
+            return RedirectToAction("Details", "LichSuSapNhap", new { id = model.MaLSSN });
         }
 
         // ================== EDIT ==================
-        // GET: /LssnTinh/Edit/LS001
+        // GET: /Admin/LssnTinh/Edit/LS001
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
@@ -105,12 +101,12 @@ namespace QLSNT.Controllers
             return View(item);
         }
 
-        // POST: /LssnTinh/Edit/LS001
+        // POST: /Admin/LssnTinh/Edit/LS001
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, LssnTinh model)
         {
-            if (string.IsNullOrWhiteSpace(id) || id != model.MaLSSN)
+            if (id != model.MaLSSN)
                 return BadRequest();
 
             if (!ModelState.IsValid)
@@ -122,14 +118,12 @@ namespace QLSNT.Controllers
             }
 
             await _lssnTinhRepo.UpdateAsync(model);
-
-            // Tuỳ bạn muốn về đâu:
-            // return RedirectToAction("Details", "LichSuSapNhap", new { id = model.MaLSSN });
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "LichSuSapNhap", new { id = model.MaLSSN });
         }
 
         // ================== DELETE ==================
-        // GET: /LssnTinh/Delete/LS001
+        // GET: /Admin/LssnTinh/Delete/LS001
+        [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
@@ -143,33 +137,29 @@ namespace QLSNT.Controllers
             return View(item);
         }
 
-        // POST: /LssnTinh/Delete/LS001
+        // POST: /Admin/LssnTinh/Delete/LS001
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (string.IsNullOrWhiteSpace(id)) return NotFound();
-
             var item = await _lssnTinhRepo.GetByIdAsync(id);
             if (item == null) return NotFound();
 
             var maLssn = item.MaLSSN;
 
             await _lssnTinhRepo.DeleteAsync(id);
-
-            // Tuỳ ý quay lại LichSuSapNhap hay Index
-            // return RedirectToAction("Details", "LichSuSapNhap", new { id = maLssn });
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "LichSuSapNhap", new { id = maLssn });
         }
 
         // ================== HELPER: LOAD DROPDOWN TỈNH ==================
-        private async Task LoadTinhDropDownsAsync(string? selectedTinhCu = null, string? selectedTinhMoi = null)
+        private async Task LoadTinhDropDownsAsync(int? selectedTinhCu = null, int? selectedTinhMoi = null)
         {
             var tinhCuList = await _tinhCuRepo.GetAllAsync();
             var tinhMoiList = await _tinhMoiRepo.GetAllAsync();
 
             ViewBag.TinhCuList = new SelectList(tinhCuList, "MaTinhCu", "TenTinhCu", selectedTinhCu);
-            ViewBag.TinhMoiList = new SelectList(tinhMoiList, "MaTinh", "TenTinh", selectedTinhMoi);
+            ViewBag.TinhMoiList = new SelectList(tinhMoiList, "MaTinhMoi", "TenTinhMoi", selectedTinhMoi);
+            // chú ý: TenTinhMoi (không phải TenTinh)
         }
     }
 }

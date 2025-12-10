@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLSNT.Models
 {
@@ -6,8 +7,8 @@ namespace QLSNT.Models
     {
         [Key]
         [Required]
-        [StringLength(10)]
-        public string MaTinhMoi { get; set; } = default!;   // PK
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MaTinhMoi { get; set; } = default!;   // PK
         public string TenTinhMoi { get; set; } = default!;
         public double? DienTich { get; set; }
         public long? DanSo { get; set; }

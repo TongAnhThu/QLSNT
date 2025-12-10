@@ -11,10 +11,10 @@ namespace QLSNT.Repositories
         Task<IEnumerable<LssnTinh>> GetByLssnAsync(string maLssn);
 
         // Lấy theo Tỉnh cũ
-        Task<IEnumerable<LssnTinh>> GetByTinhCuAsync(string maTinhCu);
+        Task<IEnumerable<LssnTinh>> GetByTinhCuAsync(int maTinhCu);
 
         // Lấy theo Tỉnh mới
-        Task<IEnumerable<LssnTinh>> GetByTinhMoiAsync(string maTinhMoi);
+        Task<IEnumerable<LssnTinh>> GetByTinhMoiAsync(int maTinhMoi);
 
         // Lấy 1 bản ghi (PK)
         Task<LssnTinh?> GetByIdAsync(string maLssn);

@@ -97,6 +97,12 @@ namespace QLSNT.Repositories
             _db.LichSuSapNhaps.Update(entity);
             await _db.SaveChangesAsync();
         }
+        
+            public async Task<int> CountAsync()
+            {
+                return await _db.LichSuSapNhaps.CountAsync();
+            }
+        
 
         // =================== DELETE ===================
         public async Task DeleteAsync(string maLssn)

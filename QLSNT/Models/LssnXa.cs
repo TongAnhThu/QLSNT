@@ -9,8 +9,8 @@ namespace QLSNT.Models
         [Required]
         [StringLength(10)]
         public string MaLSSN { get; set; } = default!;   // PK + FK → LichSuSapNhap
-        public string MaXaMoi { get; set; } = default!;  // FK → XaMoi
-        public string MaXaCu { get; set; } = default!;   // FK → XaCu
+        public int MaXaMoi { get; set; } = default!;  // FK → XaMoi
+        public int MaXaCu { get; set; } = default!;   // FK → XaCu
         [ForeignKey(nameof(MaLSSN))]
         public LichSuSapNhap LichSuSapNhap { get; set; } = default!;
         [ForeignKey(nameof(MaXaMoi))]

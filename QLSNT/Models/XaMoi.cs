@@ -7,8 +7,8 @@ namespace QLSNT.Models
     {
         [Key]
         [Required]
-        [StringLength(10)]
-        public string MaXaMoi { get; set; } = default!;  // PK
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MaXaMoi { get; set; } = default!;  // PK
         public string TenXaMoi { get; set; } = default!;
         public string? LoaiXa { get; set; }
         public string? TrangThai { get; set; }              
@@ -19,7 +19,7 @@ namespace QLSNT.Models
         public double? DienTich { get; set; }
 
         
-        public string MaTinh { get; set; } = default!;   // FK → TinhMoi
+        public int MaTinh { get; set; } = default!;   // FK → TinhMoi
         [ForeignKey(nameof(MaTinh))]
         public TinhMoi? TinhMoi { get; set; } = default!;
 

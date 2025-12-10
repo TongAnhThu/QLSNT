@@ -16,11 +16,11 @@ namespace QLSNT.Repositories
         public async Task<IEnumerable<XaCu>> GetAllAsync()
         {
             return await _db.XaCus
-                .OrderBy(x => x.MaXaCu)
+                .OrderBy(x => x.MaXaCu)      // MaXaCu là int
                 .ToListAsync();
         }
 
-        public async Task<XaCu?> GetByIdAsync(string id)
+        public async Task<XaCu?> GetByIdAsync(int id)
         {
             return await _db.XaCus
                 .FirstOrDefaultAsync(x => x.MaXaCu == id);
@@ -38,7 +38,7 @@ namespace QLSNT.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _db.XaCus.FirstOrDefaultAsync(x => x.MaXaCu == id);
             if (entity != null)
@@ -57,13 +57,13 @@ namespace QLSNT.Repositories
 
             keyword = keyword.Trim();
 
-            // Tìm theo tên xã (và có thể cả mã, loại, huyện)
+            // Tìm theo tên xã, loại xã, hoặc gõ số để match MaXaCu / MaHuyenCu
             return await _db.XaCus
                 .Where(x =>
                     (x.TenXaCu != null && EF.Functions.Like(x.TenXaCu, $"%{keyword}%")) ||
-                    (x.MaXaCu != null && EF.Functions.Like(x.MaXaCu, $"%{keyword}%")) ||
                     (x.LoaiXa != null && EF.Functions.Like(x.LoaiXa, $"%{keyword}%")) ||
-                    (x.MaHuyenCu != null && EF.Functions.Like(x.MaHuyenCu, $"%{keyword}%"))
+                    EF.Functions.Like(x.MaXaCu.ToString(), $"%{keyword}%") ||
+                    EF.Functions.Like(x.MaHuyenCu.ToString(), $"%{keyword}%")
                 )
                 .OrderBy(x => x.TenXaCu)
                 .ToListAsync();

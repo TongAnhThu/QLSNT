@@ -1,0 +1,60 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model QLSNT.Models.NguoiDan
+
+@{
+    ViewData["Title"] = "Đăng ký người dân - Bước 1";
+}
+
+<h2>Đăng ký người dân (Bước 1: Thông tin cơ bản)</h2>
+
+<form asp-action="CreateStep1" method="post">
+    <div class="form-group">
+        <label asp-for="HoTen"></label>
+        <input asp-for="HoTen" class="form-control" />
+        <span asp-validation-for="HoTen" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NgaySinh"></label>
+        <input asp-for="NgaySinh" type="date" class="form-control" />
+        <span asp-validation-for="NgaySinh" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GioiTinh"></label>
+        <select asp-for="GioiTinh" class="form-control">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MaCCCD"></label>
+        <input asp-for="MaCCCD" class="form-control" />
+        <span asp-validation-for="MaCCCD" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Dân tộc</label>
+        <select asp-for="MaDanToc" class="form-control"
+                asp-items="@(new SelectList(ViewBag.DanToc, "MaDanToc", "TenDanToc"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Tôn giáo</label>
+        <select asp-for="MaTonGiao" class="form-control"
+                asp-items="@(new SelectList(ViewBag.TonGiao, "MaTonGiao", "TenTonGiao"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label>Trình độ văn hóa</label>
+        <select asp-for="MaTDVH" class="form-control"
+                asp-items="@(new SelectList(ViewBag.TrinhDo, "MaTDVH", "TenTrinhDo"))"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Tiếp tục</button>
+</form>

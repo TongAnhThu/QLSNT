@@ -5,17 +5,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-3">@ViewData["Title"]</h2>
 
 <div class="mb-3">
     <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
     <a asp-action="Edit" asp-route-id="@Model.MaLSSN" class="btn btn-warning btn-sm">Sửa</a>
 </div>
 
+<!-- Thông tin chung -->
 <div class="card mb-4">
-    <div class="card-header">
-        Thông tin chung
-    </div>
+    <div class="card-header">Thông tin chung</div>
     <div class="card-body">
         <dl class="row mb-0">
             <dt class="col-sm-3">Mã LSSN</dt>
@@ -28,7 +27,7 @@
             <dd class="col-sm-9">@Model.NguoiTao</dd>
 
             <dt class="col-sm-3">Ngày tạo</dt>
-            <dd class="col-sm-9">@Model.NgayTao</dd>
+            <dd class="col-sm-9">@Model.NgayTao?.ToString("dd/MM/yyyy")</dd>
 
             <dt class="col-sm-3">Ghi chú</dt>
             <dd class="col-sm-9">@Model.GhiChu</dd>
@@ -36,9 +35,10 @@
     </div>
 </div>
 
+<!-- Các tỉnh tham gia -->
 @if (Model.LssnTinhs != null && Model.LssnTinhs.Any())
 {
-    <h4>Các tỉnh tham gia sáp nhập</h4>
+    <h4 class="mt-4">Các tỉnh tham gia sáp nhập</h4>
     <table class="table table-bordered table-sm align-middle">
         <thead class="table-light">
             <tr>
@@ -66,9 +66,10 @@ else
     <p class="text-muted"><em>Chưa khai báo các tỉnh trong lần sáp nhập này.</em></p>
 }
 
+<!-- Các xã tham gia -->
 @if (Model.LssnXas != null && Model.LssnXas.Any())
 {
-    <h4>Các xã / phường / thị trấn tham gia sáp nhập</h4>
+    <h4 class="mt-4">Các xã / phường / thị trấn tham gia sáp nhập</h4>
     <table class="table table-bordered table-sm align-middle">
         <thead class="table-light">
             <tr>

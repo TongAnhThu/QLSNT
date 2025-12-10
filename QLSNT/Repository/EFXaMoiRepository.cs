@@ -20,7 +20,7 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<XaMoi?> GetByIdAsync(string id)
+        public async Task<XaMoi?> GetByIdAsync(int id)
         {
             return await _db.XaMois
                 .FirstOrDefaultAsync(x => x.MaXaMoi == id);
@@ -38,7 +38,7 @@ namespace QLSNT.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _db.XaMois.FirstOrDefaultAsync(x => x.MaXaMoi == id);
             if (entity != null)
@@ -60,7 +60,7 @@ namespace QLSNT.Repositories
             return await _db.XaMois
                 .Where(x =>
                     (x.TenXaMoi != null && EF.Functions.Like(x.TenXaMoi, $"%{keyword}%")) ||
-                    (x.MaXaMoi != null && EF.Functions.Like(x.MaXaMoi, $"%{keyword}%")) ||
+                    (x.MaXaMoi.ToString() != null && EF.Functions.Like(x.MaXaMoi.ToString(), $"%{keyword}%")) ||
                     (x.LoaiXa != null && EF.Functions.Like(x.LoaiXa, $"%{keyword}%"))
                 )
                 .OrderBy(x => x.TenXaMoi)

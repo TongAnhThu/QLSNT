@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using QLSNT.Models;
 using QLSNT.Repositories;
 
-namespace QLSNT.Controllers
+namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class LssnXaController : Controller
@@ -26,7 +26,7 @@ namespace QLSNT.Controllers
         }
 
         // ==================== LIST THEO 1 LẦN SÁP NHẬP ====================
-        // GET: /LssnXa/ByLssn?maLssn=LS001
+        // GET: /Admin/LssnXa/ByLssn?maLssn=LS001
         public async Task<IActionResult> ByLssn(string maLssn)
         {
             if (string.IsNullOrWhiteSpace(maLssn)) return NotFound();
@@ -41,7 +41,8 @@ namespace QLSNT.Controllers
         }
 
         // ==================== CREATE ====================
-        // GET: /LssnXa/Create?maLssn=LS001
+        // GET: /Admin/LssnXa/Create?maLssn=LS001
+        [HttpGet]
         public async Task<IActionResult> Create(string maLssn)
         {
             if (string.IsNullOrWhiteSpace(maLssn)) return NotFound();
@@ -60,7 +61,7 @@ namespace QLSNT.Controllers
             return View(model);
         }
 
-        // POST: /LssnXa/Create
+        // POST: /Admin/LssnXa/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LssnXa model)
@@ -79,7 +80,8 @@ namespace QLSNT.Controllers
         }
 
         // ==================== EDIT ====================
-        // GET: /LssnXa/Edit/5
+        // GET: /Admin/LssnXa/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             var item = await _lssnXaRepo.GetByIdAsync(id);
@@ -93,7 +95,7 @@ namespace QLSNT.Controllers
             return View(item);
         }
 
-        // POST: /LssnXa/Edit/5
+        // POST: /Admin/LssnXa/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, LssnXa model)
@@ -114,7 +116,8 @@ namespace QLSNT.Controllers
         }
 
         // ==================== DELETE ====================
-        // GET: /LssnXa/Delete/5
+        // GET: /Admin/LssnXa/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
             var item = await _lssnXaRepo.GetByIdAsync(id);
@@ -126,7 +129,7 @@ namespace QLSNT.Controllers
             return View(item);
         }
 
-        // POST: /LssnXa/Delete/5
+        // POST: /Admin/LssnXa/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -141,7 +144,7 @@ namespace QLSNT.Controllers
         }
 
         // ==================== HELPER: LOAD DROPDOWN XÃ ====================
-        private async Task LoadXaDropDownsAsync(string? selectedXaCu = null, string? selectedXaMoi = null)
+        private async Task LoadXaDropDownsAsync(int? selectedXaCu = null, int? selectedXaMoi = null)
         {
             var xaCuList = await _xaCuRepo.GetAllAsync();
             var xaMoiList = await _xaMoiRepo.GetAllAsync();
@@ -149,6 +152,5 @@ namespace QLSNT.Controllers
             ViewBag.XaCuList = new SelectList(xaCuList, "MaXaCu", "TenXaCu", selectedXaCu);
             ViewBag.XaMoiList = new SelectList(xaMoiList, "MaXaMoi", "TenXaMoi", selectedXaMoi);
         }
-       
     }
 }

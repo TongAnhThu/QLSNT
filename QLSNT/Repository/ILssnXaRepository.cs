@@ -14,10 +14,10 @@ namespace QLSNT.Repositories
         Task<IEnumerable<LssnXa>> GetByLssnAsync(string maLssn);
 
         // Lấy các dòng liên quan tới một Xã cũ
-        Task<IEnumerable<LssnXa>> GetByXaCuAsync(string maXaCu);
+        Task<IEnumerable<LssnXa>> GetByXaCuAsync(int maXaCu);
 
         // Lấy các dòng liên quan tới một Xã mới
-        Task<IEnumerable<LssnXa>> GetByXaMoiAsync(string maXaMoi);
+        Task<IEnumerable<LssnXa>> GetByXaMoiAsync(int maXaMoi);
 
         // Thêm mới
         Task AddAsync(LssnXa entity);

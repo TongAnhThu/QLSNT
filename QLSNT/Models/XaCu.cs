@@ -7,8 +7,8 @@ namespace QLSNT.Models
     {
         [Key]
         [Required]
-        [StringLength(10)]
-        public string MaXaCu { get; set; } = default!;
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MaXaCu { get; set; } = default!;
 
         // Thuộc tính
         public string TenXaCu { get; set; } = default!;
@@ -20,7 +20,7 @@ namespace QLSNT.Models
         public double? DienTich { get; set; }
 
         // Khóa ngoại tới HuyenCu
-        public string MaHuyenCu { get; set; } = default!;
+        public int MaHuyenCu { get; set; } = default!;
         [ForeignKey(nameof(MaHuyenCu))]
         public HuyenCu HuyenCu { get; set; } = default!;
     }

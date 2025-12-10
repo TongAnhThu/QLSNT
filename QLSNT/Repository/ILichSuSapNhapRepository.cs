@@ -27,5 +27,6 @@ namespace QLSNT.Repositories
 
         // Xoá theo MaLssn
         Task DeleteAsync(string maLssn);
+        Task<int> CountAsync();
     }
 }

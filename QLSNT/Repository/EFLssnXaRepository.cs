@@ -20,6 +20,7 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
+        // MaLSSN vẫn là string (mã lần sáp nhập)
         public async Task<LssnXa?> GetByIdAsync(string maLssn)
         {
             return await _context.LssnXas
@@ -34,7 +35,8 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<LssnXa>> GetByXaCuAsync(string maXaCu)
+        // 🔁 ĐÃ ĐỔI: MaXaCu = int
+        public async Task<IEnumerable<LssnXa>> GetByXaCuAsync(int maXaCu)
         {
             return await _context.LssnXas
                 .Where(x => x.MaXaCu == maXaCu)
@@ -42,7 +44,8 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<LssnXa>> GetByXaMoiAsync(string maXaMoi)
+        // 🔁 ĐÃ ĐỔI: MaXaMoi = int
+        public async Task<IEnumerable<LssnXa>> GetByXaMoiAsync(int maXaMoi)
         {
             return await _context.LssnXas
                 .Where(x => x.MaXaMoi == maXaMoi)

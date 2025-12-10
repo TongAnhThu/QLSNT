@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLSNT.Models
 {
@@ -6,8 +7,8 @@ namespace QLSNT.Models
     {
         [Key]
         [Required]
-        [StringLength(10)]
-        public string MaTinhCu { get; set; } = default!;
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int MaTinhCu { get; set; } = default!;
 
         // Thuộc tính
         public string TenTinhCu { get; set; } = default!;

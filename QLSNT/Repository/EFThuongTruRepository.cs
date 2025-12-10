@@ -14,105 +14,48 @@ namespace QLSNT.Repositories
         }
 
         public async Task<IEnumerable<ThuongTru>> GetAllAsync()
-        {
-            return await _context.ThuongTrus
-                .Include(t => t.XaMoi)
-                .Include(t => t.NguoiDan)
-                .AsNoTracking()
-                .OrderBy(t => t.MaXaMoi)
-                .ThenBy(t => t.MaCCCD)
-                .ToListAsync();
-        }
+            => await _context.ThuongTrus.Include(x => x.XaMoi).Include(x => x.NguoiDan).ToListAsync();
+
+        public async Task<ThuongTru?> GetByCCCDAsync(string maCCCD)
+            => await _context.ThuongTrus.FirstOrDefaultAsync(x => x.MaCCCD == maCCCD);
 
         public async Task<IEnumerable<ThuongTru>> SearchAsync(string? keyword)
-        {
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return await GetAllAsync();
-            }
-
-            keyword = keyword.Trim();
-
-            var query = _context.ThuongTrus
-                .Include(t => t.XaMoi)
-                .Include(t => t.NguoiDan)
-                .AsQueryable();
-
-            return await query
-                .Where(t =>
-                    EF.Functions.Like(t.MaXaMoi, $"%{keyword}%") ||
-                    EF.Functions.Like(t.MaCCCD, $"%{keyword}%") ||
-                    (t.DiaChi != null && EF.Functions.Like(t.DiaChi, $"%{keyword}%"))
-                // nếu NguoiDan có HoTen, có thể thêm:
-                // || (t.NguoiDan.HoTen != null && EF.Functions.Like(t.NguoiDan.HoTen, $"%{keyword}%"))
-                )
-                .AsNoTracking()
-                .OrderBy(t => t.MaXaMoi)
-                .ThenBy(t => t.MaCCCD)
+            => await _context.ThuongTrus
+                .Where(x => string.IsNullOrEmpty(keyword)
+                         || x.MaCCCD.Contains(keyword)
+                         || x.DiaChi!.Contains(keyword))
                 .ToListAsync();
-        }
 
-        public async Task<ThuongTru?> GetByIdAsync(string maXaMoi, string maCccd)
-        {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCccd))
-                return null;
+        public async Task<ThuongTru?> GetByIdAsync(int maXaMoi, string maCccd)
+            => await _context.ThuongTrus.FindAsync(maXaMoi, maCccd);
 
-            maXaMoi = maXaMoi.Trim();
-            maCccd = maCccd.Trim();
-
-            return await _context.ThuongTrus
-                .Include(t => t.XaMoi)
-                .Include(t => t.NguoiDan)
-                .FirstOrDefaultAsync(t => t.MaXaMoi == maXaMoi && t.MaCCCD == maCccd);
-        }
-
-        public async Task<IEnumerable<ThuongTru>> GetByXaMoiAsync(string maXaMoi)
-        {
-            if (string.IsNullOrWhiteSpace(maXaMoi))
-                return Enumerable.Empty<ThuongTru>();
-
-            maXaMoi = maXaMoi.Trim();
-
-            return await _context.ThuongTrus
-                .Where(t => t.MaXaMoi == maXaMoi)
-                .Include(t => t.XaMoi)
-                .Include(t => t.NguoiDan)
-                .AsNoTracking()
-                .OrderBy(t => t.MaCCCD)
-                .ToListAsync();
-        }
+        public async Task<IEnumerable<ThuongTru>> GetByXaMoiAsync(int maXaMoi)
+            => await _context.ThuongTrus.Where(x => x.MaXaMoi == maXaMoi).ToListAsync();
 
         public async Task<IEnumerable<ThuongTru>> GetByNguoiDanAsync(string maCccd)
-        {
-            if (string.IsNullOrWhiteSpace(maCccd))
-                return Enumerable.Empty<ThuongTru>();
-
-            maCccd = maCccd.Trim();
-
-            return await _context.ThuongTrus
-                .Where(t => t.MaCCCD == maCccd)
-                .Include(t => t.XaMoi)
-                .Include(t => t.NguoiDan)
-                .AsNoTracking()
-                .OrderBy(t => t.MaXaMoi)
-                .ToListAsync();
-        }
+            => await _context.ThuongTrus.Where(x => x.MaCCCD == maCccd).ToListAsync();
 
         public async Task AddAsync(ThuongTru entity)
         {
-            await _context.ThuongTrus.AddAsync(entity);
+            _context.ThuongTrus.Add(entity);
             await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ThuongTru entity)
         {
-            _context.ThuongTrus.Update(entity);
-            await _context.SaveChangesAsync();
+            // Chỉ update các field không phải khóa
+            var existing = await _context.ThuongTrus.FindAsync(entity.MaXaMoi, entity.MaCCCD);
+            if (existing != null)
+            {
+                existing.DiaChi = entity.DiaChi;
+                existing.NgayDangKy = entity.NgayDangKy;
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task DeleteAsync(string maXaMoi, string maCccd)
+        public async Task DeleteAsync(int maXaMoi, string maCccd)
         {
-            var existing = await GetByIdAsync(maXaMoi, maCccd);
+            var existing = await _context.ThuongTrus.FindAsync(maXaMoi, maCccd);
             if (existing != null)
             {
                 _context.ThuongTrus.Remove(existing);

@@ -20,7 +20,7 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<TinhCu?> GetByIdAsync(string id)
+        public async Task<TinhCu?> GetByIdAsync(int id)
         {
             return await _db.TinhCus
                 .FirstOrDefaultAsync(t => t.MaTinhCu == id);
@@ -38,7 +38,7 @@ namespace QLSNT.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _db.TinhCus.FirstOrDefaultAsync(t => t.MaTinhCu == id);
             if (entity != null)
@@ -48,7 +48,7 @@ namespace QLSNT.Repositories
             }
         }
 
-        // ⭐ Chính là hàm bạn muốn xài:
+        // ⭐ Hàm tìm kiếm theo tên (không phân biệt hoa/thường)
         public async Task<IEnumerable<TinhCu>> SearchByNameAsync(string keyword)
         {
             if (string.IsNullOrWhiteSpace(keyword))
@@ -58,7 +58,6 @@ namespace QLSNT.Repositories
 
             keyword = keyword.Trim();
 
-            // Tìm không phân biệt hoa/thường
             return await _db.TinhCus
                 .Where(t => t.TenTinhCu != null &&
                             EF.Functions.Like(t.TenTinhCu, $"%{keyword}%"))

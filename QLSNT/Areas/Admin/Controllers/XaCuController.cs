@@ -2,7 +2,7 @@
 using QLSNT.Models;
 using QLSNT.Repositories;
 
-namespace QLSNT.Controllers
+namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class XaCuController : Controller
@@ -14,7 +14,7 @@ namespace QLSNT.Controllers
             _repo = repo;
         }
 
-        // GET: /XaCu?search=Thảo Điền
+        // GET: /Admin/XaCu?search=Thảo Điền
         public async Task<IActionResult> Index(string? search)
         {
             IEnumerable<XaCu> list;
@@ -32,27 +32,28 @@ namespace QLSNT.Controllers
             return View(list);
         }
 
-        // GET: /XaCu/Details/X001
-        public async Task<IActionResult> Details(string id)
+        // GET: /Admin/XaCu/Details/1
+        public async Task<IActionResult> Details(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
             return View(item);
         }
 
-        // GET: /XaCu/Create
+        // GET: /Admin/XaCu/Create
+        [HttpGet]
         public IActionResult Create()
         {
             // Sau này có thể load dropdown Huyện cũ ở đây (ViewBag.HuyenCuList)
             return View();
         }
 
-        // POST: /XaCu/Create
+        // POST: /Admin/XaCu/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(XaCu model)
@@ -64,13 +65,14 @@ namespace QLSNT.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /XaCu/Edit/X001
-        public async Task<IActionResult> Edit(string id)
+        // GET: /Admin/XaCu/Edit/1
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
@@ -78,11 +80,14 @@ namespace QLSNT.Controllers
             return View(item);
         }
 
-        // POST: /XaCu/Edit
+        // POST: /Admin/XaCu/Edit/1
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(XaCu model)
+        public async Task<IActionResult> Edit(int id, XaCu model)
         {
+            if (id != model.MaXaCu)   // đảm bảo id route khớp với model
+                return BadRequest();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -90,23 +95,24 @@ namespace QLSNT.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /XaCu/Delete/X001
-        public async Task<IActionResult> Delete(string id)
+        // GET: /Admin/XaCu/Delete/1
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
             return View(item);
         }
 
-        // POST: /XaCu/Delete
+        // POST: /Admin/XaCu/Delete/1
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _repo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

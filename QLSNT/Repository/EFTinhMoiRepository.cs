@@ -16,14 +16,14 @@ namespace QLSNT.Repositories
         public async Task<IEnumerable<TinhMoi>> GetAllAsync()
         {
             return await _db.TinhMois
-                .OrderBy(t => t.MaTinhMoi)
+                .OrderBy(t => t.MaTinhMoi)  // Sắp xếp theo MaTinhMoi, kiểu int
                 .ToListAsync();
         }
 
-        public async Task<TinhMoi?> GetByIdAsync(string id)
+        public async Task<TinhMoi?> GetByIdAsync(int id)  // Đổi kiểu id thành int
         {
             return await _db.TinhMois
-                .FirstOrDefaultAsync(t => t.MaTinhMoi == id);
+                .FirstOrDefaultAsync(t => t.MaTinhMoi == id);  // So sánh với int
         }
 
         public async Task AddAsync(TinhMoi entity)
@@ -38,9 +38,9 @@ namespace QLSNT.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)  // Đổi kiểu id thành int
         {
-            var entity = await _db.TinhMois.FirstOrDefaultAsync(t => t.MaTinhMoi == id);
+            var entity = await _db.TinhMois.FirstOrDefaultAsync(t => t.MaTinhMoi == id);  // So sánh với int
             if (entity != null)
             {
                 _db.TinhMois.Remove(entity);
@@ -61,7 +61,7 @@ namespace QLSNT.Repositories
             return await _db.TinhMois
                 .Where(t =>
                     (t.TenTinhMoi != null && EF.Functions.Like(t.TenTinhMoi, $"%{keyword}%")) ||
-                    (t.MaTinhMoi != null && EF.Functions.Like(t.MaTinhMoi, $"%{keyword}%")) ||
+                    (t.MaTinhMoi.ToString() != null && EF.Functions.Like(t.MaTinhMoi.ToString(), $"%{keyword}%")) ||  // Chuyển int thành string để so sánh
                     (t.LoaiTinh != null && EF.Functions.Like(t.LoaiTinh, $"%{keyword}%"))
                 )
                 .OrderBy(t => t.TenTinhMoi)

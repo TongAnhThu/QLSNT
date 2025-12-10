@@ -11,8 +11,8 @@ namespace QLSNT.Models
         [Required]
         [StringLength(10)]
         public string MaLSSN { get; set; } = default!;    // PK + FK → LichSuSapNhap
-        public string MaTinhCu { get; set; } = default!;  // FK → TinhCu
-        public string MaTinhMoi { get; set; } = default!;    // FK → TinhMoi
+        public int MaTinhCu { get; set; } = default!;  // FK → TinhCu
+        public int MaTinhMoi { get; set; } = default!;    // FK → TinhMoi
         [ForeignKey(nameof(MaLSSN))]
         public LichSuSapNhap LichSuSapNhap { get; set; } = default!;
         [ForeignKey(nameof(MaTinhCu))]

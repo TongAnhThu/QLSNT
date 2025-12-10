@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using QLSNT.Models;
 using QLSNT.Repositories;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace QLSNT.Controllers
 {
@@ -32,12 +34,10 @@ namespace QLSNT.Controllers
             return View(list);
         }
 
-
-
         // GET: /ThuongTru/Details?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Details(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Details(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
@@ -67,15 +67,15 @@ namespace QLSNT.Controllers
                 return View(model);
             }
 
-            // Ở đây MaXaMoi + MaCCCD là PK, không identity nên bắt buộc model phải có đủ 2 cái
+            // MaXaMoi + MaCCCD là PK, không identity nên bắt buộc model phải có đủ 2 cái
             await _repo.AddAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
         // GET: /ThuongTru/Edit?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Edit(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Edit(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
@@ -103,9 +103,9 @@ namespace QLSNT.Controllers
         }
 
         // GET: /ThuongTru/Delete?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Delete(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> Delete(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
@@ -118,9 +118,10 @@ namespace QLSNT.Controllers
         // POST: /ThuongTru/DeleteConfirmed
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string maXaMoi, string maCCCD)
+        public async Task<IActionResult> DeleteConfirmed(int maXaMoi, string maCCCD)
         {
-            if (!string.IsNullOrWhiteSpace(maXaMoi) && !string.IsNullOrWhiteSpace(maCCCD))
+            // Ensure parameters are valid
+            if (maXaMoi != 0 && !string.IsNullOrWhiteSpace(maCCCD))
             {
                 await _repo.DeleteAsync(maXaMoi, maCCCD);
             }

@@ -2,7 +2,7 @@
 using QLSNT.Models;
 using QLSNT.Repositories;
 
-namespace QLSNT.Controllers
+namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class TinhMoiController : Controller
@@ -14,7 +14,7 @@ namespace QLSNT.Controllers
             _repo = repo;
         }
 
-        // GET: /TinhMoi?search=Hà Nội
+        // GET: /Admin/TinhMoi?search=Hà Nội
         public async Task<IActionResult> Index(string? search)
         {
             IEnumerable<TinhMoi> list;
@@ -32,26 +32,27 @@ namespace QLSNT.Controllers
             return View(list);
         }
 
-        // GET: /TinhMoi/Details/01
-        public async Task<IActionResult> Details(string id)
+        // GET: /Admin/TinhMoi/Details/1
+        public async Task<IActionResult> Details(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
             return View(item);
         }
 
-        // GET: /TinhMoi/Create
+        // GET: /Admin/TinhMoi/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /TinhMoi/Create
+        // POST: /Admin/TinhMoi/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TinhMoi model)
@@ -63,24 +64,28 @@ namespace QLSNT.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /TinhMoi/Edit/01
-        public async Task<IActionResult> Edit(string id)
+        // GET: /Admin/TinhMoi/Edit/1
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
             return View(item);
         }
 
-        // POST: /TinhMoi/Edit
+        // POST: /Admin/TinhMoi/Edit/1
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(TinhMoi model)
+        public async Task<IActionResult> Edit(int id, TinhMoi model)
         {
+            if (id != model.MaTinhMoi)   // đảm bảo route id khớp model
+                return BadRequest();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -88,23 +93,24 @@ namespace QLSNT.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /TinhMoi/Delete/01
-        public async Task<IActionResult> Delete(string id)
+        // GET: /Admin/TinhMoi/Delete/1
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
+            var item = await _repo.GetByIdAsync(id.Value);
             if (item == null)
                 return NotFound();
 
             return View(item);
         }
 
-        // POST: /TinhMoi/Delete
+        // POST: /Admin/TinhMoi/Delete/1
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _repo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

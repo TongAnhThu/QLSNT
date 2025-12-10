@@ -26,11 +26,12 @@ namespace QLSNT.Models
         [ForeignKey(nameof(MaCCCD))]
         public NguoiDan NguoiDan { get; set; } = default!;
 
-        public string MaXaCu { get; set; } = default!;
+        public int? MaXaCu { get; set; }
         [ForeignKey(nameof(MaXaCu))]
-        public XaCu XaCu { get; set; } = default!;
+        public XaCu? XaCu { get; set; }
 
-        public string MaXaMoi { get; set; } = default!;  // FK → XaCu
+
+        public int? MaXaMoi { get; set; } = default!;  // FK → XaCu
         [ForeignKey(nameof(MaXaMoi))]
         public XaMoi xaMoi { get; set; } = default!;
 

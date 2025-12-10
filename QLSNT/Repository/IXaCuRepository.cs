@@ -3,10 +3,10 @@
 public interface IXaCuRepository
 {
     Task<IEnumerable<XaCu>> GetAllAsync();
-    Task<XaCu?> GetByIdAsync(string id);
+    Task<XaCu?> GetByIdAsync(int id);
     Task AddAsync(XaCu entity);
     Task UpdateAsync(XaCu entity);
-    Task DeleteAsync(string id);
+    Task DeleteAsync(int id);
 
     Task<IEnumerable<XaCu>> SearchByNameAsync(string keyword);
 }

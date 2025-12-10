@@ -52,7 +52,14 @@ namespace QLSNT.Repositories
             _context.LichSuDiaChis.Add(entity);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<string?> GetLastCodeAsync()
+        {
+            // Giả sử MaLichSuCuTru là chuỗi dạng "LS0001", "LS0002"...
+            return await _context.LichSuDiaChis
+                .OrderByDescending(x => x.MaLichSuCuTru) // sắp xếp giảm dần theo mã
+                .Select(x => x.MaLichSuCuTru)
+                .FirstOrDefaultAsync();
+        }
         public async Task UpdateAsync(LichSuDiaChi entity)
         {
             _context.LichSuDiaChis.Update(entity);

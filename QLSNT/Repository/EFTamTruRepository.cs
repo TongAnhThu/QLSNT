@@ -37,11 +37,11 @@ namespace QLSNT.Repositories
                 .Include(t => t.NguoiDan)
                 .AsQueryable();
 
-            // Tùy bạn có thuộc tính gì trong NguoiDan/XaMoi, tớ để basic:
+            // Sử dụng ToString() để tìm kiếm với kiểu int (MaXaMoi, MaCCCD)
             return await query
                 .Where(t =>
-                    EF.Functions.Like(t.MaXaMoi, $"%{keyword}%") ||
-                    EF.Functions.Like(t.MaCCCD, $"%{keyword}%") ||
+                    EF.Functions.Like(t.MaXaMoi.ToString(), $"%{keyword}%") ||
+                    EF.Functions.Like(t.MaCCCD.ToString(), $"%{keyword}%") ||
                     (t.DiaChi != null && EF.Functions.Like(t.DiaChi, $"%{keyword}%")) ||
                     (t.NoiDungDeNghi != null && EF.Functions.Like(t.NoiDungDeNghi, $"%{keyword}%"))
                 )
@@ -50,14 +50,8 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<TamTru?> GetByIdAsync(string maXaMoi, string maCCCD)
+        public async Task<TamTru?> GetByIdAsync(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
-                return null;
-
-            maXaMoi = maXaMoi.Trim();
-            maCCCD = maCCCD.Trim();
-
             return await _db.TamTrus
                 .Include(t => t.XaMoi)
                 .Include(t => t.NguoiDan)
@@ -76,14 +70,8 @@ namespace QLSNT.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string maXaMoi, string maCCCD)
+        public async Task DeleteAsync(int maXaMoi, string maCCCD)
         {
-            if (string.IsNullOrWhiteSpace(maXaMoi) || string.IsNullOrWhiteSpace(maCCCD))
-                return;
-
-            maXaMoi = maXaMoi.Trim();
-            maCCCD = maCCCD.Trim();
-
             var entity = await _db.TamTrus
                 .FirstOrDefaultAsync(t => t.MaXaMoi == maXaMoi && t.MaCCCD == maCCCD);
 

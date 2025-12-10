@@ -11,5 +11,6 @@ namespace QLSNT.Repositories
         Task AddAsync(LichSuDiaChi entity);
         Task UpdateAsync(LichSuDiaChi entity);
         Task DeleteAsync(string id);
+        Task<string?> GetLastCodeAsync();
     }
 }

@@ -28,7 +28,7 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<LssnTinh>> GetByTinhCuAsync(string maTinhCu)
+        public async Task<IEnumerable<LssnTinh>> GetByTinhCuAsync(int maTinhCu)
         {
             return await _context.LssnTinhs
                 .Where(x => x.MaTinhCu == maTinhCu)
@@ -36,7 +36,7 @@ namespace QLSNT.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<LssnTinh>> GetByTinhMoiAsync(string maTinhMoi)
+        public async Task<IEnumerable<LssnTinh>> GetByTinhMoiAsync(int maTinhMoi)
         {
             return await _context.LssnTinhs
                 .Where(x => x.MaTinhMoi == maTinhMoi)

@@ -33,9 +33,9 @@ namespace QLSNT.Controllers
         }
 
         // GET: /HuyenCu/Details/H001
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)  // Chuyển id từ string sang int
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == 0)
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(id);
@@ -66,9 +66,9 @@ namespace QLSNT.Controllers
         }
 
         // GET: /HuyenCu/Edit/H001
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)  // Chuyển id từ string sang int
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == 0)
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(id);
@@ -92,9 +92,9 @@ namespace QLSNT.Controllers
         }
 
         // GET: /HuyenCu/Delete/H001
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)  // Chuyển id từ string sang int
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == 0)
                 return NotFound();
 
             var item = await _repo.GetByIdAsync(id);
@@ -107,7 +107,7 @@ namespace QLSNT.Controllers
         // POST: /HuyenCu/DeleteConfirmed
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)  // Chuyển id từ string sang int
         {
             await _repo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));

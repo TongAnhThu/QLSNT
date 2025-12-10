@@ -7,7 +7,7 @@ namespace QLSNT.Models
     public class ThuongTru
     {
         // Composite key: MaXaMoi + MaCCCD
-        public string MaXaMoi { get; set; } = default!;
+        public int MaXaMoi { get; set; } = default!;
         public string MaCCCD { get; set; } = default!;
 
         public string? DiaChi { get; set; }
@@ -16,5 +16,9 @@ namespace QLSNT.Models
         public XaMoi XaMoi { get; set; } = default!;
         [ForeignKey(nameof(MaCCCD))]
         public NguoiDan NguoiDan { get; set; } = default!;
+
+
+        [NotMapped]   // EF sẽ bỏ qua, không tạo cột trong DB
+        public int MaXaCu { get; set; }
     }
 }
