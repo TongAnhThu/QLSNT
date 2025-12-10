@@ -77,9 +77,9 @@ namespace QLSNT.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SuKienHanhChinh model)
+        public async Task<IActionResult> Edit(string id, SuKienHanhChinh model)
         {
-            if (id != model.MaSuKien) return NotFound();
+            if (id != model.SoNghiDinh) return NotFound();
 
             if (!ModelState.IsValid)
             {
@@ -91,15 +91,15 @@ namespace QLSNT.Controllers
             if (entity == null) return NotFound();
 
             // map các trường cho phép sửa
-            entity.TenSuKien = model.TenSuKien;
-            entity.NgayBatDau = model.NgayBatDau;
-            entity.NgayKetThuc = model.NgayKetThuc;
-            entity.NoiDung = model.NoiDung;
+            entity.TenSK = model.TenSK;
+            entity.NgayBanHanh = model.NgayBanHanh;
+            
+            entity.MoTaChiTiet = model.MoTaChiTiet;
             // ... các trường khác ...
 
             // thông tin cập nhật
-            entity.NguoiCapNhat = User.Identity?.Name;
-            entity.NgayCapNhat = DateTime.Now;
+            entity.NguoiTao = User.Identity?.Name;
+            entity.NgayTao = DateTime.Now;
 
             await _repo.UpdateAsync(entity);
 

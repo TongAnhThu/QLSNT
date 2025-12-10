@@ -13,6 +13,7 @@ namespace QLSNT.Models
         public DateTime? NgayTao { get; set; }
         public string? GhiChu { get; set; }
 
+
         public string SoNghiDinh { get; set; } = default!;   // FK → SuKienHanhChinh
         [ForeignKey(nameof(SoNghiDinh))]
         public SuKienHanhChinh SuKienHanhChinh { get; set; } = default!;

@@ -133,8 +133,7 @@ namespace QLSNT.Controllers
             entity.GhiChu = model.GhiChu;
 
             // 5. Ghi log người cập nhật + thời gian cập nhật
-            entity.NguoiCapNhat = User.Identity?.Name;
-            entity.NgayCapNhat = DateTime.Now;
+            
 
             // KHÔNG đụng tới:
             //  - entity.MaLSSN  (khóa chính)
