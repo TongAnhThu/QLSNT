@@ -1,0 +1,28 @@
+﻿@model QLSNT.Models.TonGiao
+
+@{
+    ViewData["Title"] = "Xóa Tôn giáo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xóa Tôn giáo</h1>
+
+<h4>Bạn có chắc chắn muốn xóa mục sau?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Mã tôn giáo</dt>
+    <dd class="col-sm-9">@Model.MaTonGiao</dd>
+
+    <dt class="col-sm-3">Tên tôn giáo</dt>
+    <dd class="col-sm-9">@Model.TenTonGiao</dd>
+
+    <dt class="col-sm-3">Ghi chú</dt>
+    <dd class="col-sm-9">@Model.GhiChu</dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="MaTonGiao" />
+    <button class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

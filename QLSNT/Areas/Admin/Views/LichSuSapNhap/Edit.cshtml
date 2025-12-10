@@ -1,0 +1,57 @@
+﻿@model QLSNT.Models.LichSuSapNhap
+
+@{
+    ViewData["Title"] = "Chỉnh sửa lịch sử sáp nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-action="Details" asp-route-id="@Model.MaLSSN" class="btn btn-secondary btn-sm">← Quay lại chi tiết</a>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="MaLSSN" />
+
+    <div class="mb-3">
+        <label class="form-label">Mã LSSN</label>
+        <input class="form-control" value="@Model.MaLSSN" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoNghiDinh" class="form-label">Số nghị định</label>
+        <select asp-for="SoNghiDinh"
+                class="form-select"
+                asp-items="ViewBag.SoNghiDinhList">
+        </select>
+        <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NguoiTao" class="form-label"></label>
+        <input asp-for="NguoiTao" class="form-control" />
+        <span asp-validation-for="NguoiTao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NgayTao" class="form-label"></label>
+        <input asp-for="NgayTao" class="form-control" type="datetime-local"
+               value="@Model.NgayTao" />
+        <span asp-validation-for="NgayTao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label"></label>
+        <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

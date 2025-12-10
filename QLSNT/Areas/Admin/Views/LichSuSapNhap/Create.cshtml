@@ -1,0 +1,57 @@
+﻿@model QLSNT.Models.LichSuSapNhap
+
+@{
+    ViewData["Title"] = "Thêm lịch sử sáp nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+</div>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="MaLSSN" class="form-label"></label>
+        <input asp-for="MaLSSN" class="form-control" />
+        <span asp-validation-for="MaLSSN" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SoNghiDinh" class="form-label">Số nghị định</label>
+        <select asp-for="SoNghiDinh"
+                class="form-select"
+                asp-items="ViewBag.SoNghiDinhList">
+            <option value="">-- Chọn số nghị định --</option>
+        </select>
+        <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NguoiTao" class="form-label"></label>
+        <input asp-for="NguoiTao" class="form-control" />
+        <span asp-validation-for="NguoiTao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NgayTao" class="form-label"></label>
+        <input asp-for="NgayTao" class="form-control" type="datetime-local"
+               value="@Model.NgayTao" />
+        <span asp-validation-for="NgayTao" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GhiChu" class="form-label"></label>
+        <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

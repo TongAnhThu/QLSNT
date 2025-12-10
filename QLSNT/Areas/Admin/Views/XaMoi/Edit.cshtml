@@ -1,0 +1,63 @@
+﻿@model QLSNT.Models.XaMoi
+
+@{
+    ViewData["Title"] = "Sửa Xã mới";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Sửa Xã mới</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaXaMoi" class="form-label"></label>
+                <input asp-for="MaXaMoi" class="form-control" readonly />
+                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TenXaMoi" class="form-label"></label>
+                <input asp-for="TenXaMoi" class="form-control" />
+                <span asp-validation-for="TenXaMoi" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LoaiXa" class="form-label"></label>
+                <select asp-for="LoaiXa" class="form-select">
+                    <option value="Xã">Xã</option>
+                    <option value="Phường">Phường</option>
+                    <option value="Thị trấn">Thị trấn</option>
+                    <option value="Đặc khu">Đặc khu</option>
+                </select>
+                <span asp-validation-for="LoaiXa" class="text-danger"></span>
+            </div>
+
+           
+
+            <div class="mb-3">
+                <label asp-for="TrangThai" class="form-label"></label>
+                <input asp-for="TrangThai" class="form-control" />
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="GhiChu" class="form-label"></label>
+                <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="GhiChu" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

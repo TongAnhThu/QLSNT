@@ -1,0 +1,37 @@
+﻿@model QLSNT.Models.HuyenCu
+
+@{
+    ViewData["Title"] = "Xóa Huyện cũ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xóa Huyện cũ</h1>
+
+<h4>Bạn có chắc chắn muốn xóa huyện sau?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Mã huyện</dt>
+    <dd class="col-sm-9">@Model.MaHuyenCu</dd>
+
+    <dt class="col-sm-3">Tên huyện</dt>
+    <dd class="col-sm-9">@Model.TenHuyenCu</dd>
+
+    <dt class="col-sm-3">Loại huyện</dt>
+    <dd class="col-sm-9">@Model.LoaiHuyen</dd>
+
+    <dt class="col-sm-3">Mã tỉnh cũ</dt>
+    <dd class="col-sm-9">@Model.MaTinhCu</dd>
+
+    <dt class="col-sm-3">Trạng thái</dt>
+    <dd class="col-sm-9">@Model.TrangThai</dd>
+
+    <dt class="col-sm-3">Ghi chú</dt>
+    <dd class="col-sm-9">@Model.GhiChu</dd>
+</dl>
+
+<form asp-action="Delete" method="post" class="mt-3">
+    <input type="hidden" asp-for="MaHuyenCu" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

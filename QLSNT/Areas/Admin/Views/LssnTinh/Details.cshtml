@@ -1,0 +1,25 @@
+﻿@model QLSNT.Models.LssnTinh
+
+@{
+    ViewData["Title"] = "Chi tiết lịch sử sáp nhập tỉnh";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">Mã LSSN</dt>
+    <dd class="col-sm-9">@Model.MaLSSN</dd>
+
+    <dt class="col-sm-3">Mã tỉnh cũ</dt>
+    <dd class="col-sm-9">@Model.MaTinhCu - @Model.TinhCu?.TenTinhCu</dd>
+
+    <dt class="col-sm-3">Mã tỉnh mới</dt>
+    <dd class="col-sm-9">@Model.MaTinhMoi - @Model.TinhMoi?.TenTinhMoi</dd>
+</dl>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.MaLSSN" class="btn btn-warning">Sửa</a>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</div>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<QLSNT.Models.LichSuSapNhap>
+
+@{
+    ViewData["Title"] = "Danh sách lịch sử sáp nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <input type="text"
+                   name="search"
+                   value="@(ViewBag.Search ?? "")"
+                   class="form-control"
+                   placeholder="Tìm theo mã, số nghị định, ghi chú..." />
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+        </div>
+        <div class="col-md-2">
+            <a asp-action="Index" class="btn btn-outline-secondary w-100">Xóa lọc</a>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-action="Create" class="btn btn-success">
+                + Thêm lịch sử sáp nhập
+            </a>
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped table-bordered table-sm align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Mã LSSN</th>
+            <th>Số nghị định</th>
+            <th>Người tạo</th>
+            <th>Ngày tạo</th>
+            <th>Ghi chú</th>
+            <th style="width: 160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    Không có bản ghi nào.
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MaLSSN</td>
+                    <td>@item.SoNghiDinh</td>
+                    <td>@item.NguoiTao</td>
+                    <td>@item.NgayTao</td>
+                    <td>@item.GhiChu</td>
+                    <td class="text-nowrap">
+                        <a asp-action="Details" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-info">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

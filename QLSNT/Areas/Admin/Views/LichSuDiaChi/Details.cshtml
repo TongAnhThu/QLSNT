@@ -1,0 +1,67 @@
+﻿@model QLSNT.Models.LichSuDiaChi
+
+@{
+    ViewData["Title"] = "Chi tiết lịch sử địa chỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-3">Chi tiết lịch sử địa chỉ</h2>
+
+<div class="card">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mã bản ghi</dt>
+            <dd class="col-sm-9">@Model.MaLichSuCuTru</dd>
+
+            <dt class="col-sm-3">CCCD</dt>
+            <dd class="col-sm-9">@Model.MaCCCD</dd>
+
+            <dt class="col-sm-3">Họ tên</dt>
+            <dd class="col-sm-9">@Model.NguoiDan?.HoTen</dd>
+
+            <dt class="col-sm-3">Xã</dt>
+            <dd class="col-sm-9">@Model.XaCu?.TenXaCu</dd>
+
+            <dt class="col-sm-3">Địa chỉ cũ</dt>
+            <dd class="col-sm-9">@Model.DiaChiCu</dd>
+
+            <dt class="col-sm-3">Địa chỉ mới</dt>
+            <dd class="col-sm-9">@Model.DiaChiMoi</dd>
+
+            <dt class="col-sm-3">Ngày hiệu lực</dt>
+            <dd class="col-sm-9">@Model.NgayHieuLuc?.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">Ngày kết thúc</dt>
+            <dd class="col-sm-9">@Model.NgayKetThuc?.ToString("dd/MM/yyyy")</dd>
+
+            <dt class="col-sm-3">Loại thay đổi</dt>
+            <dd class="col-sm-9">@Model.LoaiThayDoi</dd>
+
+            <dt class="col-sm-3">Số quyết định</dt>
+            <dd class="col-sm-9">@Model.SoQuyetDinh</dd>
+
+            <dt class="col-sm-3">Lý do thay đổi</dt>
+            <dd class="col-sm-9">@Model.LyDoThayDoi</dd>
+
+            <dt class="col-sm-3">Ghi chú</dt>
+            <dd class="col-sm-9">@Model.GhiChu</dd>
+
+            <dt class="col-sm-3">Người tạo</dt>
+            <dd class="col-sm-9">@Model.NguoiTao</dd>
+
+            <dt class="col-sm-3">Ngày tạo</dt>
+            <dd class="col-sm-9">@Model.NgayTao?.ToString("dd/MM/yyyy HH:mm")</dd>
+
+            <dt class="col-sm-3">Người cập nhật</dt>
+            <dd class="col-sm-9">@Model.NguoiCapNhat</dd>
+
+            <dt class="col-sm-3">Ngày cập nhật</dt>
+            <dd class="col-sm-9">@Model.NgayCapNhat?.ToString("dd/MM/yyyy HH:mm")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Edit" asp-route-id="@Model.MaLichSuCuTru" class="btn btn-warning">Sửa</a>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>

@@ -1,0 +1,37 @@
+﻿@model QLSNT.Models.NguoiDan
+
+@{
+    ViewData["Title"] = "Xóa Người dân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="h3 fw-bold text-danger mb-3">Xóa Người dân</h1>
+<hr />
+
+<p>Bạn có chắc chắn muốn xóa người dân sau?</p>
+
+<dl class="row">
+    <dt class="col-sm-3">CCCD</dt>
+    <dd class="col-sm-9">@Model.MaCCCD</dd>
+
+    <dt class="col-sm-3">Họ tên</dt>
+    <dd class="col-sm-9">@Model.HoTen</dd>
+
+    <dt class="col-sm-3">Ngày sinh</dt>
+    <dd class="col-sm-9">@Model.NgaySinh?.ToString("dd/MM/yyyy")</dd>
+
+    <dt class="col-sm-3">Giới tính</dt>
+    <dd class="col-sm-9">@Model.GioiTinh</dd>
+
+    <dt class="col-sm-3">Dân tộc</dt>
+    <dd class="col-sm-9">@Model.DanToc?.TenDanToc</dd>
+
+    <dt class="col-sm-3">Tôn giáo</dt>
+    <dd class="col-sm-9">@Model.TonGiao?.TenTonGiao</dd>
+</dl>
+
+<form asp-action="Delete" method="post" class="mt-3">
+    <input type="hidden" asp-for="MaCCCD" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

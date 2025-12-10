@@ -1,0 +1,55 @@
+﻿@model IEnumerable<QLSNT.Models.DanToc>
+
+@{
+    ViewData["Title"] = "Danh sách Dân tộc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Danh sách Dân tộc</h1>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control me-2"
+                   placeholder="Tìm theo tên dân tộc..." />
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="Create" class="btn btn-success">+ Thêm dân tộc mới</a>
+    </div>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.First().MaDanToc)</th>
+            <th>@Html.DisplayNameFor(m => m.First().TenDanToc)</th>
+            <th>@Html.DisplayNameFor(m => m.First().MoTa)</th>
+            <th style="width:180px;">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaDanToc</td>
+                <td>@item.TenDanToc</td>
+                <td>@item.GhiChu</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaDanToc" class="btn btn-sm btn-info">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@item.MaDanToc" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaDanToc" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p><em>Chưa có dữ liệu dân tộc.</em></p>
+}

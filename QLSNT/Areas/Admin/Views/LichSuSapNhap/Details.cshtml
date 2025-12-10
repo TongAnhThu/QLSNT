@@ -1,0 +1,99 @@
+﻿@model QLSNT.Models.LichSuSapNhap
+
+@{
+    ViewData["Title"] = "Chi tiết lịch sử sáp nhập";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="mb-3">
+    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+    <a asp-action="Edit" asp-route-id="@Model.MaLSSN" class="btn btn-warning btn-sm">Sửa</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        Thông tin chung
+    </div>
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Mã LSSN</dt>
+            <dd class="col-sm-9">@Model.MaLSSN</dd>
+
+            <dt class="col-sm-3">Số nghị định</dt>
+            <dd class="col-sm-9">@Model.SoNghiDinh</dd>
+
+            <dt class="col-sm-3">Người tạo</dt>
+            <dd class="col-sm-9">@Model.NguoiTao</dd>
+
+            <dt class="col-sm-3">Ngày tạo</dt>
+            <dd class="col-sm-9">@Model.NgayTao</dd>
+
+            <dt class="col-sm-3">Ghi chú</dt>
+            <dd class="col-sm-9">@Model.GhiChu</dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.LssnTinhs != null && Model.LssnTinhs.Any())
+{
+    <h4>Các tỉnh tham gia sáp nhập</h4>
+    <table class="table table-bordered table-sm align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Mã tỉnh cũ</th>
+                <th>Tên tỉnh cũ</th>
+                <th>Mã tỉnh mới</th>
+                <th>Tên tỉnh mới</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.LssnTinhs)
+            {
+                <tr>
+                    <td>@t.MaTinhCu</td>
+                    <td>@t.TinhCu?.TenTinhCu</td>
+                    <td>@t.MaTinhMoi</td>
+                    <td>@t.TinhMoi?.TenTinhMoi</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted"><em>Chưa khai báo các tỉnh trong lần sáp nhập này.</em></p>
+}
+
+@if (Model.LssnXas != null && Model.LssnXas.Any())
+{
+    <h4>Các xã / phường / thị trấn tham gia sáp nhập</h4>
+    <table class="table table-bordered table-sm align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Xã cũ</th>
+                <th>Huyện cũ</th>
+                <th>Tỉnh cũ</th>
+                <th>Xã mới</th>
+                <th>Tỉnh mới</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model.LssnXas)
+            {
+                <tr>
+                    <td>@x.XaCu?.TenXaCu</td>
+                    <td>@x.XaCu?.HuyenCu?.TenHuyenCu</td>
+                    <td>@x.XaCu?.HuyenCu?.TinhCu?.TenTinhCu</td>
+                    <td>@x.XaMoi?.TenXaMoi</td>
+                    <td>@x.XaMoi?.TinhMoi?.TenTinhMoi</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted"><em>Chưa khai báo các xã trong lần sáp nhập này.</em></p>
+}

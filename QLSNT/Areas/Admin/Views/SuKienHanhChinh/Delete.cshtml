@@ -1,0 +1,31 @@
+﻿@model QLSNT.Models.SuKienHanhChinh
+
+@{
+    ViewData["Title"] = "Xóa Sự kiện hành chính";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xóa Sự kiện hành chính</h1>
+<hr />
+
+<p>Bạn có chắc chắn muốn xóa sự kiện sau?</p>
+
+<dl class="row">
+    <dt class="col-sm-3">Số nghị định</dt>
+    <dd class="col-sm-9">@Model.SoNghiDinh</dd>
+
+    <dt class="col-sm-3">Tên sự kiện</dt>
+    <dd class="col-sm-9">@Model.TenSK</dd>
+
+    <dt class="col-sm-3">Ngày ban hành</dt>
+    <dd class="col-sm-9">@Model.NgayBanHanh</dd>
+
+    <dt class="col-sm-3">Cơ quan ban hành</dt>
+    <dd class="col-sm-9">@Model.CoQuanBanHanh</dd>
+</dl>
+
+<form asp-action="Delete" method="post" class="mt-3">
+    <input type="hidden" asp-for="SoNghiDinh" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

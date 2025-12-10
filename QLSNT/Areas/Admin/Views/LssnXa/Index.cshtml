@@ -1,0 +1,54 @@
+﻿@model IEnumerable<QLSNT.Models.LssnXa>
+
+@{
+    ViewData["Title"] = "Lịch sử sáp nhập xã";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="mb-3">Lịch sử sáp nhập xã</h1>
+
+<div class="mb-3 text-end">
+    <a asp-action="Create" class="btn btn-success">
+        + Thêm bản ghi sáp nhập xã
+    </a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+                <tr>
+     
+                    <th>Mã LSSN</th>
+                    <th>Mã xã cũ</th>
+                    <th>Mã xã mới</th>
+       
+                    <th style="width: 200px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                    <tr>
+                      
+                        <td>@item.MaLSSN</td>
+                        <td>@item.MaXaCu</td>
+                        <td>@item.MaXaMoi</td>
+                        
+                        <td>
+                        <a asp-action="Details" asp-route-id="@item.MaLSSN"
+                               class="btn btn-sm btn-info">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaLSSN"
+                               class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaLSSN"
+                               class="btn btn-sm btn-danger">Xóa</a>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+}
+else
+{
+        <p><em>Chưa có bản ghi lịch sử sáp nhập xã nào.</em></p>
+}

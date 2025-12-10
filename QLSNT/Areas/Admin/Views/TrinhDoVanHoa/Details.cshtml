@@ -1,0 +1,38 @@
+﻿@model QLSNT.Models.TrinhDoVanHoa
+
+@{
+    ViewData["Title"] = "Chi tiết trình độ văn hóa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Chi tiết trình độ văn hóa</h1>
+
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.MaTDVH)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.MaTDVH)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.TenTDVH)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.TenTDVH)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.MoTa)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.MoTa)
+    </dd>
+</dl>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MaTDVH" class="btn btn-warning">Sửa</a>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+</div>

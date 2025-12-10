@@ -1,0 +1,40 @@
+﻿@model QLSNT.Models.DanToc
+
+@{
+    ViewData["Title"] = "Xóa dân tộc";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xóa dân tộc</h1>
+
+<h4>Bạn có chắc chắn muốn xóa bản ghi sau?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.MaDanToc)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.MaDanToc)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.TenDanToc)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.TenDanToc)
+    </dd>
+
+    <dt class="col-sm-3">
+        @Html.DisplayNameFor(model => model.GhiChu)
+    </dt>
+    <dd class="col-sm-9">
+        @Html.DisplayFor(model => model.GhiChu)
+    </dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="MaDanToc" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+</form>

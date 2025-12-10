@@ -1,0 +1,45 @@
+﻿@model QLSNT.Models.QuanHeChuHo
+
+@{
+    ViewData["Title"] = "Thêm Quan hệ chủ hộ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Thêm Quan hệ chủ hộ</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="MaQHCH" class="form-label"></label>
+                <input asp-for="MaQHCH" class="form-control" />
+                <span asp-validation-for="MaQHCH" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TenQHCH" class="form-label"></label>
+                <input asp-for="TenQHCH" class="form-control" />
+                <span asp-validation-for="TenQHCH" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MoTa" class="form-label"></label>
+                <textarea asp-for="MoTa" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="MoTa" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

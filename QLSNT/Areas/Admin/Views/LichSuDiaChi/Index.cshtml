@@ -1,0 +1,88 @@
+﻿@model IEnumerable<QLSNT.Models.LichSuDiaChi>
+
+@{
+    ViewData["Title"] = "Lịch sử địa chỉ";
+}
+
+<h2 class="mb-3">Lịch sử địa chỉ</h2>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="row g-2">
+            <div class="col-8">
+                <input type="text"
+                       name="searchCccd"
+                       value="@ViewBag.SearchCccd"
+                       class="form-control"
+                       placeholder="Tìm theo CCCD hoặc họ tên" />
+            </div>
+            <div class="col-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Xoá lọc</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6 text-end">
+        <a asp-action="Create" class="btn btn-success">
+            + Thêm lịch sử địa chỉ
+        </a>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Mã</th>
+            <th>CCCD</th>
+            <th>Họ tên</th>
+            <th>Địa chỉ cũ</th>
+            <th>Địa chỉ mới</th>
+            <th>Ngày hiệu lực</th>
+            <th>Người tạo</th>
+            <th>Ngày tạo</th>
+            <th style="width: 150px;">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MaLichSuCuTru</td>
+                    <td>@item.MaCCCD</td>
+                    <td>@item.NguoiDan?.HoTen</td>
+                    <td>@item.DiaChiCu</td>
+                    <td>@item.DiaChiMoi</td>
+                    <td>@item.NgayHieuLuc?.ToString("dd/MM/yyyy")</td>
+                    <td>@item.NguoiTao</td>
+                    <td>@item.NgayTao?.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.MaLichSuCuTru"
+                           class="btn btn-sm btn-info">Xem</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaLichSuCuTru"
+                           class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaLichSuCuTru"
+                           class="btn btn-sm btn-danger">Xoá</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center text-muted">
+                    Chưa có dữ liệu lịch sử địa chỉ.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

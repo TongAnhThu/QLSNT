@@ -1,0 +1,66 @@
+﻿@model IEnumerable<QLSNT.Models.TinhCu>
+
+@{
+    ViewData["Title"] = "Danh sách Tỉnh cũ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="mb-3">Danh sách Tỉnh cũ</h1>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control me-2"
+                   placeholder="Nhập tên tỉnh cần tìm..." />
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="Create" class="btn btn-success">
+            + Thêm tỉnh cũ
+        </a>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Mã tỉnh</th>
+                <th>Tên tỉnh</th>
+                <th>Loại tỉnh</th>
+                <th>Trạng thái</th>
+                <th>Ghi chú</th>
+                <th style="width: 190px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MaTinhCu</td>
+                    <td>@item.TenTinhCu</td>
+                    <td>@item.LoaiTinh</td>
+                    <td>@item.TrangThai</td>
+                    <td>@item.GhiChu</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.MaTinhCu"
+                           class="btn btn-sm btn-info">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-id="@item.MaTinhCu"
+                           class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaTinhCu"
+                           class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Không tìm thấy bản ghi nào.</em></p>
+}

@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QLSNT</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/QLSNT.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                    QLSNT
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between" id="mainNavbar">
+                    <ul class="navbar-nav flex-grow-1">
+                        <!-- Trang chủ (ngoài admin) -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                Trang chủ
+                            </a>
+                        </li>
+
+                        <!-- Danh mục cá nhân -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="dmCaNhanDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Danh mục cá nhân
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dmCaNhanDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="NguoiDan" asp-action="Index">
+                                        Người dân
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="DanToc" asp-action="Index">
+                                        Dân tộc
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="TonGiao" asp-action="Index">
+                                        Tôn giáo
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="TrinhDoVanHoa" asp-action="Index">
+                                        Trình độ văn hóa
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="QuanHeChuHo" asp-action="Index">
+                                        Quan hệ với chủ hộ
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Đơn vị hành chính cũ -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="dvHanhChinhCuDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Đơn vị hành chính cũ
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dvHanhChinhCuDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="TinhCu" asp-action="Index">
+                                        Tỉnh cũ
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="HuyenCu" asp-action="Index">
+                                        Huyện cũ
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="XaCu" asp-action="Index">
+                                        Xã cũ
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Đơn vị hành chính mới -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="dvHanhChinhMoiDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Đơn vị hành chính mới
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dvHanhChinhMoiDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="TinhMoi" asp-action="Index">
+                                        Tỉnh mới
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="XaMoi" asp-action="Index">
+                                        Xã mới
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Cư trú -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="cuTruDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cư trú
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="cuTruDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="ThuongTru" asp-action="Index">
+                                        Thường trú
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="TamTru" asp-action="Index">
+                                        Tạm trú
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Sự kiện & Lịch sử sáp nhập -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="suKienDropdown"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sự kiện & Lịch sử sáp nhập
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="suKienDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="SuKienHanhChinh" asp-action="Index">
+                                        Sự kiện hành chính
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="LichSuSapNhap" asp-action="Index">
+                                        Lịch sử sáp nhập
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="LssnTinh" asp-action="Index">
+                                        LSSN Tỉnh
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="LssnXa" asp-action="Index">
+                                        LSSN Xã
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Privacy giữ lại cho tiện (ngoài admin) -->
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                Privacy
+                            </a>
+                        </li>
+                    </ul>
+
+                    @* Góc phải cho login/user nếu cần sau này *@
+                    @*<ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Account" asp-action="Login">
+                                Đăng nhập
+                            </a>
+                        </li>
+                    </ul>*@
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted mt-auto">
+        <div class="container">
+            &copy; 2025 - QLSNT -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

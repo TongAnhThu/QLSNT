@@ -1,0 +1,44 @@
+﻿@model QLSNT.Models.LichSuDiaChi
+
+@{
+    ViewData["Title"] = "Xoá lịch sử địa chỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-3 text-danger">Xoá lịch sử địa chỉ</h2>
+
+<div class="alert alert-warning">
+    Bạn có chắc chắn muốn xoá bản ghi này không?
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Mã bản ghi</dt>
+            <dd class="col-sm-9">@Model.MaLichSuCuTru</dd>
+
+            <dt class="col-sm-3">CCCD</dt>
+            <dd class="col-sm-9">@Model.MaCCCD</dd>
+
+            <dt class="col-sm-3">Họ tên</dt>
+            <dd class="col-sm-9">@Model.NguoiDan?.HoTen</dd>
+
+            <dt class="col-sm-3">Địa chỉ cũ</dt>
+            <dd class="col-sm-9">@Model.DiaChiCu</dd>
+
+            <dt class="col-sm-3">Địa chỉ mới</dt>
+            <dd class="col-sm-9">@Model.DiaChiMoi</dd>
+
+            <dt class="col-sm-3">Ngày hiệu lực</dt>
+            <dd class="col-sm-9">@Model.NgayHieuLuc?.ToString("dd/MM/yyyy")</dd>
+        </dl>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="MaLichSuCuTru" />
+
+    <button type="submit" class="btn btn-danger">Xoá</button>
+    <a asp-action="Index" class="btn btn-secondary">Huỷ</a>
+</form>

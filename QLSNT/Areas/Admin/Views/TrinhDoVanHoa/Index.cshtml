@@ -1,0 +1,55 @@
+﻿@model IEnumerable<QLSNT.Models.TrinhDoVanHoa>
+
+@{
+    ViewData["Title"] = "Danh sách Trình độ văn hóa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Danh sách Trình độ văn hóa</h1>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="d-flex">
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control me-2"
+                   placeholder="Tìm theo tên trình độ (ví dụ: 12/12, Đại học)..." />
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </form>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="Create" class="btn btn-success">+ Thêm trình độ mới</a>
+    </div>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Mã TDVH</th>
+            <th>Tên trình độ</th>
+            <th>Mô tả</th>
+            <th style="width:180px;">Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaTDVH</td>
+                <td>@item.TenTDVH</td>
+                <td>@item.MoTa</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaTDVH" class="btn btn-sm btn-info">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@item.MaTDVH" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaTDVH" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p><em>Chưa có dữ liệu trình độ văn hóa.</em></p>
+}
