@@ -14,24 +14,84 @@ namespace QLSNT.Repositories
         }
 
         // =================== GET ALL ===================
-        public async Task<List<LichSuSapNhap>> GetAllAsync()
+        public async Task<List<LichSuSapNhap>> GetAllAsync(bool includeTinhs = false, bool includeXas = false)
         {
-            return await _db.LichSuSapNhaps
-                .OrderBy(l => l.MaLSSN)
-                .ToListAsync();
+            var query = _db.LichSuSapNhaps.AsQueryable();
+
+            if (includeTinhs)
+            {
+                query = query.Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhCu)
+                             .Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhMoi);
+            }
+
+            if (includeXas)
+            {
+                query = query.Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaCu)
+                             .Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaMoi);
+            }
+
+            return await query.ToListAsync();
         }
+
+        public async Task<List<LichSuSapNhap>> SearchAsync(string search, bool includeTinhs = false, bool includeXas = false)
+        {
+            var query = _db.LichSuSapNhaps
+                .Where(x => x.MaLSSN.Contains(search)
+                         || x.SoNghiDinh.Contains(search)
+                         || x.GhiChu.Contains(search));
+
+            if (includeTinhs)
+            {
+                query = query.Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhCu)
+                             .Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhMoi);
+            }
+
+            if (includeXas)
+            {
+                query = query.Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaCu)
+                             .Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaMoi);
+            }
+
+            return await query.ToListAsync();
+
+        }
+
 
         // =================== GET BY ID (Mộc) ===================
-        public async Task<LichSuSapNhap?> GetByIdAsync(string maLssn)
+        public async Task<LichSuSapNhap?> GetByIdAsync(string id, bool includeTinhs = false, bool includeXas = false)
         {
-            if (string.IsNullOrWhiteSpace(maLssn))
-                return null;
+            var query = _db.LichSuSapNhaps.AsQueryable();
 
-            maLssn = maLssn.Trim();
+            if (includeTinhs)
+            {
+                query = query.Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhCu)
+                             .Include(x => x.LssnTinhs)
+                             .ThenInclude(t => t.TinhMoi);
+            }
 
-            return await _db.LichSuSapNhaps
-                .FirstOrDefaultAsync(l => l.MaLSSN == maLssn);
+            if (includeXas)
+            {
+                query = query.Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaCu)
+                                 .ThenInclude(xa => xa.HuyenCu)
+                                     .ThenInclude(h => h.TinhCu)
+                             .Include(x => x.LssnXas)
+                             .ThenInclude(xa => xa.XaMoi)
+                                 .ThenInclude(xa => xa.TinhMoi);
+            }
+
+            return await query.FirstOrDefaultAsync(x => x.MaLSSN == id);
         }
+
 
         // =================== GET DETAILS (Include quan hệ) ===================
         public async Task<LichSuSapNhap?> GetDetailsAsync(string maLssn)

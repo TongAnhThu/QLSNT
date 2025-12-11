@@ -5,46 +5,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Thêm Thường trú</h1>
-<hr />
+<h2>@ViewData["Title"]</h2>
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
-
-            <div class="mb-3">
-                <label asp-for="MaXaMoi" class="form-label"></label>
-                <input asp-for="MaXaMoi" class="form-control" placeholder="Mã xã mới" />
-                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="MaCCCD" class="form-label"></label>
-                <input asp-for="MaCCCD" class="form-control" placeholder="Số CCCD" />
-                <span asp-validation-for="MaCCCD" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="DiaChi" class="form-label"></label>
-                <textarea asp-for="DiaChi" class="form-control" rows="2"></textarea>
-                <span asp-validation-for="DiaChi" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="NgayDangKy" class="form-label"></label>
-                <input asp-for="NgayDangKy" type="date" class="form-control" />
-                <span asp-validation-for="NgayDangKy" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
-        </form>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="MaXaMoi">Xã mới</label>
+        <select asp-for="MaXaMoi" class="form-control" asp-items="ViewBag.MaXaMoi"></select>
     </div>
-</div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+    <div class="form-group">
+        <label for="MaCCCD">Người dân</label>
+        <select asp-for="MaCCCD" class="form-control" asp-items="ViewBag.MaCCCD"></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="DiaChi"></label>
+        <input asp-for="DiaChi" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="NgayDangKy"></label>
+        <input asp-for="NgayDangKy" type="date" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>

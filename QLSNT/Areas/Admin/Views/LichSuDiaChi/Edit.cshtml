@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-3">Cập nhật lịch sử địa chỉ</h2>
+<h2 class="mb-3 text-primary fw-bold">
+    <i class="bi bi-pencil-square"></i> Cập nhật lịch sử địa chỉ
+</h2>
 
 <div class="row">
     <div class="col-md-8">
@@ -15,6 +17,7 @@
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <!-- Người dân -->
             <div class="mb-3">
                 <label asp-for="MaCCCD" class="form-label">Người dân (CCCD)</label>
                 <select asp-for="MaCCCD"
@@ -25,28 +28,32 @@
                 <span asp-validation-for="MaCCCD" class="text-danger"></span>
             </div>
 
+            <!-- Xã mới -->
             <div class="mb-3">
-                <label asp-for="MaXaCu" class="form-label">Xã (địa chỉ hành chính)</label>
-                <select asp-for="MaXaCu"
-                        asp-items="ViewBag.XaCuList"
+                <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
+                <select asp-for="MaXaMoi"
+                        asp-items="ViewBag.XaMoiList"
                         class="form-select">
-                    <option value="">-- Chọn xã --</option>
+                    <option value="">-- Chọn xã mới --</option>
                 </select>
-                <span asp-validation-for="MaXaCu" class="text-danger"></span>
+                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
             </div>
 
+            <!-- Địa chỉ cũ -->
             <div class="mb-3">
                 <label asp-for="DiaChiCu" class="form-label">Địa chỉ cũ</label>
                 <textarea asp-for="DiaChiCu" class="form-control" rows="2"></textarea>
                 <span asp-validation-for="DiaChiCu" class="text-danger"></span>
             </div>
 
+            <!-- Địa chỉ mới -->
             <div class="mb-3">
                 <label asp-for="DiaChiMoi" class="form-label">Địa chỉ mới</label>
                 <textarea asp-for="DiaChiMoi" class="form-control" rows="2"></textarea>
                 <span asp-validation-for="DiaChiMoi" class="text-danger"></span>
             </div>
 
+            <!-- Ngày hiệu lực / Ngày kết thúc -->
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label asp-for="NgayHieuLuc" class="form-label">Ngày hiệu lực</label>
@@ -60,33 +67,42 @@
                 </div>
             </div>
 
+            <!-- Loại thay đổi -->
             <div class="mb-3">
                 <label asp-for="LoaiThayDoi" class="form-label">Loại thay đổi</label>
                 <input asp-for="LoaiThayDoi" class="form-control" />
                 <span asp-validation-for="LoaiThayDoi" class="text-danger"></span>
             </div>
 
+            <!-- Số quyết định -->
             <div class="mb-3">
                 <label asp-for="SoQuyetDinh" class="form-label">Số quyết định</label>
                 <input asp-for="SoQuyetDinh" class="form-control" />
                 <span asp-validation-for="SoQuyetDinh" class="text-danger"></span>
             </div>
 
+            <!-- Lý do thay đổi -->
             <div class="mb-3">
                 <label asp-for="LyDoThayDoi" class="form-label">Lý do thay đổi</label>
                 <textarea asp-for="LyDoThayDoi" class="form-control" rows="2"></textarea>
                 <span asp-validation-for="LyDoThayDoi" class="text-danger"></span>
             </div>
 
+            <!-- Ghi chú -->
             <div class="mb-3">
                 <label asp-for="GhiChu" class="form-label">Ghi chú</label>
                 <textarea asp-for="GhiChu" class="form-control" rows="2"></textarea>
                 <span asp-validation-for="GhiChu" class="text-danger"></span>
             </div>
 
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Lưu</button>
-                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <!-- Buttons -->
+            <div class="mt-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Lưu
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left-circle"></i> Quay lại
+                </a>
             </div>
         </form>
     </div>

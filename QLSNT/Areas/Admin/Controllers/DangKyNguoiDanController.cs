@@ -221,19 +221,9 @@ namespace QLSNT.Areas.Admin.Controllers
             await LoadDropdownsAsync();
             return View("EditDetails", model);
         }
-        private async Task<string> GenerateMaLichSuCuTruAsync()
-        {
-            var last = await _lichSuDiaChiRepo.GetLastCodeAsync(); // ví dụ lấy mã cuối cùng
-            int number = 0;
-            if (!string.IsNullOrEmpty(last) && last.Length > 2)
-            {
-                int.TryParse(last.Substring(2), out number);
-            }
-            return $"LS{(number + 1):D3}";
-        }
-
-
+        
         [HttpPost]
+
         public async Task<IActionResult> EditDetails(NguoiDanCreateViewModel model)
         {
             if (!ModelState.IsValid)
@@ -247,7 +237,7 @@ namespace QLSNT.Areas.Admin.Controllers
                 return NotFound();
 
             // Nếu địa chỉ thay đổi thì ghi lịch sử
-            if (thuongTru.DiaChi != model.DiaChiThuongTru)
+            if (thuongTru.DiaChi != model.DiaChiThuongTru || thuongTru.MaXaMoi != model.MaXaMoi)
             {
                 var lichSu = new LichSuDiaChi
                 {
@@ -259,14 +249,11 @@ namespace QLSNT.Areas.Admin.Controllers
                     NguoiTao = User.Identity?.Name,
                     NgayTao = DateTime.Now,
 
-                    // Gán mã xã cũ và xã mới
-                    MaXaCu = thuongTru.MaXaCu,
+                    // Chỉ còn mã xã mới
                     MaXaMoi = model.MaXaMoi
                 };
                 await _lichSuDiaChiRepo.AddAsync(lichSu);
             }
-
-
 
             // Cập nhật thông tin mới
             thuongTru.MaXaMoi = model.MaXaMoi;
@@ -275,6 +262,7 @@ namespace QLSNT.Areas.Admin.Controllers
 
             return RedirectToAction("Index", "NguoiDan");
         }
+
 
         // ============================
         // XEM CHI TIẾT NGƯỜI DÂN
@@ -310,9 +298,30 @@ namespace QLSNT.Areas.Admin.Controllers
             await LoadDropdownsAsync();
             return View("Details", model);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetXaByTinh(int maTinhMoi)
+        {
+            var xaList = await _xaMoiRepo.GetByTinhAsync(maTinhMoi);
+            var result = xaList.Select(x => new {
+                maXaMoi = x.MaXaMoi,
+                tenXaMoi = x.TenXaMoi
+            });
+            return Json(result);
+        }
+        private async Task<string> GenerateMaLichSuCuTruAsync()
+        {
+            var last = await _lichSuDiaChiRepo.GetLastCodeAsync(); // ví dụ lấy mã cuối cùng
+            int number = 0;
+            if (!string.IsNullOrEmpty(last) && last.Length > 2)
+            {
+                int.TryParse(last.Substring(2), out number);
+            }
+            return $"LS{(number + 1):D3}";
+        }
 
 
 
 
     }
+
 }

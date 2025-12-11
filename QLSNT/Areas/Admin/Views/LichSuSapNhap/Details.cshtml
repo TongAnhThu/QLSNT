@@ -5,32 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-3">@ViewData["Title"]</h2>
+<h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
 
 <div class="mb-3">
-    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">← Quay lại danh sách</a>
     <a asp-action="Edit" asp-route-id="@Model.MaLSSN" class="btn btn-warning btn-sm">Sửa</a>
 </div>
 
 <!-- Thông tin chung -->
-<div class="card mb-4">
-    <div class="card-header">Thông tin chung</div>
+<div class="card mb-4 shadow-lg">
+    <div class="card-header bg-dark text-white">Thông tin chung</div>
     <div class="card-body">
-        <dl class="row mb-0">
-            <dt class="col-sm-3">Mã LSSN</dt>
-            <dd class="col-sm-9">@Model.MaLSSN</dd>
+        <dl class="row">
+            <dt class="col-sm-4">Mã LSSN</dt>
+            <dd class="col-sm-8">@Model.MaLSSN</dd>
 
-            <dt class="col-sm-3">Số nghị định</dt>
-            <dd class="col-sm-9">@Model.SoNghiDinh</dd>
+            <dt class="col-sm-4">Sự kiện hành chính</dt>
+            <dd class="col-sm-8">@Model.SuKienHanhChinh?.TenSK</dd>
 
-            <dt class="col-sm-3">Người tạo</dt>
-            <dd class="col-sm-9">@Model.NguoiTao</dd>
+            <dt class="col-sm-4">Người tạo</dt>
+            <dd class="col-sm-8">@Model.NguoiTao</dd>
 
-            <dt class="col-sm-3">Ngày tạo</dt>
-            <dd class="col-sm-9">@Model.NgayTao?.ToString("dd/MM/yyyy")</dd>
+            <dt class="col-sm-4">Ngày tạo</dt>
+            <dd class="col-sm-8">@Model.NgayTao?.ToString("dd/MM/yyyy HH:mm")</dd>
 
-            <dt class="col-sm-3">Ghi chú</dt>
-            <dd class="col-sm-9">@Model.GhiChu</dd>
+            <dt class="col-sm-4">Ghi chú</dt>
+            <dd class="col-sm-8">@Model.GhiChu</dd>
         </dl>
     </div>
 </div>
@@ -38,28 +38,45 @@
 <!-- Các tỉnh tham gia -->
 @if (Model.LssnTinhs != null && Model.LssnTinhs.Any())
 {
-    <h4 class="mt-4">Các tỉnh tham gia sáp nhập</h4>
-    <table class="table table-bordered table-sm align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Mã tỉnh cũ</th>
-                <th>Tên tỉnh cũ</th>
-                <th>Mã tỉnh mới</th>
-                <th>Tên tỉnh mới</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var t in Model.LssnTinhs)
-            {
-                <tr>
-                    <td>@t.MaTinhCu</td>
-                    <td>@t.TinhCu?.TenTinhCu</td>
-                    <td>@t.MaTinhMoi</td>
-                    <td>@t.TinhMoi?.TenTinhMoi</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h4 class="mt-4 text-info">Chi tiết các tỉnh sáp nhập</h4>
+    @foreach (var t in Model.LssnTinhs)
+    {
+        <div class="row mb-4">
+            <!-- Tỉnh cũ -->
+            <div class="col-md-6 mb-3">
+                <div class="card border-primary shadow-sm">
+                    <div class="card-header bg-primary text-white">Tỉnh cũ</div>
+                    <div class="card-body">
+                        <p><strong>Mã tỉnh:</strong> @t.MaTinhCu</p>
+                        <p><strong>Tên tỉnh:</strong> @t.TinhCu?.TenTinhCu</p>
+                        <p><strong>Diện tích:</strong> @t.TinhCu?.DienTich km²</p>
+                        <p><strong>Dân số:</strong> @t.TinhCu?.DanSo người</p>
+                        <p><strong>Số huyện:</strong> @t.TinhCu?.SLHuyen</p>
+                        <p><strong>Số xã:</strong> @t.TinhCu?.SLXa</p>
+                        <p><strong>Vùng địa lý:</strong> @t.TinhCu?.VungDiaLy</p>
+                        <p><strong>Ghi chú:</strong> @t.TinhCu?.GhiChu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tỉnh mới -->
+            <div class="col-md-6 mb-3">
+                <div class="card border-success shadow-sm">
+                    <div class="card-header bg-success text-white">Tỉnh mới</div>
+                    <div class="card-body">
+                        <p><strong>Mã tỉnh:</strong> @t.MaTinhMoi</p>
+                        <p><strong>Tên tỉnh:</strong> @t.TinhMoi?.TenTinhMoi</p>
+                        <p><strong>Diện tích:</strong> @t.TinhMoi?.DienTich km²</p>
+                        <p><strong>Dân số:</strong> @t.TinhMoi?.DanSo người</p>
+                        <p><strong>Số huyện:</strong> @t.TinhMoi?.SLHuyen</p>
+                        <p><strong>Số xã:</strong> @t.TinhMoi?.SLXa</p>
+                        <p><strong>Vùng địa lý:</strong> @t.TinhMoi?.VungDiaLy</p>
+                        <p><strong>Ghi chú:</strong> @t.TinhMoi?.GhiChu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }
 else
 {
@@ -69,30 +86,48 @@ else
 <!-- Các xã tham gia -->
 @if (Model.LssnXas != null && Model.LssnXas.Any())
 {
-    <h4 class="mt-4">Các xã / phường / thị trấn tham gia sáp nhập</h4>
-    <table class="table table-bordered table-sm align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Xã cũ</th>
-                <th>Huyện cũ</th>
-                <th>Tỉnh cũ</th>
-                <th>Xã mới</th>
-                <th>Tỉnh mới</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var x in Model.LssnXas)
-            {
-                <tr>
-                    <td>@x.XaCu?.TenXaCu</td>
-                    <td>@x.XaCu?.HuyenCu?.TenHuyenCu</td>
-                    <td>@x.XaCu?.HuyenCu?.TinhCu?.TenTinhCu</td>
-                    <td>@x.XaMoi?.TenXaMoi</td>
-                    <td>@x.XaMoi?.TinhMoi?.TenTinhMoi</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <h4 class="mt-4 text-success">Chi tiết các xã / phường / thị trấn sáp nhập</h4>
+    @foreach (var x in Model.LssnXas)
+    {
+        <div class="row mb-4">
+            <!-- Xã cũ -->
+            <div class="col-md-6 mb-3">
+                <div class="card border-info shadow-sm">
+                    <div class="card-header bg-info text-white">Xã cũ</div>
+                    <div class="card-body">
+                        <p><strong>Mã xã:</strong> @x.XaCu?.MaXaCu</p>
+                        <p><strong>Tên xã:</strong> @x.XaCu?.TenXaCu</p>
+                        <p><strong>Loại xã:</strong> @x.XaCu?.LoaiXa</p>
+                        <p><strong>Trạng thái:</strong> @x.XaCu?.TrangThai</p>
+                        <p><strong>Số ấp:</strong> @x.XaCu?.SLAp</p>
+                        <p><strong>Dân số:</strong> @x.XaCu?.DanSo người</p>
+                        <p><strong>Diện tích:</strong> @x.XaCu?.DienTich km²</p>
+                        <p><strong>Huyện:</strong> @x.XaCu?.HuyenCu?.TenHuyenCu</p>
+                        <p><strong>Tỉnh:</strong> @x.XaCu?.HuyenCu?.TinhCu?.TenTinhCu</p>
+                        <p><strong>Ghi chú:</strong> @x.XaCu?.GhiChu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Xã mới -->
+            <div class="col-md-6 mb-3">
+                <div class="card border-success shadow-sm">
+                    <div class="card-header bg-success text-white">Xã mới</div>
+                    <div class="card-body">
+                        <p><strong>Mã xã:</strong> @x.XaMoi?.MaXaMoi</p>
+                        <p><strong>Tên xã:</strong> @x.XaMoi?.TenXaMoi</p>
+                        <p><strong>Loại xã:</strong> @x.XaMoi?.LoaiXa</p>
+                        <p><strong>Trạng thái:</strong> @x.XaMoi?.TrangThai</p>
+                        <p><strong>Số ấp:</strong> @x.XaMoi?.SLAp</p>
+                        <p><strong>Dân số:</strong> @x.XaMoi?.DanSo người</p>
+                        <p><strong>Diện tích:</strong> @x.XaMoi?.DienTich km²</p>
+                        <p><strong>Tỉnh:</strong> @x.XaMoi?.TinhMoi?.TenTinhMoi</p>
+                        <p><strong>Ghi chú:</strong> @x.XaMoi?.GhiChu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 }
 else
 {

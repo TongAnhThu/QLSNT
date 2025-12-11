@@ -19,8 +19,8 @@ namespace QLSNT.Repositories
         public async Task<IEnumerable<LichSuDiaChi>> GetAllAsync(string? keyword = null)
         {
             var query = _context.LichSuDiaChis
-                .Include(x => x.NguoiDan)  // navigation sang Người dân
-                .Include(x => x.XaCu)      // hoặc XaMoi tùy bạn map
+                .Include(x => x.NguoiDan)   // navigation sang Người dân
+                .Include(x => x.XaMoi)      // chỉ còn XaMoi
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -43,8 +43,15 @@ namespace QLSNT.Repositories
         {
             return await _context.LichSuDiaChis
                 .Include(x => x.NguoiDan)
-                .Include(x => x.XaCu)   // hoặc XaMoi
+                .Include(x => x.XaMoi)   // chỉ còn XaMoi
                 .FirstOrDefaultAsync(x => x.MaLichSuCuTru == id);
+        }
+        public async Task<string?> GetLastCodeAsync()
+        {
+            return await _context.LichSuDiaChis
+                .OrderByDescending(x => x.MaLichSuCuTru)
+                .Select(x => x.MaLichSuCuTru)
+                .FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(LichSuDiaChi entity)
@@ -52,21 +59,16 @@ namespace QLSNT.Repositories
             _context.LichSuDiaChis.Add(entity);
             await _context.SaveChangesAsync();
         }
-        public async Task<string?> GetLastCodeAsync()
-        {
-            // Giả sử MaLichSuCuTru là chuỗi dạng "LS0001", "LS0002"...
-            return await _context.LichSuDiaChis
-                .OrderByDescending(x => x.MaLichSuCuTru) // sắp xếp giảm dần theo mã
-                .Select(x => x.MaLichSuCuTru)
-                .FirstOrDefaultAsync();
-        }
+
+        
+
         public async Task UpdateAsync(LichSuDiaChi entity)
         {
             _context.LichSuDiaChis.Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(String id)
+        public async Task DeleteAsync(string id)
         {
             var entity = await _context.LichSuDiaChis.FindAsync(id);
             if (entity != null)

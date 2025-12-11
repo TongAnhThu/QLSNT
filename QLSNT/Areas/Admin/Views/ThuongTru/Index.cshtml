@@ -1,72 +1,44 @@
 ﻿@model IEnumerable<QLSNT.Models.ThuongTru>
 
 @{
-    ViewData["Title"] = "Quản lý Thường trú";
+    ViewData["Title"] = "Danh sách Thường trú";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="mb-3">Danh sách Thường trú</h1>
+<h2>@ViewData["Title"]</h2>
 
-<div class="row mb-3">
-    <div class="col-md-8">
-        <form method="get" class="d-flex">
-            <input type="text"
-                   name="keyword"
-                   value="@ViewBag.Keyword"
-                   class="form-control me-2"
-                   placeholder="Tìm theo CCCD, mã xã, địa chỉ..." />
-            <button class="btn btn-primary">Tìm kiếm</button>
-        </form>
-    </div>
-    <div class="col-md-4 text-end">
-        <a asp-action="Create" class="btn btn-success">
-            + Thêm thường trú
-        </a>
-    </div>
-</div>
+<p>
+    <a asp-action="Create" class="btn btn-primary">Thêm mới</a>
+</p>
 
-@if (Model != null && Model.Any())
-{
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-light">
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mã xã mới</th>
+            <th>Tên xã</th>
+            <th>Mã CCCD</th>
+            <th>Họ tên</th>
+            <th>Địa chỉ</th>
+            <th>Ngày đăng ký</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>Mã xã</th>
-                <th>CCCD</th>
-                <th>Địa chỉ</th>
-                <th>Ngày đăng ký</th>
-                <th style="width: 220px;">Thao tác</th>
+                <td>@item.MaXaMoi</td>
+                <td>@item.XaMoi?.TenXaMoi</td>
+                <td>@item.MaCCCD</td>
+                <td>@item.NguoiDan?.HoTen</td>
+                <td>@item.DiaChi</td>
+                <td>@item.NgayDangKy?.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a asp-action="Details" asp-route-maXaMoi="@item.MaXaMoi" asp-route-maCCCD="@item.MaCCCD">Chi tiết</a> |
+                    <a asp-action="Edit" asp-route-maXaMoi="@item.MaXaMoi" asp-route-maCCCD="@item.MaCCCD">Sửa</a> |
+                    <a asp-action="Delete" asp-route-maXaMoi="@item.MaXaMoi" asp-route-maCCCD="@item.MaCCCD">Xóa</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.MaXaMoi</td>
-                    <td>@item.MaCCCD</td>
-                    <td>@item.DiaChi</td>
-                    <td>@(item.NgayDangKy?.ToString("dd/MM/yyyy") ?? "-")</td>
-                    <td>
-                        <a asp-action="Details"
-                           asp-route-maXaMoi="@item.MaXaMoi"
-                           asp-route-maCCCD="@item.MaCCCD"
-                           class="btn btn-sm btn-info">Chi tiết</a>
-
-                        <a asp-action="Edit"
-                           asp-route-maXaMoi="@item.MaXaMoi"
-                           asp-route-maCCCD="@item.MaCCCD"
-                           class="btn btn-sm btn-warning">Sửa</a>
-
-                        <a asp-action="Delete"
-                           asp-route-maXaMoi="@item.MaXaMoi"
-                           asp-route-maCCCD="@item.MaCCCD"
-                           class="btn btn-sm btn-danger">Xóa</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p><em>Chưa có bản ghi thường trú nào.</em></p>
-}
+        }
+    </tbody>
+</table>

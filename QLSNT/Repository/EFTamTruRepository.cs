@@ -81,5 +81,32 @@ namespace QLSNT.Repositories
                 await _db.SaveChangesAsync();
             }
         }
+        public async Task<IEnumerable<TamTru>> GetTamTruHieuLucByNguoiDanIdAsync(string maNguoiDan)
+        {
+            var today = DateTime.Today;
+
+            // Ví dụ quy ước: tạm trú còn hiệu lực nếu:
+            // - MaNguoiDan trùng
+            // - NgayBatDau <= hôm nay
+            // - NgayKetThuc null hoặc >= hôm nay
+            var query = _db.TamTrus
+                .Where(t =>
+                    t.MaCCCD == maNguoiDan &&
+                    t.NgayDangKy <= today )
+                  
+                .OrderByDescending(t => t.NgayDangKy);
+
+            // Trả về List<TamTru>, nhưng kiểu khai báo là IEnumerable<TamTru> nên OK
+            return await query.ToListAsync();
+        }
+        public async Task<List<TamTru>> GetByNguoiDanAsync(string maCCCD)
+        {
+            return await _db.TamTrus
+                .Include(t => t.XaMoi)
+                .Include(t => t.NguoiDan)
+                .Where(t => t.MaCCCD == maCCCD)
+                .ToListAsync();
+        }
+
     }
 }

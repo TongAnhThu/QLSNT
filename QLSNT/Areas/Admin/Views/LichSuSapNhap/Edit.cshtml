@@ -5,49 +5,54 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-3">@ViewData["Title"]</h2>
 
 <div class="mb-3">
-    <a asp-action="Details" asp-route-id="@Model.MaLSSN" class="btn btn-secondary btn-sm">← Quay lại chi tiết</a>
+    <a asp-action="Index" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
 </div>
 
 <form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="MaLSSN" />
+    @Html.AntiForgeryToken()
+    <div class="card">
+        <div class="card-body">
+            <div class="mb-3">
+                <label asp-for="MaLSSN" class="form-label"></label>
+                <input asp-for="MaLSSN" class="form-control" readonly />
+                <span asp-validation-for="MaLSSN" class="text-danger"></span>
+            </div>
 
-    <div class="mb-3">
-        <label class="form-label">Mã LSSN</label>
-        <input class="form-control" value="@Model.MaLSSN" disabled />
+            <div class="mb-3">
+                <label asp-for="SoNghiDinh" class="form-label">Sự kiện hành chính</label>
+                <select asp-for="SoNghiDinh" class="form-select" readonly
+                        asp-items="ViewBag.SuKienHanhChinhList">
+                    <option value="">-- Chọn sự kiện --</option>
+                </select>
+                <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="NguoiTao" class="form-label"></label>
+                <input asp-for="NguoiTao" class="form-control" />
+                <span asp-validation-for="NguoiTao" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NgayTao" class="form-label"></label>
+                <input asp-for="NgayTao" type="datetime-local" class="form-control" />
+                <span asp-validation-for="NgayTao" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="GhiChu" class="form-label"></label>
+                <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="GhiChu" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="SoNghiDinh" class="form-label">Số nghị định</label>
-        <select asp-for="SoNghiDinh"
-                class="form-select"
-                asp-items="ViewBag.SoNghiDinhList">
-        </select>
-        <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NguoiTao" class="form-label"></label>
-        <input asp-for="NguoiTao" class="form-control" />
-        <span asp-validation-for="NguoiTao" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NgayTao" class="form-label"></label>
-        <input asp-for="NgayTao" class="form-control" type="datetime-local"
-               value="@Model.NgayTao" />
-        <span asp-validation-for="NgayTao" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="GhiChu" class="form-label"></label>
-        <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="GhiChu" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
 </form>
 
 @section Scripts {

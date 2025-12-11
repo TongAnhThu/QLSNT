@@ -9,24 +9,21 @@ using QLSNT.Repositories;
 namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize] // If you are not using role-based authorization, this can be removed
+   
     public class LichSuDiaChiController : Controller
     {
         private readonly ILichSuDiaChiRepository _lsctRepo;
         private readonly INguoiDanRepository _nguoiDanRepo;
-        private readonly IXaCuRepository _xaCuRepo;
-        private readonly IXaMoiRepository _xaMoiRepo; // Added for new district
+        private readonly IXaMoiRepository _xaMoiRepo; // Chỉ còn xã mới
 
         public LichSuDiaChiController(
             ILichSuDiaChiRepository lsctRepo,
             INguoiDanRepository nguoiDanRepo,
-            IXaCuRepository xaCuRepo,
             IXaMoiRepository xaMoiRepo)
         {
             _lsctRepo = lsctRepo;
             _nguoiDanRepo = nguoiDanRepo;
-            _xaCuRepo = xaCuRepo;
-            _xaMoiRepo = xaMoiRepo; // Inject the new repository for XaMoi
+            _xaMoiRepo = xaMoiRepo;
         }
 
         // GET: Admin/LichSuDiaChi
@@ -49,16 +46,29 @@ namespace QLSNT.Areas.Admin.Controllers
 
             return View(item);
         }
+        private async Task<string> GenerateMaLichSuCuTruAsync()
+        {
+            var lastCode = await _lsctRepo.GetLastCodeAsync();
+            int number = 0;
+
+            if (!string.IsNullOrEmpty(lastCode) && lastCode.Length > 2)
+            {
+                // bỏ tiền tố TT và parse số
+                int.TryParse(lastCode.Substring(2), out number);
+            }
+
+            // tăng số lên 1 và format lại
+            return $"TT{(number + 1):D3}";
+        }
 
         // GET: Admin/LichSuDiaChi/Create
         public async Task<IActionResult> Create(string? maCccd)
         {
-            // Load both old and new districts dropdowns
             await LoadDropdowns(maCccd: maCccd);
 
             var model = new LichSuDiaChi
             {
-                MaCCCD = maCccd,           // Create from "NguoiDan" details if needed
+                MaCCCD = maCccd,
                 NgayHieuLuc = DateTime.Today
             };
 
@@ -67,18 +77,18 @@ namespace QLSNT.Areas.Admin.Controllers
 
         // POST: Admin/LichSuDiaChi/Create        
         [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(LichSuDiaChi model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(LichSuDiaChi model)
         {
+            ModelState.Remove(nameof(model.MaLichSuCuTru));
             if (!ModelState.IsValid)
             {
-                await LoadDropdowns(model.MaCCCD, model.MaXaCu, model.MaXaMoi);
+                await LoadDropdowns(model.MaCCCD, model.MaXaMoi);
                 return View(model);
             }
 
-            // Sinh mã tự động khi thêm bằng tay
-            model.MaLichSuCuTru = Guid.NewGuid().ToString();
-
+            // Sinh mã tự động TT001, TT002...
+            model.MaLichSuCuTru = await GenerateMaLichSuCuTruAsync();
             model.NguoiTao = User.Identity?.Name;
             model.NgayTao = DateTime.Now;
 
@@ -99,8 +109,7 @@ public async Task<IActionResult> Create(LichSuDiaChi model)
             if (entity == null)
                 return NotFound();
 
-            // Load both old and new districts dropdowns for editing
-            await LoadDropdowns(entity.MaCCCD, entity.MaXaCu, entity.MaXaMoi);
+            await LoadDropdowns(entity.MaCCCD, entity.MaXaMoi);
             return View(entity);
         }
 
@@ -114,8 +123,7 @@ public async Task<IActionResult> Create(LichSuDiaChi model)
 
             if (!ModelState.IsValid)
             {
-                // Load dropdowns for both old and new districts if model is not valid
-                await LoadDropdowns(model.MaCCCD, model.MaXaCu, model.MaXaMoi);
+                await LoadDropdowns(model.MaCCCD, model.MaXaMoi);
                 return View(model);
             }
 
@@ -123,7 +131,6 @@ public async Task<IActionResult> Create(LichSuDiaChi model)
             if (entity == null)
                 return NotFound();
 
-            // Update editable fields
             entity.LoaiThayDoi = model.LoaiThayDoi;
             entity.SoQuyetDinh = model.SoQuyetDinh;
             entity.LyDoThayDoi = model.LyDoThayDoi;
@@ -133,10 +140,8 @@ public async Task<IActionResult> Create(LichSuDiaChi model)
             entity.DiaChiMoi = model.DiaChiMoi;
             entity.GhiChu = model.GhiChu;
             entity.MaCCCD = model.MaCCCD;
-            entity.MaXaCu = model.MaXaCu;
-            entity.MaXaMoi = model.MaXaMoi; // Added for new district code
+            entity.MaXaMoi = model.MaXaMoi;
 
-            // Record update info
             entity.NguoiCapNhat = User.Identity?.Name;
             entity.NgayCapNhat = DateTime.Now;
 
@@ -178,17 +183,15 @@ public async Task<IActionResult> Create(LichSuDiaChi model)
         }
 
         /// <summary>
-        /// Load dropdown for NguoiDan and XaCu + XaMoi (new district)
+        /// Load dropdown cho NguoiDan và XaMoi
         /// </summary>
-        private async Task LoadDropdowns(string? maCccd = null, int? maXaCu = null, int? maXaMoi = null)
+        private async Task LoadDropdowns(string? maCccd = null, int? maXaMoi = null)
         {
             var nguoiDans = await _nguoiDanRepo.GetAllAsync();
-            var xasCu = await _xaCuRepo.GetAllAsync();
-            var xasMoi = await _xaMoiRepo.GetAllAsync(); // Added for new district dropdown
+            var xasMoi = await _xaMoiRepo.GetAllAsync();
 
             ViewBag.NguoiDanList = new SelectList(nguoiDans, "MaCCCD", "HoTen", maCccd);
-            ViewBag.XaCuList = new SelectList(xasCu, "MaXaCu", "TenXaCu", maXaCu);
-            ViewBag.XaMoiList = new SelectList(xasMoi, "MaXaMoi", "TenXaMoi", maXaMoi); // Added for new district dropdown
+            ViewBag.XaMoiList = new SelectList(xasMoi, "MaXaMoi", "TenXaMoi", maXaMoi);
         }
     }
 }

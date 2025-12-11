@@ -12,6 +12,14 @@ namespace QLSNT.Repositories
         {
             _db = db;
         }
+        public async Task<IEnumerable<XaMoi>> GetByTinhAsync(int maTinhMoi)
+        {
+            return await _db.XaMois
+                .Where(x => x.MaTinh == maTinhMoi)
+                .OrderBy(x => x.MaXaMoi)
+                .ToListAsync();
+        }
+
 
         public async Task<IEnumerable<XaMoi>> GetAllAsync()
         {

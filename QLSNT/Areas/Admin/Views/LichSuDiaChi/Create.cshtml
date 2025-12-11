@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <form asp-action="Create" method="post">
+        <form asp-controller="LichSuDiaChi" asp-action="Create" method="post">
             @Html.AntiForgeryToken()
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,15 +24,18 @@
                 <span asp-validation-for="MaCCCD" class="text-danger"></span>
             </div>
 
+            <!-- Xã mới -->
             <div class="mb-3">
-                <label asp-for="MaXaCu" class="form-label">Xã (địa chỉ hành chính)</label>
-                <select asp-for="MaXaCu"
-                        asp-items="ViewBag.XaCuList"
+                <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
+                <select asp-for="MaXaMoi"
+                        asp-items="ViewBag.XaMoiList"
                         class="form-select">
-                    <option value="">-- Chọn xã --</option>
+                    <option value="">-- Chọn xã mới --</option>
                 </select>
-                <span asp-validation-for="MaXaCu" class="text-danger"></span>
+                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
             </div>
+
+           
 
             <div class="mb-3">
                 <label asp-for="DiaChiCu" class="form-label">Địa chỉ cũ</label>

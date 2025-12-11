@@ -1,38 +1,51 @@
 ﻿@model QLSNT.Models.TamTru
 
 @{
-    ViewData["Title"] = "Chi tiết Tạm trú";
+    ViewData["Title"] = "Chi tiết tạm trú";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Chi tiết Tạm trú</h1>
-<hr />
+<h2 class="mb-3 text-info fw-bold">
+    <i class="bi bi-eye"></i> Chi tiết tạm trú
+</h2>
 
-<dl class="row">
-    <dt class="col-sm-3">Mã xã</dt>
-    <dd class="col-sm-9">@Model.MaXaMoi</dd>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Người dân (CCCD)</dt>
+            <dd class="col-sm-9">@Model.MaCCCD</dd>
 
-    <dt class="col-sm-3">CCCD</dt>
-    <dd class="col-sm-9">@Model.MaCCCD</dd>
+            <dt class="col-sm-3">Họ tên</dt>
+            <dd class="col-sm-9">@Model.NguoiDan?.HoTen</dd>
 
-    <dt class="col-sm-3">Địa chỉ tạm trú</dt>
-    <dd class="col-sm-9">@Model.DiaChi</dd>
+            <dt class="col-sm-3">Xã mới</dt>
+            <dd class="col-sm-9">@Model.XaMoi?.TenXaMoi</dd>
 
-    <dt class="col-sm-3">Ngày bắt đầu</dt>
-    <dd class="col-sm-9">@Model.NgayDangKy</dd>
+            <dt class="col-sm-3">Địa chỉ</dt>
+            <dd class="col-sm-9">@Model.DiaChi</dd>
 
-    <dt class="col-sm-3">Thời Hạn</dt>
-    <dd class="col-sm-9">@Model.ThoiHan</dd>
+            <dt class="col-sm-3">Ngày đăng ký</dt>
+            <dd class="col-sm-9">@Model.NgayDangKy?.ToString("dd/MM/yyyy")</dd>
 
-    <dt class="col-sm-3">Lý do</dt>
-    <dd class="col-sm-9">@Model.NoiDungDeNghi</dd>
-</dl>
+            <dt class="col-sm-3">Thời hạn</dt>
+            <dd class="col-sm-9">@Model.ThoiHan</dd>
 
-<div class="mt-3">
-    <a asp-action="Edit"
-       asp-route-maXaMoi="@Model.MaXaMoi"
-       asp-route-maCCCD="@Model.MaCCCD"
-       class="btn btn-warning">Sửa</a>
+            <dt class="col-sm-3">Nội dung đề nghị</dt>
+            <dd class="col-sm-9">@Model.NoiDungDeNghi</dd>
+        </dl>
+    </div>
+</div>
 
-    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+<div class="mt-3 d-flex gap-2">
+    <a asp-action="Edit" asp-route-maXaMoi="@Model.MaXaMoi" asp-route-maCCCD="@Model.MaCCCD"
+       class="btn btn-warning">
+        <i class="bi bi-pencil-square"></i> Sửa
+    </a>
+    <a asp-action="Delete" asp-route-maXaMoi="@Model.MaXaMoi" asp-route-maCCCD="@Model.MaCCCD"
+       class="btn btn-danger">
+        <i class="bi bi-trash"></i> Xoá
+    </a>
+    <a asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left-circle"></i> Quay lại
+    </a>
 </div>

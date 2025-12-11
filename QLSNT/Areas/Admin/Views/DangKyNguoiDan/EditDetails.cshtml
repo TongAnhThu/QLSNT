@@ -3,12 +3,13 @@
 @{
     ViewData["Title"] = "Sửa địa chỉ thường trú";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var getXaUrl = Url.Action("GetXaByTinh", "DangKyNguoiDan", new { area = "Admin" });
 }
 
 <h2 class="fw-bold text-primary mb-4">Sửa địa chỉ thường trú</h2>
 
 <div class="card shadow-sm p-4">
-    <form asp-action="EditDetails" method="post">
+    <form asp-controller="DangKyNguoiDan" asp-action="EditDetails" method="post">
         @Html.AntiForgeryToken()
 
         <!-- CCCD -->
@@ -16,8 +17,8 @@
 
         <!-- Tỉnh -->
         <div class="mb-3">
-            <label asp-for="MaTinhMoi" class="form-label"></label>
-            <select asp-for="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhList">
+            <label asp-for="MaTinhMoi" class="form-label">Tỉnh/Thành phố</label>
+            <select asp-for="MaTinhMoi" id="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhList">
                 <option value="">-- Chọn tỉnh/thành phố --</option>
             </select>
             <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
@@ -25,8 +26,9 @@
 
         <!-- Xã -->
         <div class="mb-3">
-            <label asp-for="MaXaMoi" class="form-label"></label>
-            <select asp-for="MaXaMoi" class="form-select" asp-items="ViewBag.XaList">
+            <label asp-for="MaXaMoi" class="form-label">Xã/Phường</label>
+            <!-- KHÔNG bind sẵn ViewBag.XaList -->
+            <select asp-for="MaXaMoi" id="MaXaMoi" class="form-select">
                 <option value="">-- Chọn xã/phường --</option>
             </select>
             <span asp-validation-for="MaXaMoi" class="text-danger"></span>
@@ -46,4 +48,50 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tinhSelect = document.getElementById("MaTinhMoi");
+            const xaSelect = document.getElementById("MaXaMoi");
+            const getXaUrl = "@getXaUrl";
+
+            function resetXa() {
+                xaSelect.innerHTML = "";
+                xaSelect.append(new Option("-- Chọn xã/phường --", ""));
+            }
+
+            async function loadXa(maTinh) {
+                resetXa();
+                if (!maTinh || isNaN(parseInt(maTinh))) return;
+
+                const url = `${getXaUrl}?maTinhMoi=${maTinh}`;
+                const res = await fetch(url);
+                if (!res.ok) return;
+
+                const data = await res.json();
+                data.forEach(x => {
+                    xaSelect.append(new Option(x.tenXaMoi, x.maXaMoi));
+                });
+
+                // Giữ lại xã đã chọn khi edit
+                const current = "@Model.MaXaMoi";
+                if (current && !isNaN(parseInt(current))) {
+                    xaSelect.value = current;
+                }
+            }
+
+            // Khi chọn tỉnh thì load xã
+            tinhSelect.addEventListener("change", function () {
+                loadXa(this.value);
+            });
+
+            // Khởi tạo khi vào trang edit
+            const initialTinh = tinhSelect.value || "@Model.MaTinhMoi";
+            if (initialTinh && !isNaN(parseInt(initialTinh))) {
+                loadXa(initialTinh);
+            } else {
+                resetXa();
+            }
+        });
+    </script>
 }

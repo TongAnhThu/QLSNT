@@ -2,9 +2,12 @@
 
 @{
     ViewData["Title"] = "Lịch sử địa chỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-3">Lịch sử địa chỉ</h2>
+<h2 class="mb-3 text-primary fw-bold">
+    <i class="bi bi-clock-history"></i> Lịch sử địa chỉ
+</h2>
 
 <div class="row mb-3">
     <div class="col-md-6">
@@ -14,75 +17,104 @@
                        name="searchCccd"
                        value="@ViewBag.SearchCccd"
                        class="form-control"
-                       placeholder="Tìm theo CCCD hoặc họ tên" />
+                       placeholder="🔍 Tìm theo CCCD hoặc họ tên" />
             </div>
             <div class="col-4 d-flex gap-2">
-                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                <a asp-action="Index" class="btn btn-outline-secondary">Xoá lọc</a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Tìm kiếm
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Xoá lọc
+                </a>
             </div>
         </form>
     </div>
 
     <div class="col-md-6 text-end">
         <a asp-action="Create" class="btn btn-success">
-            + Thêm lịch sử địa chỉ
+            <i class="bi bi-plus-circle"></i> Thêm lịch sử địa chỉ
         </a>
     </div>
 </div>
 
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 
-<table class="table table-bordered table-striped align-middle">
-    <thead class="table-light">
-        <tr>
-            <th>Mã</th>
-            <th>CCCD</th>
-            <th>Họ tên</th>
-            <th>Địa chỉ cũ</th>
-            <th>Địa chỉ mới</th>
-            <th>Ngày hiệu lực</th>
-            <th>Người tạo</th>
-            <th>Ngày tạo</th>
-            <th style="width: 150px;">Thao tác</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
-            foreach (var item in Model)
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle shadow-sm">
+        <thead class="table-primary text-center">
+            <tr>
+                <th>Mã</th>
+                <th>CCCD</th>
+                <th>Họ tên</th>
+                <th>Địa chỉ cũ</th>
+                <th>Địa chỉ mới</th>
+                <th>Ngày hiệu lực</th>
+                <th>Người tạo</th>
+                <th>Ngày tạo</th>
+                <th style="width: 200px;">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.MaLichSuCuTru</td>
+                        <td class="text-center">@item.MaCCCD</td>
+                        <td>@item.NguoiDan?.HoTen</td>
+                        <td>@item.DiaChiCu</td>
+                        <td class="fw-bold text-success">@item.DiaChiMoi</td>
+                        <td class="text-center">@item.NgayHieuLuc?.ToString("dd/MM/yyyy")</td>
+                        <td>@item.NguoiTao</td>
+                        <td class="text-center">@item.NgayTao?.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a asp-action="Details" asp-route-id="@item.MaLichSuCuTru"
+                                   class="btn btn-info"
+                                   data-bs-toggle="tooltip" title="Xem chi tiết">
+                                    <i class="bi bi-eye"></i> Xem
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.MaLichSuCuTru"
+                                   class="btn btn-warning"
+                                   data-bs-toggle="tooltip" title="Chỉnh sửa">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.MaLichSuCuTru"
+                                   class="btn btn-danger"
+                                   data-bs-toggle="tooltip" title="Xoá">
+                                    <i class="bi bi-trash"></i> Xoá
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>@item.MaLichSuCuTru</td>
-                    <td>@item.MaCCCD</td>
-                    <td>@item.NguoiDan?.HoTen</td>
-                    <td>@item.DiaChiCu</td>
-                    <td>@item.DiaChiMoi</td>
-                    <td>@item.NgayHieuLuc?.ToString("dd/MM/yyyy")</td>
-                    <td>@item.NguoiTao</td>
-                    <td>@item.NgayTao?.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.MaLichSuCuTru"
-                           class="btn btn-sm btn-info">Xem</a>
-                        <a asp-action="Edit" asp-route-id="@item.MaLichSuCuTru"
-                           class="btn btn-sm btn-warning">Sửa</a>
-                        <a asp-action="Delete" asp-route-id="@item.MaLichSuCuTru"
-                           class="btn btn-sm btn-danger">Xoá</a>
+                    <td colspan="9" class="text-center text-muted">
+                        <i class="bi bi-info-circle"></i> Chưa có dữ liệu lịch sử địa chỉ.
                     </td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="9" class="text-center text-muted">
-                    Chưa có dữ liệu lịch sử địa chỉ.
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+}

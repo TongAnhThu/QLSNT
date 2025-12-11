@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Đăng ký người dân - Địa chỉ thường trú";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var getXaUrl = Url.Action("GetXaByTinh", "DangKyNguoiDan", new { area = "Admin" });
 }
 
 <h2 class="fw-bold text-primary mb-4">Đăng ký người dân - Bước 2</h2>
@@ -16,18 +17,20 @@
 
         <!-- Tỉnh -->
         <div class="mb-3">
-            <label class="form-label">Tỉnh</label>
-            <select asp-for="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhList">
+            <label asp-for="MaTinhMoi" class="form-label">Tỉnh</label>
+            <select asp-for="MaTinhMoi" id="MaTinhMoi" class="form-select" asp-items="ViewBag.TinhList">
                 <option value="">-- Chọn tỉnh --</option>
             </select>
+            <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
         </div>
 
         <!-- Xã -->
         <div class="mb-3">
-            <label class="form-label">Xã</label>
-            <select asp-for="MaXaMoi" class="form-select" asp-items="ViewBag.XaList">
+            <label asp-for="MaXaMoi" class="form-label">Xã</label>
+            <select asp-for="MaXaMoi" id="MaXaMoi" class="form-select">
                 <option value="">-- Chọn xã --</option>
             </select>
+            <span asp-validation-for="MaXaMoi" class="text-danger"></span>
         </div>
 
         <!-- Địa chỉ thường trú -->
@@ -43,5 +46,49 @@
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const tinhSelect = document.getElementById("MaTinhMoi");
+            const xaSelect = document.getElementById("MaXaMoi");
+            const getXaUrl = "@getXaUrl";
+
+            function resetXa() {
+                xaSelect.innerHTML = "";
+                xaSelect.append(new Option("-- Chọn xã/phường --", ""));
+            }
+
+            async function loadXa(maTinh) {
+                resetXa();
+                if (!maTinh || isNaN(parseInt(maTinh))) return;
+
+                const url = `${getXaUrl}?maTinhMoi=${maTinh}`;
+                const res = await fetch(url);
+                if (!res.ok) return;
+
+                const data = await res.json();
+                data.forEach(x => {
+                    xaSelect.append(new Option(x.tenXaMoi, x.maXaMoi));
+                });
+
+                // Giữ lại xã đã chọn khi edit hoặc khi ModelState trả về lỗi
+                const current = "@Model.MaXaMoi";
+                if (current && !isNaN(parseInt(current))) {
+                    xaSelect.value = current;
+                }
+            }
+
+            // Khi chọn tỉnh thì load xã
+            tinhSelect.addEventListener("change", function () {
+                loadXa(this.value);
+            });
+
+            // Khởi tạo khi vào trang
+            const initialTinh = tinhSelect.value || "@Model.MaTinhMoi";
+            if (initialTinh && !isNaN(parseInt(initialTinh))) {
+                loadXa(initialTinh);
+            } else {
+                resetXa();
+            }
+        });
+    </script>
 }

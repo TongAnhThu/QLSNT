@@ -1,132 +1,153 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using QLSNT.Data;
 using QLSNT.Models;
-using QLSNT.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace QLSNT.Controllers
 {
     [Area("Admin")]
     public class ThuongTruController : Controller
     {
-        private readonly IThuongTruRepository _repo;
+        private readonly ApplicationDbContext _context;
 
-        public ThuongTruController(IThuongTruRepository repo)
+        public ThuongTruController(ApplicationDbContext context)
         {
-            _repo = repo;
+            _context = context;
         }
 
-        // GET: /ThuongTru
-        // Hỗ trợ tìm kiếm theo keyword (CCCD, xã, địa chỉ...)
-        public async Task<IActionResult> Index(string? keyword)
+        // GET: ThuongTru
+        public async Task<IActionResult> Index()
         {
-            IEnumerable<ThuongTru> list;
-
-            if (!string.IsNullOrWhiteSpace(keyword))
-            {
-                list = await _repo.SearchAsync(keyword);
-            }
-            else
-            {
-                list = await _repo.GetAllAsync();
-            }
-
+            var list = await _context.ThuongTrus
+                .Include(t => t.XaMoi)
+                .Include(t => t.NguoiDan)
+                .ToListAsync();
             return View(list);
         }
 
-        // GET: /ThuongTru/Details?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Details(int maXaMoi, string maCCCD)
+        // GET: ThuongTru/Details/5
+        public async Task<IActionResult> Details(int? maXaMoi, string? maCCCD)
         {
-            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == null || maCCCD == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
-            if (item == null)
+            var thuongTru = await _context.ThuongTrus
+                .Include(t => t.XaMoi)
+                .Include(t => t.NguoiDan)
+                .FirstOrDefaultAsync(m => m.MaXaMoi == maXaMoi && m.MaCCCD == maCCCD);
+
+            if (thuongTru == null)
                 return NotFound();
 
-            return View(item);
+            return View(thuongTru);
         }
 
-        // GET: /ThuongTru/Create
+        // GET: ThuongTru/Create
+        // GET: ThuongTru/Create
         public IActionResult Create()
         {
-            // Nếu sau này bạn muốn dropdown:
-            // - ViewBag.DanhSachXaMoi
-            // - ViewBag.DanhSachNguoiDan
+            ViewData["MaXaMoi"] = new SelectList(_context.XaMois, "MaXaMoi", "TenXaMoi");
+            ViewData["MaCCCD"] = new SelectList(_context.NguoiDans, "MaCCCD", "HoTen");
             return View();
         }
 
-        // POST: /ThuongTru/Create
+        // POST: ThuongTru/Create
+        // POST: ThuongTru/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ThuongTru model)
+        public async Task<IActionResult> Create([Bind("MaXaMoi,MaCCCD,DiaChi,NgayDangKy")] ThuongTru thuongTru)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                // load lại dropdown nếu có
-                return View(model);
+                _context.Add(thuongTru);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
 
-            // MaXaMoi + MaCCCD là PK, không identity nên bắt buộc model phải có đủ 2 cái
-            await _repo.AddAsync(model);
-            return RedirectToAction(nameof(Index));
+            // ⚠️ Gán lại ViewBag khi return View
+            ViewData["MaXaMoi"] = new SelectList(_context.XaMois, "MaXaMoi", "TenXaMoi", thuongTru.MaXaMoi);
+            ViewData["MaCCCD"] = new SelectList(_context.NguoiDans, "MaCCCD", "HoTen", thuongTru.MaCCCD);
+
+            return View(thuongTru);
         }
 
-        // GET: /ThuongTru/Edit?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Edit(int maXaMoi, string maCCCD)
+
+
+        // GET: ThuongTru/Edit/5
+        public async Task<IActionResult> Edit(int? maXaMoi, string? maCCCD)
         {
-            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == null || maCCCD == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
-            if (item == null)
+            var thuongTru = await _context.ThuongTrus.FindAsync(maXaMoi, maCCCD);
+            if (thuongTru == null)
                 return NotFound();
 
-            // load dropdown nếu cần
-            return View(item);
+            return View(thuongTru);
         }
 
-        // POST: /ThuongTru/Edit
+        // POST: ThuongTru/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ThuongTru model)
+        public async Task<IActionResult> Edit(int maXaMoi, string maCCCD, [Bind("MaXaMoi,MaCCCD,DiaChi,NgayDangKy")] ThuongTru thuongTru)
         {
-            // Lưu ý: để Update đúng, View phải giữ nguyên MaXaMoi + MaCCCD (readonly/hidden),
-            // không cho sửa PK trên form.
-            if (!ModelState.IsValid)
+            if (maXaMoi != thuongTru.MaXaMoi || maCCCD != thuongTru.MaCCCD)
+                return NotFound();
+
+            if (ModelState.IsValid)
             {
-                return View(model);
+                try
+                {
+                    _context.Update(thuongTru);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ThuongTruExists(maXaMoi, maCCCD))
+                        return NotFound();
+                    else
+                        throw;
+                }
+                return RedirectToAction(nameof(Index));
             }
-
-            await _repo.UpdateAsync(model);
-            return RedirectToAction(nameof(Index));
+            return View(thuongTru);
         }
 
-        // GET: /ThuongTru/Delete?maXaMoi=...&maCCCD=...
-        public async Task<IActionResult> Delete(int maXaMoi, string maCCCD)
+        // GET: ThuongTru/Delete/5
+        public async Task<IActionResult> Delete(int? maXaMoi, string? maCCCD)
         {
-            if (maXaMoi == 0 || string.IsNullOrWhiteSpace(maCCCD))
+            if (maXaMoi == null || maCCCD == null)
                 return NotFound();
 
-            var item = await _repo.GetByIdAsync(maXaMoi, maCCCD);
-            if (item == null)
+            var thuongTru = await _context.ThuongTrus
+                .Include(t => t.XaMoi)
+                .Include(t => t.NguoiDan)
+                .FirstOrDefaultAsync(m => m.MaXaMoi == maXaMoi && m.MaCCCD == maCCCD);
+
+            if (thuongTru == null)
                 return NotFound();
 
-            return View(item);
+            return View(thuongTru);
         }
 
-        // POST: /ThuongTru/DeleteConfirmed
+        // POST: ThuongTru/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int maXaMoi, string maCCCD)
         {
-            // Ensure parameters are valid
-            if (maXaMoi != 0 && !string.IsNullOrWhiteSpace(maCCCD))
+            var thuongTru = await _context.ThuongTrus.FindAsync(maXaMoi, maCCCD);
+            if (thuongTru != null)
             {
-                await _repo.DeleteAsync(maXaMoi, maCCCD);
+                _context.ThuongTrus.Remove(thuongTru);
+                await _context.SaveChangesAsync();
             }
-
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool ThuongTruExists(int maXaMoi, string maCCCD)
+        {
+            return _context.ThuongTrus.Any(e => e.MaXaMoi == maXaMoi && e.MaCCCD == maCCCD);
         }
     }
 }

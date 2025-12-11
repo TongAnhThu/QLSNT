@@ -97,5 +97,11 @@ namespace QLSNT.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<NguoiDan?> GetByIdentityUserIdAsync(string cccd)
+        {
+            return await _context.NguoiDans
+        .FirstOrDefaultAsync(nd => nd.MaCCCD == cccd);
+        }
+
     }
 }

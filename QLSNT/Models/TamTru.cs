@@ -12,13 +12,13 @@ namespace QLSNT.Models
 
         public string? DiaChi { get; set; }
         public DateTime? NgayDangKy { get; set; }
-        public DateTime? ThoiHan { get; set; }
+        public string? ThoiHan { get; set; }
         public string? NoiDungDeNghi { get; set; }
         [ForeignKey(nameof(MaXaMoi))]
-        public XaMoi XaMoi { get; set; } = default!;
+        public XaMoi? XaMoi { get; set; } = default!;
         [ForeignKey(nameof(MaCCCD))]
 
-        public NguoiDan NguoiDan { get; set; } = default!;
+        public NguoiDan? NguoiDan { get; set; } = default!;
     }
 }
 

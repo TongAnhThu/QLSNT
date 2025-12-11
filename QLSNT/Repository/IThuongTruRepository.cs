@@ -28,5 +28,6 @@ namespace QLSNT.Repositories
 
         // Xóa (tự SaveChanges bên trong)
         Task DeleteAsync(int maXaMoi, string maCccd);
+        Task<ThuongTru?> GetThuongTruHienTaiByNguoiDanIdAsync(string maNguoiDan);
     }
 }
