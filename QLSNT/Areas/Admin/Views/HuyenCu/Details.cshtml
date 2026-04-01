@@ -5,30 +5,53 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Chi tiết Huyện cũ</h1>
-<hr />
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Mã huyện</dt>
+                <dd class="col-sm-9">@Model.MaHuyenCu</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Mã huyện</dt>
-    <dd class="col-sm-9">@Model.MaHuyenCu</dd>
+                <dt class="col-sm-3">Tên huyện</dt>
+                <dd class="col-sm-9">@Model.TenHuyenCu</dd>
 
-    <dt class="col-sm-3">Tên huyện</dt>
-    <dd class="col-sm-9">@Model.TenHuyenCu</dd>
+                <dt class="col-sm-3">Loại huyện</dt>
+                <dd class="col-sm-9">@Model.LoaiHuyen</dd>
 
-    <dt class="col-sm-3">Loại huyện</dt>
-    <dd class="col-sm-9">@Model.LoaiHuyen</dd>
+                <dt class="col-sm-3">Mã tỉnh cũ</dt>
+                <dd class="col-sm-9">@Model.TinhCu?.TenTinhCu</dd>
 
-    <dt class="col-sm-3">Mã tỉnh cũ</dt>
-    <dd class="col-sm-9">@Model.MaTinhCu</dd>
+                <dt class="col-sm-3">Trạng thái</dt>
+                <dd class="col-sm-9">
+                    @if (Model.TrangThai == "Hoạt động")
+                    {
+                        <span class="badge bg-success">Hoạt động</span>
+                    }
+                    else if (Model.TrangThai == "Đã sáp nhập")
+                    {
+                        <span class="badge bg-danger">Đã sáp nhập</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@Model.TrangThai</span>
+                    }
+                </dd>
 
-    <dt class="col-sm-3">Trạng thái</dt>
-    <dd class="col-sm-9">@Model.TrangThai</dd>
+                <dt class="col-sm-3">Ghi chú</dt>
+                <dd class="col-sm-9">@Model.GhiChu</dd>
+            </dl>
+        </div>
+    </div>
 
-    <dt class="col-sm-3">Ghi chú</dt>
-    <dd class="col-sm-9">@Model.GhiChu</dd>
-</dl>
-
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.MaHuyenCu" class="btn btn-warning">Sửa</a>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.MaHuyenCu" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Sửa
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
 </div>

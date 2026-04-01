@@ -10,8 +10,8 @@ namespace QLSNT.Repositories
 
         // Lấy 1 bản ghi theo MaLssn (không include nặng)
         Task<LichSuSapNhap?> GetByIdAsync(string id, bool includeTinhs = false, bool includeXas = false);
-        
 
+        Task<LichSuSapNhap?> GetLastAsync();
             // Lấy chi tiết 1 bản ghi + các quan hệ (Tỉnh/Xã)
             Task<LichSuSapNhap?> GetDetailsAsync(string maLssn);
 

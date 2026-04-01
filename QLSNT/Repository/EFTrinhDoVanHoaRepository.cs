@@ -17,6 +17,7 @@ namespace QLSNT.Repositories
         {
             return await _context.TrinhDoVanHoas
                 .AsNoTracking()
+                .OrderBy(t => t.MaTDVH)
                 .ToListAsync();
         }
 

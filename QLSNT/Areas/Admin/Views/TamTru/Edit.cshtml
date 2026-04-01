@@ -24,12 +24,19 @@
                 <label asp-for="MaCCCD" class="form-label">Người dân (CCCD)</label>
                 <input asp-for="MaCCCD" class="form-control" readonly />
             </div>
+            <!-- Tỉnh mới -->
+            <div class="mb-3">
+                <label class="form-label">Tỉnh </label>
+                <input type="text" class="form-control" value="@ViewBag.TenTinhMoi" readonly />
+            </div>
+
 
             <!-- Xã mới -->
             <div class="mb-3">
-                <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
-                <input asp-for="MaXaMoi" class="form-control" readonly />
+                <label class="form-label">Xã</label>
+                <input type="text" class="form-control" value="@ViewBag.TenXaMoi" readonly />
             </div>
+
 
             <!-- Địa chỉ -->
             <div class="mb-3">

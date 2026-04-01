@@ -10,5 +10,7 @@ namespace QLSNT.Repositories
         Task UpdateAsync(TinhMoi entity);
         Task DeleteAsync(int id);
         Task<IEnumerable<TinhMoi>> SearchByNameAsync(string keyword);
+        Task<IEnumerable<TinhMoi>> GetAllCuAsync();   // thêm
+        Task<IEnumerable<TinhMoi>> GetAllMoiAsync();
     }
 }

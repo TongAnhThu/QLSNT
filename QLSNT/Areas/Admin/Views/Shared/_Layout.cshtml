@@ -156,21 +156,39 @@
                         </li>
 
                         <!-- Privacy giữ lại cho tiện (ngoài admin) -->
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
-                                Privacy
-                            </a>
-                        </li>
-                    </ul>
+                        <ul class="navbar-nav ms-auto">
 
-                    @* Góc phải cho login/user nếu cần sau này *@
-                    @*<ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Account" asp-action="Login">
-                                Đăng nhập
-                            </a>
-                        </li>
-                    </ul>*@
+                            @if (User.Identity != null && User.Identity.IsAuthenticated)
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link text-dark">
+                                        Xin chào, <strong>@User.Identity.Name</strong>
+                                    </span>
+                                </li>
+
+                                <li class="nav-item">
+                                    <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger ms-2">
+                                            Đăng xuất
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
+                                        Đăng nhập
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+
+                    
+
+
+
                 </div>
             </div>
         </nav>

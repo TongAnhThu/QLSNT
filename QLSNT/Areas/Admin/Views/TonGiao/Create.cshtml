@@ -12,11 +12,7 @@
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    <div class="mb-3">
-        <label asp-for="MaTonGiao" class="form-label"></label>
-        <input asp-for="MaTonGiao" class="form-control" />
-        <span asp-validation-for="MaTonGiao" class="text-danger"></span>
-    </div>
+    <input type="hidden" asp-for="MaTonGiao" />
 
     <div class="mb-3">
         <label asp-for="TenTonGiao" class="form-label"></label>

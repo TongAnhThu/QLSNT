@@ -17,8 +17,10 @@ namespace QLSNT.Repositories
         {
             return await _context.DanTocs
                 .AsNoTracking()
+                .OrderBy(d => d.MaDanToc)   // sắp xếp tăng dần theo mã
                 .ToListAsync();
         }
+
 
         public async Task<DanToc?> GetByIdAsync(int maDanToc)
         {

@@ -17,8 +17,10 @@ namespace QLSNT.Repositories
         {
             return await _context.QuanHeChuHos
                 .AsNoTracking()
+                .OrderBy(q => q.MaQHCH)   // sắp xếp tăng dần theo MaQHCH
                 .ToListAsync();
         }
+
 
         public async Task<QuanHeChuHo?> GetByIdAsync(string maQhch)
         {

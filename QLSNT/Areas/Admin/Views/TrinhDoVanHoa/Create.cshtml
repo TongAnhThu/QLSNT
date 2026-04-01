@@ -14,11 +14,9 @@
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="mb-3">
-                <label asp-for="MaTDVH" class="form-label"></label>
-                <input asp-for="MaTDVH" class="form-control" />
-                <span asp-validation-for="MaTDVH" class="text-danger"></span>
-            </div>
+           
+                <input asp-for="MaTDVH" class="form-control" type="hidden"/>
+                
 
             <div class="mb-3">
                 <label asp-for="TenTDVH" class="form-label"></label>

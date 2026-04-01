@@ -2,35 +2,51 @@
 
 @{
     ViewData["Title"] = "Danh sách Dân tộc";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Danh sách Dân tộc</h1>
-
 <div class="row mb-3">
     <div class="col-md-6">
         <form asp-action="Index" method="get" class="d-flex">
-            <input type="text"
-                   name="search"
-                   value="@ViewBag.Search"
-                   class="form-control me-2"
-                   placeholder="Tìm theo tên dân tộc..." />
+
+            <div class="position-relative w-100 me-2">
+                <input type="text"
+                       id="searchBox"
+                       name="search"
+                       value="@ViewBag.Search"
+                       class="form-control"
+                       placeholder="Tìm theo tên dân tộc..." />
+
+                <!-- 🔥 THÊM CÁI NÀY -->
+                <div id="suggestions"
+                     class="list-group position-absolute w-100"
+                     style="top:100%; z-index:1000;">
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
         </form>
     </div>
+
     <div class="col-md-6 text-end">
         <a asp-action="Create" class="btn btn-success">+ Thêm dân tộc mới</a>
     </div>
 </div>
 
+
+@if (!Model.Any())
+{
+    <p><em>Chưa có dữ liệu dân tộc.</em></p>
+}
+
+
 <table class="table table-striped table-bordered">
     <thead class="table-light">
-        <tr>
-            <th>@Html.DisplayNameFor(m => m.First().MaDanToc)</th>
-            <th>@Html.DisplayNameFor(m => m.First().TenDanToc)</th>
-            <th>@Html.DisplayNameFor(m => m.First().MoTa)</th>
-            <th style="width:180px;">Thao tác</th>
-        </tr>
+    <th>Mã dân tộc</th>
+    <th>Tên dân tộc</th>
+    <th>Mô tả</th>
+    <th style="width:180px;">Thao tác</th>
     </thead>
     <tbody>
         @foreach (var item in Model)
@@ -53,3 +69,42 @@
 {
     <p><em>Chưa có dữ liệu dân tộc.</em></p>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const input = document.getElementById("searchBox");
+        const box = document.getElementById("suggestions");
+
+        input.addEventListener("input", async function () {
+            const keyword = this.value;
+            console.log("Đang gõ:", keyword);
+
+            if (keyword.length < 1) {
+                box.innerHTML = "";
+                return;
+            }
+
+            const res = await fetch(`/Admin/DanToc/Suggest?keyword=${keyword}`);
+            const data = await res.json();
+
+            console.log("Data trả về:", data);
+
+            box.innerHTML = "";
+
+            data.forEach(item => {
+                const div = document.createElement("a");
+                div.classList.add("list-group-item", "list-group-item-action");
+                div.textContent = item;
+
+                div.onclick = () => {
+                    input.value = item;
+                    box.innerHTML = "";
+                };
+
+                box.appendChild(div);
+            });
+        });
+
+    });
+</script>

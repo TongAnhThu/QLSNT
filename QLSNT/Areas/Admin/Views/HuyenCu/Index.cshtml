@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Danh sách Huyện cũ";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 <h1 class="mb-3">Danh sách Huyện cũ</h1>
@@ -33,7 +33,7 @@
                 <th>Mã huyện</th>
                 <th>Tên huyện</th>
                 <th>Loại huyện</th>
-                <th>Mã tỉnh cũ</th>
+                <th>Tỉnh</th>
                 <th>Trạng thái</th>
                 <th>Ghi chú</th>
                 <th style="width: 190px;">Thao tác</th>
@@ -46,7 +46,7 @@
                 <td>@item.MaHuyenCu</td>
                 <td>@item.TenHuyenCu</td>
                 <td>@item.LoaiHuyen</td>
-                <td>@item.MaTinhCu</td>
+                <td>@item.TinhCu?.TenTinhCu</td>
                 <td>@item.TrangThai</td>
                 <td>@item.GhiChu</td>
                 <td>

@@ -5,44 +5,79 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-3">Thêm xã cũ</h2>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <!-- Mã xã -->
+                <input asp-for="MaXaCu" type="hidden" />
 
-            <div class="mb-3">
-                <label asp-for="MaXaCu" class="form-label">Mã xã</label>
-                <input asp-for="MaXaCu" class="form-control" />
-                <span asp-validation-for="MaXaCu" class="text-danger"></span>
-            </div>
+                <!-- Tên xã -->
+                <div class="mb-3">
+                    <label asp-for="TenXaCu" class="form-label fw-bold">Tên xã</label>
+                    <input asp-for="TenXaCu" class="form-control" placeholder="Nhập tên xã..." />
+                    <span asp-validation-for="TenXaCu" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="TenXaCu" class="form-label">Tên xã</label>
-                <input asp-for="TenXaCu" class="form-control" />
-                <span asp-validation-for="TenXaCu" class="text-danger"></span>
-            </div>
+                <!-- Loại xã -->
+                <div class="mb-3">
+                    <label asp-for="LoaiXa" class="form-label fw-bold">Loại xã</label>
+                    <select asp-for="LoaiXa" class="form-select">
+                        <option value="">-- Chọn loại xã --</option>
+                        <option value="Xã">Xã</option>
+                        <option value="Phường">Phường</option>
+                        <option value="Thị trấn">Thị trấn</option>
+                    </select>
+                    <span asp-validation-for="LoaiXa" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="MaHuyenCu" class="form-label">Huyện cũ</label>
-                <select asp-for="MaHuyenCu"
-                        asp-items="ViewBag.HuyenCuList"
-                        class="form-select">
-                    <option value="">-- Chọn huyện cũ --</option>
-                </select>
-                <span asp-validation-for="MaHuyenCu" class="text-danger"></span>
-            </div>
+                <!-- Huyện cũ -->
+                <div class="mb-3">
+                    <label asp-for="MaHuyenCu" class="form-label fw-bold">Thuộc Huyện cũ</label>
+                    <select asp-for="MaHuyenCu"
+                            asp-items="@(new SelectList(ViewBag.HuyenCuList, "MaHuyenCu", "TenHuyenCu"))"
+                            class="form-select">
+                        <option value="">-- Chọn huyện cũ --</option>
+                    </select>
+                    <span asp-validation-for="MaHuyenCu" class="text-danger"></span>
+                </div>
 
-            @* Nếu bạn có thêm thuộc tính (GhiChu, LoaiXa, ...) thì thêm field ở đây *@
+                <!-- Trạng thái -->
+                <div class="mb-3">
+                    <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái</label>
+                    <select asp-for="TrangThai" class="form-select">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="Hoạt động">Hoạt động</option>
+                        <option value="Đã sáp nhập">Đã sáp nhập</option>
+                    </select>
+                    <span asp-validation-for="TrangThai" class="text-danger"></span>
+                </div>
 
-            <div class="mt-3">
-                <button type="submit" class="btn btn-primary">Lưu</button>
-                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
-            </div>
-        </form>
+                <!-- Ghi chú -->
+                <div class="mb-3">
+                    <label asp-for="GhiChu" class="form-label fw-bold">Ghi chú</label>
+                    <textarea asp-for="GhiChu" class="form-control" rows="3" placeholder="Nhập ghi chú nếu có..."></textarea>
+                    <span asp-validation-for="GhiChu" class="text-danger"></span>
+                </div>
+
+                <!-- Nút thao tác -->
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-save"></i> Lưu
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

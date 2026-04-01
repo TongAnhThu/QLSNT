@@ -24,10 +24,19 @@
                 <span asp-validation-for="MaCCCD" class="text-danger"></span>
             </div>
 
+            <!-- Tỉnh mới -->
+            <div class="mb-3">
+                <label asp-for="MaTinhMoi" class="form-label">Tỉnh mới</label>
+                <select asp-for="MaTinhMoi" asp-items="ViewBag.TinhMoiList" class="form-select" id="tinhMoiSelect">
+                    <option value="">-- Chọn tỉnh mới --</option>
+                </select>
+                <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
+            </div>
+
             <!-- Xã mới -->
             <div class="mb-3">
                 <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
-                <select asp-for="MaXaMoi" asp-items="ViewBag.XaMoiList" class="form-select">
+                <select asp-for="MaXaMoi" class="form-select" id="xaMoiSelect">
                     <option value="">-- Chọn xã mới --</option>
                 </select>
                 <span asp-validation-for="MaXaMoi" class="text-danger"></span>
@@ -77,4 +86,26 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        const tinhMoiSelect = document.getElementById("tinhMoiSelect");
+        const xaMoiSelect = document.getElementById("xaMoiSelect");
+
+        tinhMoiSelect.addEventListener("change", function () {
+            const maTinh = this.value;
+            xaMoiSelect.innerHTML = "<option value=''>-- Chọn xã mới --</option>";
+
+            if (!maTinh) return;
+
+            fetch(`/Admin/XaMoi/GetByTinh?maTinh=${maTinh}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(xa => {
+                        const opt = document.createElement("option");
+                        opt.value = xa.maXaMoi;
+                        opt.text = xa.tenXaMoi;
+                        xaMoiSelect.appendChild(opt);
+                    });
+                });
+        });
+    </script>
 }

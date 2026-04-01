@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using QLSNT.Data;
 using QLSNT.Models;
 using QLSNT.Repositories;
 
@@ -8,6 +10,7 @@ namespace QLSNT.Areas.Admin.Controllers
     [Area("Admin")]
     public class NguoiDanController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly INguoiDanRepository _nguoiDanRepo;
         private readonly IDanTocRepository _danTocRepo;
         private readonly ITonGiaoRepository _tonGiaoRepo;
@@ -15,12 +18,14 @@ namespace QLSNT.Areas.Admin.Controllers
         private readonly IQuanHeChuHoRepository _quanHeChuHoRepo;
 
         public NguoiDanController(
+            ApplicationDbContext context,
             INguoiDanRepository nguoiDanRepo,
             IDanTocRepository danTocRepo,
             ITonGiaoRepository tonGiaoRepo,
             ITrinhDoVanHoaRepository trinhDoRepo,
             IQuanHeChuHoRepository quanHeChuHoRepo)
         {
+            _context = context;
             _nguoiDanRepo = nguoiDanRepo;
             _danTocRepo = danTocRepo;
             _tonGiaoRepo = tonGiaoRepo;
@@ -160,6 +165,20 @@ namespace QLSNT.Areas.Admin.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Suggest(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return Json(new List<string>());
+
+            var data = await _context.NguoiDans
+                .Where(x => x.HoTen.Contains(keyword))
+                .Select(x => x.HoTen)
+                .Take(5) // giới hạn 5 gợi ý
+                .ToListAsync();
+
+            return Json(data);
         }
     }
 }

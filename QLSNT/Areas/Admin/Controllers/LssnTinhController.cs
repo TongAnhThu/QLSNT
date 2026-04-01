@@ -85,6 +85,7 @@ namespace QLSNT.Areas.Admin.Controllers
 
         // ================== EDIT ==================
         // GET: /Admin/LssnTinh/Edit/LS001
+        // GET: /Admin/LssnTinh/Edit/LS001
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -93,10 +94,11 @@ namespace QLSNT.Areas.Admin.Controllers
             var item = await _lssnTinhRepo.GetByIdAsync(id);
             if (item == null) return NotFound();
 
+            // load dropdown tỉnh, truyền giá trị đang chọn
             await LoadTinhDropDownsAsync(item.MaTinhCu, item.MaTinhMoi);
 
-            var lssn = await _lssnRepo.GetByIdAsync(item.MaLSSN);
-            ViewBag.LichSuSapNhap = lssn;
+            // lấy thông tin lịch sử sáp nhập cha để hiển thị thêm
+            ViewBag.LichSuSapNhap = await _lssnRepo.GetByIdAsync(item.MaLSSN);
 
             return View(item);
         }
@@ -106,20 +108,29 @@ namespace QLSNT.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, LssnTinh model)
         {
-            if (id != model.MaLSSN)
-                return BadRequest();
+            if (id != model.MaLSSN) return BadRequest();
 
             if (!ModelState.IsValid)
             {
+                // reload dropdown khi có lỗi
                 await LoadTinhDropDownsAsync(model.MaTinhCu, model.MaTinhMoi);
-                var lssn = await _lssnRepo.GetByIdAsync(model.MaLSSN);
-                ViewBag.LichSuSapNhap = lssn;
+                ViewBag.LichSuSapNhap = await _lssnRepo.GetByIdAsync(model.MaLSSN);
                 return View(model);
             }
 
-            await _lssnTinhRepo.UpdateAsync(model);
+            var entity = await _lssnTinhRepo.GetByIdAsync(id);
+            if (entity == null) return NotFound();
+
+            // cập nhật các trường cần thiết
+            entity.MaTinhCu = model.MaTinhCu;
+            entity.MaTinhMoi = model.MaTinhMoi;
+            entity.MaLSSN = model.MaLSSN;
+
+            await _lssnTinhRepo.UpdateAsync(entity);
+
             return RedirectToAction("Details", "LichSuSapNhap", new { id = model.MaLSSN });
         }
+
 
         // ================== DELETE ==================
         // GET: /Admin/LssnTinh/Delete/LS001

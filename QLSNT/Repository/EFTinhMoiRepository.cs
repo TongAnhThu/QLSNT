@@ -67,5 +67,15 @@ namespace QLSNT.Repositories
                 .OrderBy(t => t.TenTinhMoi)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<TinhMoi>> GetAllCuAsync()
+        {
+            return await _db.TinhMois.Where(t => t.TrangThai == "Cu").ToListAsync();
+        }
+
+        public async Task<IEnumerable<TinhMoi>> GetAllMoiAsync()
+        {
+            return await _db.TinhMois.Where(t => t.TrangThai == "Moi").ToListAsync();
+        }
+
     }
 }

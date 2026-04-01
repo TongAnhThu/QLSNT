@@ -5,27 +5,43 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Chi tiết Tỉnh cũ</h1>
-<hr />
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Mã Tỉnh cũ</dt>
+                <dd class="col-sm-9">@Model.MaTinhCu</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Mã tỉnh</dt>
-    <dd class="col-sm-9">@Model.MaTinhCu</dd>
+                <dt class="col-sm-3">Tên Tỉnh cũ</dt>
+                <dd class="col-sm-9">@Model.TenTinhCu</dd>
 
-    <dt class="col-sm-3">Tên tỉnh</dt>
-    <dd class="col-sm-9">@Model.TenTinhCu</dd>
+                <dt class="col-sm-3">Loại Tỉnh</dt>
+                <dd class="col-sm-9">@Model.LoaiTinh</dd>
 
-    <dt class="col-sm-3">Loại tỉnh</dt>
-    <dd class="col-sm-9">@Model.LoaiTinh</dd>
+                <dt class="col-sm-3">Diện tích</dt>
+                <dd class="col-sm-9">@Model.DienTich km²</dd>
 
-    <dt class="col-sm-3">Trạng thái</dt>
-    <dd class="col-sm-9">@Model.TrangThai</dd>
+                <dt class="col-sm-3">Dân số</dt>
+                <dd class="col-sm-9">@Model.DanSo?.ToString("N0") người</dd>
 
-    <dt class="col-sm-3">Ghi chú</dt>
-    <dd class="col-sm-9">@Model.GhiChu</dd>
-</dl>
 
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.MaTinhCu" class="btn btn-warning">Sửa</a>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+                <dt class="col-sm-3">Số lượng Huyện</dt>
+                <dd class="col-sm-9">@Model.SLHuyen</dd>
+
+                <dt class="col-sm-3">Số lượng Xã</dt>
+                <dd class="col-sm-9">@Model.SLXa</dd>
+
+                <dt class="col-sm-3">Trạng thái</dt>
+                <dd class="col-sm-9">@Model.TrangThai</dd>
+
+                <dt class="col-sm-3">Ghi chú</dt>
+                <dd class="col-sm-9">@Model.GhiChu</dd>
+            </dl>
+        </div>
+    </div>
+
+    
 </div>

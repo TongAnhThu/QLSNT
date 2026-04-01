@@ -1,16 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QLSNT.Models;
 using QLSNT.Repositories;
+using QLSNT.Data;
 
 namespace QLSNT.Controllers
 {
     [Area("Admin")]
     public class DanTocController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly IDanTocRepository _danTocRepo;
 
-        public DanTocController(IDanTocRepository danTocRepo)
+        public DanTocController(IDanTocRepository danTocRepo, ApplicationDbContext context)
         {
+            _context = context;
             _danTocRepo = danTocRepo;
         }
 
@@ -61,11 +65,25 @@ namespace QLSNT.Controllers
                 return View(model);
             }
 
-            await _danTocRepo.AddAsync(model);
+            // KHÔNG gán MaDanToc, DB sẽ tự sinh
+            // Chỉ cần gán các trường khác
+            var danToc = new DanToc
+            {
+                TenDanToc = model.TenDanToc,
+                TenKhac = model.TenKhac,
+                MoTa = model.MoTa,
+                GhiChu = model.GhiChu
+            };
+
+            await _danTocRepo.AddAsync(danToc);
             await _danTocRepo.SaveChangesAsync();
+
+            // Sau khi SaveChanges, EF sẽ tự cập nhật MaDanToc vừa sinh vào object danToc
+            int newId = danToc.MaDanToc; // lấy mã dân tộc mới
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: /DanToc/Edit/1
         [HttpGet]
@@ -118,6 +136,20 @@ namespace QLSNT.Controllers
             await _danTocRepo.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> Suggest(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return Json(new List<string>());
+
+            var data = await _context.DanTocs
+                .Where(x => x.TenDanToc.Contains(keyword))
+                .Select(x => x.TenDanToc)
+                .Take(5)
+                .ToListAsync();
+
+            return Json(data);
         }
     }
 }

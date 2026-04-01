@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QLSNT.Data;
 using QLSNT.Models;
 
@@ -16,9 +17,10 @@ namespace QLSNT.Repositories
         public async Task<IEnumerable<HuyenCu>> GetAllAsync()
         {
             return await _db.HuyenCus
-                .OrderBy(h => h.MaHuyenCu)
+                .Include(h => h.TinhCu)   // ⭐ BẮT BUỘC
                 .ToListAsync();
         }
+
 
         public async Task<HuyenCu?> GetByIdAsync(int id)
         {
@@ -66,5 +68,13 @@ namespace QLSNT.Repositories
                 .OrderBy(h => h.TenHuyenCu)
                 .ToListAsync();
         }
+       
+        public async Task<IEnumerable<HuyenCu>> GetByTinhCuAsync(int maTinhCu)
+        {
+            return await _db.HuyenCus
+                .Where(h => h.MaTinhCu == maTinhCu)
+                .ToListAsync();
+        }
+        
     }
 }

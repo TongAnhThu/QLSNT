@@ -52,14 +52,32 @@ namespace QLSNT.Controllers
         // POST: /QuanHeChuHo/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create(QuanHeChuHo model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Lấy danh sách để tìm mã cuối cùng
+            var all = await _repo.GetAllAsync();
+            var last = all.OrderByDescending(q => q.MaQHCH).FirstOrDefault();
+
+            int nextId = 1;
+            if (last != null)
+            {
+                // giả sử mã dạng QHCH001
+                string lastCode = last.MaQHCH;
+                nextId = int.Parse(lastCode.Substring(4)) + 1;
+            }
+
+            model.MaQHCH = $"QHCH{nextId:D3}"; // QHCH001, QHCH002...
+
             await _repo.AddAsync(model);
+            await _repo.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: /QuanHeChuHo/Edit/QH01
         public async Task<IActionResult> Edit(string id)

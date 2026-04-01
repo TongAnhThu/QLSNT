@@ -5,34 +5,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="fw-bold text-primary mb-4">Thêm lịch sử sáp nhập</h2>
+<h2 class="fw-bold text-primary mb-4">
+    <i class="bi bi-plus-circle"></i> @ViewData["Title"]
+</h2>
 
 <div class="card shadow-sm p-4">
     <form asp-action="Create" method="post">
         @Html.AntiForgeryToken()
 
-        <!-- Mã LSSN hidden -->
-        <input asp-for="MaLSSN" type="hidden" />
-
-        <!-- Số nghị định -->
-        <!-- Sự kiện hành chính -->
+        <!-- Số nghị định / Sự kiện hành chính -->
         <div class="mb-3">
             <label asp-for="SoNghiDinh" class="form-label">Sự kiện hành chính</label>
             <select asp-for="SoNghiDinh" class="form-select"
                     asp-items="@(new SelectList(Model.SuKienHanhChinhList ?? new List<SuKienHanhChinh>(), "SoNghiDinh", "TenSK"))">
                 <option value="">-- Chọn sự kiện --</option>
             </select>
-
-
             <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
         </div>
 
-
-
-
         <!-- Loại sáp nhập -->
         <div class="mb-3">
-            <label asp-for="Loai" class="form-label"></label>
+            <label asp-for="Loai" class="form-label">Loại sáp nhập</label>
             <select asp-for="Loai" class="form-select" id="loaiSelect">
                 <option value="">-- Chọn loại --</option>
                 <option value="Tinh">Tỉnh</option>
@@ -45,71 +38,174 @@
         <div id="tinhSection" class="mb-3" style="display:none;">
             <h5 class="text-info">Thông tin Tỉnh</h5>
             <div class="mb-2">
-                <label asp-for="MaTinhCu" class="form-label"></label>
+                <label asp-for="MaTinhCu" class="form-label">Tỉnh cũ</label>
                 <select asp-for="MaTinhCu" class="form-select"
                         asp-items="@(new SelectList(Model.TinhCuList ?? new List<TinhCu>(), "MaTinhCu", "TenTinhCu"))">
                     <option value="">-- Chọn tỉnh cũ --</option>
                 </select>
-                <span asp-validation-for="MaTinhCu" class="text-danger"></span>
             </div>
             <div class="mb-2">
-                <label asp-for="MaTinhMoi" class="form-label"></label>
+                <label asp-for="MaTinhMoi" class="form-label">Tỉnh mới</label>
                 <select asp-for="MaTinhMoi" class="form-select"
                         asp-items="@(new SelectList(Model.TinhMoiList ?? new List<TinhMoi>(), "MaTinhMoi", "TenTinhMoi"))">
                     <option value="">-- Chọn tỉnh mới --</option>
                 </select>
-                <span asp-validation-for="MaTinhMoi" class="text-danger"></span>
             </div>
         </div>
 
         <!-- Nếu chọn Xã -->
         <div id="xaSection" class="mb-3" style="display:none;">
             <h5 class="text-success">Thông tin Xã</h5>
+
+            <!-- Chọn tỉnh cũ -->
             <div class="mb-2">
-                <label asp-for="MaXaCu" class="form-label"></label>
-                <select asp-for="MaXaCu" class="form-select"
-                        asp-items="@(new SelectList(Model.XaCuList ?? new List<XaCu>(), "MaXaCu", "TenXaCu"))">
+                <label asp-for="MaTinhCu" class="form-label">Tỉnh cũ</label>
+                <select asp-for="MaTinhCu" class="form-select" id="xaTinhCuSelect"
+                        asp-items="@(new SelectList(Model.TinhCuList ?? new List<TinhCu>(), "MaTinhCu", "TenTinhCu"))">
+                    <option value="">-- Chọn tỉnh cũ --</option>
+                </select>
+            </div>
+
+            <!-- Chọn huyện (thuộc tỉnh cũ) -->
+
+
+
+            <div class="mb-2">
+                <label asp-for="MaHuyenCu" class="form-label">Huyện</label>
+                <select asp-for="MaHuyenCu" class="form-select" id="HuyenCuSelect">
+                    <option value="">-- Chọn huyện --</option>
+                </select>
+            </div>
+
+            <!-- Chọn xã cũ -->
+            <div class="mb-2">
+                <label asp-for="MaXaCu" class="form-label">Xã cũ</label>
+                <select asp-for="MaXaCu" class="form-select" id="xaCuSelect">
                     <option value="">-- Chọn xã cũ --</option>
                 </select>
-                <span asp-validation-for="MaXaCu" class="text-danger"></span>
             </div>
+
+            <!-- Chọn tỉnh mới -->
             <div class="mb-2">
-                <label asp-for="MaXaMoi" class="form-label"></label>
-                <select asp-for="MaXaMoi" class="form-select"
-                        asp-items="@(new SelectList(Model.XaMoiList ?? new List<XaMoi>(), "MaXaMoi", "TenXaMoi"))">
+                <label asp-for="MaTinhMoi" class="form-label">Tỉnh mới</label>
+                <select asp-for="MaTinhMoi" class="form-select" id="xaTinhMoiSelect"
+                        asp-items="@(new SelectList(Model.TinhMoiList ?? new List<TinhMoi>(), "MaTinhMoi", "TenTinhMoi"))">
+                    <option value="">-- Chọn tỉnh mới --</option>
+                </select>
+            </div>
+
+            <!-- Chọn xã mới -->
+            <div class="mb-2">
+                <label asp-for="MaXaMoi" class="form-label">Xã mới</label>
+                <select asp-for="MaXaMoi" class="form-select" id="xaMoiSelect">
                     <option value="">-- Chọn xã mới --</option>
                 </select>
-                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
             </div>
         </div>
 
+        <!-- Ghi chú -->
+        <div class="mb-3">
+            <label asp-for="GhiChu" class="form-label">Ghi chú</label>
+            <textarea asp-for="GhiChu" class="form-control" rows="3"
+                      placeholder="Nhập ghi chú nếu có..."></textarea>
+            <span asp-validation-for="GhiChu" class="text-danger"></span>
+        </div>
         <!-- Nút submit -->
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Lưu
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle"></i> Quay lại
+            </a>
         </div>
     </form>
 </div>
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        // Hiển thị section theo loại sáp nhập
         const loaiSelect = document.getElementById("loaiSelect");
         const tinhSection = document.getElementById("tinhSection");
         const xaSection = document.getElementById("xaSection");
+        const xaTinhCuSelect = document.getElementById("xaTinhCuSelect");
+        const HuyenCuSelect = document.getElementById("HuyenCuSelect");
+        const xaCuSelect = document.getElementById("xaCuSelect");
+        const xaTinhMoiSelect = document.getElementById("xaTinhMoiSelect");
+        const xaMoiSelect = document.getElementById("xaMoiSelect");
 
+        // Hiển thị section theo loại sáp nhập
         loaiSelect.addEventListener("change", function () {
             const loai = this.value;
             tinhSection.style.display = (loai === "Tinh") ? "block" : "none";
             xaSection.style.display = (loai === "Xa") ? "block" : "none";
         });
 
-        // Nếu có giá trị sẵn (khi ModelState invalid), hiển thị đúng section
+        // Nếu có giá trị sẵn (ModelState invalid), hiển thị đúng section
         if (loaiSelect.value === "Tinh") {
             tinhSection.style.display = "block";
         } else if (loaiSelect.value === "Xa") {
             xaSection.style.display = "block";
         }
+
+        // Khi chọn tỉnh cũ -> load huyện
+          
+        xaTinhCuSelect.addEventListener("change", function () {
+            const maTinhCu = this.value;
+            HuyenCuSelect.innerHTML = "<option value=''>-- Chọn huyện --</option>";
+            xaCuSelect.innerHTML = "<option value=''>-- Chọn xã cũ --</option>";
+
+            if (!maTinhCu) return;
+
+            fetch(`/Admin/HuyenCu/GetByTinhCu?maTinh=${maTinhCu}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(h => {
+                        const opt = document.createElement("option");
+                        opt.value = h.maHuyen;
+                        opt.text = h.tenHuyen;
+                        HuyenCuSelect.appendChild(opt);
+                    });
+                });
+        });
+
+        // Khi chọn huyện -> load xã cũ
+        HuyenCuSelect.addEventListener("change", function () {
+            const maHuyen = this.value;
+            xaCuSelect.innerHTML = "<option value=''>-- Chọn xã cũ --</option>";
+
+            if (!maHuyen) return;
+
+            fetch(`/Admin/XaCu/GetByHuyen?maHuyen=${maHuyen}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(xa => {
+                        const opt = document.createElement("option");
+                        opt.value = xa.maXaCu;
+                        opt.text = xa.tenXaCu;
+                        xaCuSelect.appendChild(opt);
+                    });
+                });
+        });
+
+
+        // Khi chọn tỉnh mới -> load xã mới
+        xaTinhMoiSelect.addEventListener("change", function () {
+            const maTinhMoi = this.value;
+            xaMoiSelect.innerHTML = "<option value=''>-- Chọn xã mới --</option>";
+
+            if (!maTinhMoi) return;
+
+            fetch(`/Admin/XaMoi/GetByTinh?maTinh=${maTinhMoi}`)
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(xa => {
+                        const opt = document.createElement("option");
+                        opt.value = xa.maXaMoi;
+                        opt.text = xa.tenXaMoi;
+                        xaMoiSelect.appendChild(opt);
+                    });
+                });
+        });
     </script>
 }
+

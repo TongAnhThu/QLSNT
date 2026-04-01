@@ -12,13 +12,21 @@ namespace QLSNT.Repositories
         {
             _db = db;
         }
-
+        public async Task<IEnumerable<XaCu>> GetByHuyenAsync(int maHuyen)
+        {
+            return await _db.XaCus
+                .Where(x => x.MaHuyenCu == maHuyen)
+                .ToListAsync();
+        }
         public async Task<IEnumerable<XaCu>> GetAllAsync()
         {
             return await _db.XaCus
-                .OrderBy(x => x.MaXaCu)      // MaXaCu là int
+                .Include(x => x.HuyenCu)
+                .ThenInclude(h => h.TinhCu)
+                .OrderBy(x => x.MaXaCu)
                 .ToListAsync();
         }
+
 
         public async Task<XaCu?> GetByIdAsync(int id)
         {

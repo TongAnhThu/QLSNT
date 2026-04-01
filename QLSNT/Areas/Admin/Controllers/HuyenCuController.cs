@@ -8,10 +8,12 @@ namespace QLSNT.Controllers
     public class HuyenCuController : Controller
     {
         private readonly IHuyenCuRepository _repo;
+        private readonly ITinhCuRepository _repoTinhCu;
 
-        public HuyenCuController(IHuyenCuRepository repo)
+        public HuyenCuController(IHuyenCuRepository repo, ITinhCuRepository tinhCu)
         {
             _repo = repo;
+            _repoTinhCu = tinhCu;
         }
 
         // GET: /HuyenCu?search=Quận 1
@@ -46,10 +48,13 @@ namespace QLSNT.Controllers
         }
 
         // GET: /HuyenCu/Create
-        public IActionResult Create()
+        // GET: /HuyenCu/Create
+        public async Task<IActionResult> Create()
         {
-            // Nếu sau này bạn muốn dropdown Tỉnh cũ:
-            // ViewBag.TinhCuList = ...;
+            // Lấy danh sách tỉnh để hiển thị dropdown
+            var tinhCus = await _repoTinhCu.GetAllAsync();
+            ViewBag.TinhCus = tinhCus;
+
             return View();
         }
 
@@ -59,25 +64,34 @@ namespace QLSNT.Controllers
         public async Task<IActionResult> Create(HuyenCu model)
         {
             if (!ModelState.IsValid)
+            {
+                // Nếu ModelState invalid thì phải gán lại ViewBag để dropdown không bị null
+                var tinhCus = await _repoTinhCu.GetAllAsync();
+                ViewBag.TinhCus = tinhCus;
                 return View(model);
+            }
 
             await _repo.AddAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
+
         // GET: /HuyenCu/Edit/H001
-        public async Task<IActionResult> Edit(int id)  // Chuyển id từ string sang int
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == 0)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var item = await _repo.GetByIdAsync(id);
-            if (item == null)
-                return NotFound();
+            var huyen = await _repo.GetByIdAsync(id.Value);
+            if (huyen == null) return NotFound();
 
-            // ViewBag.TinhCuList = ... (nếu dùng dropdown)
-            return View(item);
+            // Lấy danh sách tỉnh để hiển thị dropdown
+            var tinhCus = await _repoTinhCu.GetAllAsync();
+            ViewBag.TinhCus = tinhCus;
+
+            return View(huyen);
         }
+
 
         // POST: /HuyenCu/Edit
         [HttpPost]
@@ -112,5 +126,19 @@ namespace QLSNT.Controllers
             await _repo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> GetByTinhCu(int maTinh)
+        {
+            var huyens = await _repo.GetByTinhCuAsync(maTinh);
+
+            // map sang JSON với field đúng như script đang đọc
+            var result = huyens.Select(h => new {
+                maHuyen = h.MaHuyenCu,
+                tenHuyen = h.TenHuyenCu
+            });
+
+            return Json(result);   // đây mới là đoạn trả về JSON
+        }
+
     }
 }

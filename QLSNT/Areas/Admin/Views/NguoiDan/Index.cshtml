@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Quản lý Người dân";
     var keyword = ViewBag.Keyword as string;
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,22 +16,34 @@
 <div class="card mb-3">
     <div class="card-body">
         <form method="get" class="row g-2">
-            <div class="col-md-6">
+
+            <!-- Ô tìm kiếm -->
+            <div class="col-md-6 position-relative">
                 <input type="text"
+                       id="searchBox"
                        name="keyword"
                        value="@keyword"
                        class="form-control"
                        placeholder="Tìm theo CCCD, họ tên..." />
+
+                <div id="suggestions"
+                     class="list-group position-absolute w-100"
+                     style="top: 100%; left: 0; z-index: 1000;"></div>
             </div>
+
+            <!-- Nút tìm -->
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
             </div>
+
+            <!-- Nút xóa -->
             <div class="col-md-3 text-md-end">
                 @if (!string.IsNullOrWhiteSpace(keyword))
                 {
                     <a asp-action="Index" class="btn btn-outline-secondary w-100">Xóa lọc</a>
                 }
             </div>
+
         </form>
     </div>
 </div>
@@ -68,7 +80,10 @@
                                        class="btn btn-sm btn-info me-1">Chi tiết</a>
                                     <a asp-controller="DangKyNguoiDan" asp-action="Edit" asp-route-maCCCD="@item.MaCCCD"
                                        class="btn btn-sm btn-warning me-1">Sửa</a>
-                                    <a asp-controller="DangKyNguoiDan" asp-action="Delete" asp-route-maCCCD="@item.MaCCCD"
+                                    <a asp-area="Admin"
+                                       asp-controller="NguoiDan"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.MaCCCD"
                                        class="btn btn-sm btn-danger"
                                        onclick="return confirm('Bạn có chắc muốn xóa người dân này?');">
                                         Xóa
@@ -88,3 +103,38 @@ else
         Không tìm thấy người dân nào.
     </div>
 }
+
+<script>
+    const input = document.getElementById("searchBox");
+    const box = document.getElementById("suggestions");
+
+    input.addEventListener("input", async function () {
+        const keyword = this.value;
+        console.log("Đang gõ:", keyword); // 👈 thêm dòng này
+
+        if (keyword.length < 1) {
+            box.innerHTML = "";
+            return;
+        }
+
+        const res = await fetch(`/Admin/NguoiDan/Suggest?keyword=${keyword}`);
+        const data = await res.json();
+
+        console.log("Data trả về:", data); // 👈 thêm dòng này
+
+        box.innerHTML = "";
+
+        data.forEach(item => {
+            const div = document.createElement("a");
+            div.classList.add("list-group-item", "list-group-item-action");
+            div.textContent = item;
+
+            div.onclick = () => {
+                input.value = item;
+                box.innerHTML = "";
+            };
+
+            box.appendChild(div);
+        });
+    });
+</script>

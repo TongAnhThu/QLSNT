@@ -12,7 +12,8 @@ namespace QLSNT.Models
         public string? NguoiTao { get; set; }
         public DateTime? NgayTao { get; set; }
         public string? GhiChu { get; set; }
-
+        [NotMapped]
+        public string? Loai { get; set; }
         public string SoNghiDinh { get; set; } = default!;
         [ForeignKey(nameof(SoNghiDinh))]
         public SuKienHanhChinh SuKienHanhChinh { get; set; } = default!;

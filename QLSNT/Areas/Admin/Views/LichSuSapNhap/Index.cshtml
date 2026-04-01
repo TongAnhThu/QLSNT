@@ -2,13 +2,15 @@
 
 @{
     ViewData["Title"] = "Danh sách lịch sử sáp nhập";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-bold text-primary">@ViewData["Title"]</h2>
+    <h2 class="fw-bold text-primary">
+        <i class="bi bi-clock-history"></i> @ViewData["Title"]
+    </h2>
     <a asp-action="Create" class="btn btn-success">
-        + Thêm lịch sử sáp nhập
+        <i class="bi bi-plus-circle"></i> Thêm lịch sử sáp nhập
     </a>
 </div>
 
@@ -22,10 +24,14 @@
                    placeholder="Tìm theo mã, số nghị định, ghi chú..." />
         </div>
         <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i> Tìm kiếm
+            </button>
         </div>
         <div class="col-md-2">
-            <a asp-action="Index" class="btn btn-outline-secondary w-100">Xóa lọc</a>
+            <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                <i class="bi bi-x-circle"></i> Xóa lọc
+            </a>
         </div>
     </div>
 </form>
@@ -35,20 +41,20 @@
         <thead class="table-light">
             <tr>
                 <th>Mã LSSN</th>
-                <th>Loại</th>
+                <th>Loại bản ghi</th>
                 <th>Từ cũ → thành mới</th>
                 <th>Người tạo</th>
                 <th>Ngày tạo</th>
                 <th>Ghi chú</th>
-                <th class="text-center" style="width: 200px;">Thao tác</th>
+                <th class="text-center" style="width: 220px;">Thao tác</th>
             </tr>
         </thead>
         <tbody>
-            @if (!Model.Any())
+            @if (Model == null || !Model.Any())
             {
                 <tr>
                     <td colspan="7" class="text-center text-muted">
-                        Không có bản ghi nào.
+                        <i class="bi bi-info-circle"></i> Không có bản ghi nào.
                     </td>
                 </tr>
             }
@@ -59,35 +65,52 @@
                     <tr>
                         <td>@item.MaLSSN</td>
                         <td>
-                            @(item.LssnTinhs.Any() ? "Tỉnh" : item.LssnXas.Any() ? "Xã" : "-")
+                            @if (item.LssnTinhs.Any())
+                            {
+                                <span class="badge bg-primary">Tỉnh</span>
+                            }
+                            else if (item.LssnXas.Any())
+                            {
+                                <span class="badge bg-success">Xã</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Không xác định</span>
+                            }
                         </td>
                         <td>
                             @if (item.LssnTinhs.Any())
                             {
                                 foreach (var t in item.LssnTinhs)
                                 {
-                                    @($"{t.TinhCu?.TenTinhCu} → {t.TinhMoi?.TenTinhMoi}") <br />
+                                    <div>@($"{t.TinhCu?.TenTinhCu} → {t.TinhMoi?.TenTinhMoi}")</div>
                                 }
                             }
                             else if (item.LssnXas.Any())
                             {
                                 foreach (var x in item.LssnXas)
                                 {
-                                    @($"{x.XaCu?.TenXaCu} → {x.XaMoi?.TenXaMoi}") <br />
+                                    <div>@($"{x.XaCu?.TenXaCu} → {x.XaMoi?.TenXaMoi}")</div>
                                 }
                             }
                             else
                             {
-                                @("-")
+                                <span class="text-muted">-</span>
                             }
                         </td>
                         <td>@item.NguoiTao</td>
-                        <td>@item.NgayTao</td>
+                        <td>@item.NgayTao?.ToString("dd/MM/yyyy")</td>
                         <td>@(string.IsNullOrEmpty(item.GhiChu) ? "-" : item.GhiChu)</td>
                         <td class="text-center">
-                            <a asp-action="Details" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-info me-1">Chi tiết</a>
-                            <a asp-action="Edit" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-warning me-1">Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-danger">Xóa</a>
+                            <a asp-action="Details" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-info me-1">
+                                <i class="bi bi-eye"></i> Chi tiết
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-warning me-1">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.MaLSSN" class="btn btn-sm btn-danger">
+                                <i class="bi bi-trash"></i> Xóa
+                            </a>
                         </td>
                     </tr>
                 }

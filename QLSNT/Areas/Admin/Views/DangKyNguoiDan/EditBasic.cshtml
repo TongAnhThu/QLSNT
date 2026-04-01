@@ -16,28 +16,28 @@
             <div class="col-md-6">
                 <!-- CCCD -->
                 <div class="mb-3">
-                    <label asp-for="MaCCCD" class="form-label"></label>
+                    <label asp-for="MaCCCD" class="form-label">Mã Căn Cước Công Dân</label>
                     <input asp-for="MaCCCD" class="form-control" readonly />
                     <span asp-validation-for="MaCCCD" class="text-danger"></span>
                 </div>
 
                 <!-- Họ tên -->
                 <div class="mb-3">
-                    <label asp-for="HoTen" class="form-label"></label>
+                    <label asp-for="HoTen" class="form-label">Họ Tên</label>
                     <input asp-for="HoTen" class="form-control" />
                     <span asp-validation-for="HoTen" class="text-danger"></span>
                 </div>
 
                 <!-- Ngày sinh -->
                 <div class="mb-3">
-                    <label asp-for="NgaySinh" class="form-label"></label>
+                    <label asp-for="NgaySinh" class="form-label"> Ngày Sinh</label>
                     <input asp-for="NgaySinh" type="date" class="form-control" />
                     <span asp-validation-for="NgaySinh" class="text-danger"></span>
                 </div>
 
                 <!-- Giới tính -->
                 <div class="mb-3">
-                    <label asp-for="GioiTinh" class="form-label"></label>
+                    <label asp-for="GioiTinh" class="form-label">Giới Tính</label>
                     <select asp-for="GioiTinh" class="form-select">
                         <option value="">-- Chọn giới tính --</option>
                         <option value="Nam">Nam</option>
@@ -51,7 +51,7 @@
             <div class="col-md-6">
                 <!-- Dân tộc -->
                 <div class="mb-3">
-                    <label asp-for="MaDanToc" class="form-label"></label>
+                    <label asp-for="MaDanToc" class="form-label">Dân Tộc</label>
                     <select asp-for="MaDanToc" class="form-select" asp-items="ViewBag.DanTocList">
                         <option value="">-- Chọn dân tộc --</option>
                     </select>
@@ -59,7 +59,7 @@
 
                 <!-- Tôn giáo -->
                 <div class="mb-3">
-                    <label asp-for="MaTonGiao" class="form-label"></label>
+                    <label asp-for="MaTonGiao" class="form-label">Tôn Giáo</label>
                     <select asp-for="MaTonGiao" class="form-select" asp-items="ViewBag.TonGiaoList">
                         <option value="">-- Chọn tôn giáo --</option>
                     </select>
@@ -67,7 +67,7 @@
 
                 <!-- Trình độ văn hóa -->
                 <div class="mb-3">
-                    <label asp-for="MaTDVH" class="form-label"></label>
+                    <label asp-for="MaTDVH" class="form-label">Trình Độ Học Vấn</label>
                     <select asp-for="MaTDVH" class="form-select" asp-items="ViewBag.TrinhDoList">
                         <option value="">-- Chọn trình độ --</option>
                     </select>
@@ -75,7 +75,7 @@
 
                 <!-- Tình trạng hôn nhân -->
                 <div class="mb-3">
-                    <label asp-for="TinhTrangHonNhan" class="form-label"></label>
+                    <label asp-for="TinhTrangHonNhan" class="form-label">Trình Trạng Hôn Nhân</label>
                     <select asp-for="TinhTrangHonNhan" class="form-select" asp-items="ViewBag.TinhTrangHonNhanList">
                         <option value="">-- Chọn tình trạng --</option>
                     </select>
@@ -83,7 +83,7 @@
 
                 <!-- Trạng thái công dân -->
                 <div class="mb-3">
-                    <label asp-for="TrangThaiCongDan" class="form-label"></label>
+                    <label asp-for="TrangThaiCongDan" class="form-label">Trạng Thái Công Dân</label>
                     <select asp-for="TrangThaiCongDan" class="form-select" asp-items="ViewBag.TrangThaiCongDanList">
                         <option value="">-- Chọn trạng thái --</option>
                     </select>

@@ -19,6 +19,8 @@ namespace QLSNT.Models
         [ForeignKey(nameof(MaCCCD))]
 
         public NguoiDan? NguoiDan { get; set; } = default!;
+        [NotMapped]
+        public int MaTinhMoi { get; set; }
     }
 }
 

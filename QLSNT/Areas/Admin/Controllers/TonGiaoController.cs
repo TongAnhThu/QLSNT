@@ -49,7 +49,6 @@ namespace QLSNT.Controllers
             return View();
         }
 
-        // POST: /TonGiao/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TonGiao model)
@@ -57,9 +56,27 @@ namespace QLSNT.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Lấy tất cả để tìm mã cuối cùng
+            var all = await _repo.GetAllAsync();
+            var last = all.OrderByDescending(t => t.MaTonGiao).FirstOrDefault();
+
+            int nextId = 1;
+            if (last != null)
+            {
+                // giả sử mã dạng TG001
+                string lastCode = last.MaTonGiao;
+                nextId = int.Parse(lastCode.Substring(2)) + 1;
+            }
+
+            model.MaTonGiao = $"TG{nextId:D3}"; // TG001, TG002...
+
             await _repo.AddAsync(model);
+            await _repo.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
+
 
         // GET: /TonGiao/Edit/TG01
         public async Task<IActionResult> Edit(string id)

@@ -17,8 +17,10 @@ namespace QLSNT.Repositories
         {
             return await _context.TonGiaos
                 .AsNoTracking()
+                .OrderBy(t => t.MaTonGiao)   // sắp xếp tăng dần theo mã
                 .ToListAsync();
         }
+
 
         public async Task<TonGiao?> GetByIdAsync(string maTonGiao)
         {

@@ -1,65 +1,92 @@
 ﻿@model QLSNT.Models.SuKienHanhChinh
-
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
-    ViewData["Title"] = "Sửa Sự kiện hành chính";
+    ViewData["Title"] = "Sửa sự kiện hành chính";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Sửa Sự kiện hành chính</h1>
-<hr />
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-pencil-square"></i> @ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3"></div>
 
-<div class="row">
-    <div class="col-md-7">
-        <form asp-action="Edit" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                <!-- Khóa chính -->
+                <input type="hidden" asp-for="SoNghiDinh" />
 
-            <!-- SoNghiDinh là PK, không cho sửa -->
-            <div class="mb-3">
-                <label asp-for="SoNghiDinh" class="form-label"></label>
-                <input asp-for="SoNghiDinh" class="form-control" readonly />
-                <span asp-validation-for="SoNghiDinh" class="text-danger"></span>
-            </div>
+                <!-- Tên sự kiện -->
+                <div class="mb-3">
+                    <label asp-for="TenSK" class="form-label fw-bold"></label>
+                    <input asp-for="TenSK" class="form-control" />
+                    <span asp-validation-for="TenSK" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="TenSK" class="form-label"></label>
-                <input asp-for="TenSK" class="form-control" />
-                <span asp-validation-for="TenSK" class="text-danger"></span>
-            </div>
+                <!-- Mô tả chi tiết -->
+                <div class="mb-3">
+                    <label asp-for="MoTaChiTiet" class="form-label fw-bold"></label>
+                    <textarea asp-for="MoTaChiTiet" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="MoTaChiTiet" class="text-danger"></span>
+                </div>
 
+                <!-- Căn cứ pháp lý -->
+                <div class="mb-3">
+                    <label asp-for="CanCuPhapLy" class="form-label fw-bold"></label>
+                    <input asp-for="CanCuPhapLy" class="form-control" />
+                    <span asp-validation-for="CanCuPhapLy" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="NgayBanHanh" class="form-label"></label>
-                <input asp-for="NgayBanHanh" type="date" class="form-control" />
-                <span asp-validation-for="NgayBanHanh" class="text-danger"></span>
-            </div>
+                <!-- Cơ quan ban hành -->
+                <div class="mb-3">
+                    <label asp-for="CoQuanBanHanh" class="form-label fw-bold">Cơ Quan Ban Hành</label>
+                    <input asp-for="CoQuanBanHanh" class="form-control" />
+                    <span asp-validation-for="CoQuanBanHanh" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="CoQuanBanHanh" class="form-label"></label>
-                <input asp-for="CoQuanBanHanh" class="form-control" />
-                <span asp-validation-for="CoQuanBanHanh" class="text-danger"></span>
-            </div>
+                <!-- Ngày ban hành -->
+                <div class="mb-3">
+                    <label asp-for="NgayBanHanh" class="form-label fw-bold">Ngày Ban Hành</label>
+                    <input asp-for="NgayBanHanh" type="date" class="form-control" />
+                    <span asp-validation-for="NgayBanHanh" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="TrangThai" class="form-label"></label>
-                <select asp-for="TrangThai" class="form-select">
-                    <option value="Còn hiệu lực">Còn hiệu lực</option>
-                    <option value="Hết hiệu lực">Hết hiệu lực</option>
-                </select>
-                <span asp-validation-for="TrangThai" class="text-danger"></span>
-            </div>
+                <!-- Trạng thái -->
+                <div class="mb-3">
+                    <label asp-for="TrangThai" class="form-label fw-bold">Trạng Thái</label>
+                    <select asp-for="TrangThai" class="form-select">
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="Hiệu lực">Hiệu lực</option>
+                        <option value="Hết hiệu lực">Hết hiệu lực</option>
+                    </select>
+                    <span asp-validation-for="TrangThai" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="GhiChu" class="form-label"></label>
-                <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="GhiChu" class="text-danger"></span>
-            </div>
+                <!-- Ghi chú -->
+                <div class="mb-3">
+                    <label asp-for="GhiChu" class="form-label fw-bold"></label>
+                    <textarea asp-for="GhiChu" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="GhiChu" class="text-danger"></span>
+                </div>                
 
-            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
-        </form>
+                <!-- Nút thao tác -->
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Lưu thay đổi
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left-circle"></i> Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

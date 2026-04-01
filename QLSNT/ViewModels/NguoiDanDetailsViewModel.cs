@@ -10,6 +10,7 @@
         public string? MaTonGiao { get; set; }       // nullable
         public string? MaTDVH { get; set; }          // nullable
         public string TinhTrangHonNhan { get; set; }
+        public string HoTenKhongDau { get; set; } = default!;
         public string TrangThaiCongDan { get; set; }
 
         public int? MaXaMoi { get; set; }         // nullable

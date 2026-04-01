@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using QLSNT.Areas.Identity.Pages.Account;
 using QLSNT.Data;
 using QLSNT.Repositories;
 
@@ -19,15 +20,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    // Có thể cấu hình thêm password policy để cho phép mật khẩu đơn giản (CCCD)
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 6; // CCCD thường >= 9 số, nên ok
+    options.Password.RequiredLength = 6;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+
 
 // =======================
 // Đăng ký Repositories
@@ -84,8 +85,6 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
 // Razor Pages (Identity UI)
 app.MapRazorPages();
 

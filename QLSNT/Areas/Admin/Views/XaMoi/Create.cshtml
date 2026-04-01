@@ -13,11 +13,11 @@
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
 
-            <div class="mb-3">
-                <label asp-for="MaXaMoi" class="form-label"></label>
-                <input asp-for="MaXaMoi" class="form-control" />
-                <span asp-validation-for="MaXaMoi" class="text-danger"></span>
-            </div>
+            <!-- Ẩn Mã xã vì là Identity -->
+            <input type="hidden" asp-for="MaXaMoi" />
+
+            <!-- Ẩn Mã tỉnh nếu gán tự động -->
+            <input type="hidden" asp-for="MaTinh" />
 
             <div class="mb-3">
                 <label asp-for="TenXaMoi" class="form-label"></label>
@@ -36,12 +36,27 @@
                 </select>
                 <span asp-validation-for="LoaiXa" class="text-danger"></span>
             </div>
-         
 
             <div class="mb-3">
                 <label asp-for="TrangThai" class="form-label"></label>
-                <input asp-for="TrangThai" class="form-control" placeholder="VD: Đang hoạt động" />
+                <select asp-for="TrangThai" class="form-select">
+                    <option value="">-- Chọn trạng thái --</option>
+                    <option value="Sáp nhập">Sáp nhập</option>
+                    <option value="Giữ nguyên">Giữ nguyên</option>
+                </select>
                 <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DanSo" class="form-label"></label>
+                <input asp-for="DanSo" class="form-control" />
+                <span asp-validation-for="DanSo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DienTich" class="form-label"></label>
+                <input asp-for="DienTich" class="form-control" />
+                <span asp-validation-for="DienTich" class="text-danger"></span>
             </div>
 
             <div class="mb-3">

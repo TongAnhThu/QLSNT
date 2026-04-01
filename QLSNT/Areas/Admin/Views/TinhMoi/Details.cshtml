@@ -5,27 +5,52 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Chi tiết Tỉnh mới</h1>
-<hr />
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">@ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Mã tỉnh</dt>
+                <dd class="col-sm-9">@Model.MaTinhMoi</dd>
 
-<dl class="row">
-    <dt class="col-sm-3">Mã tỉnh</dt>
-    <dd class="col-sm-9">@Model.MaTinhMoi</dd>
+                <dt class="col-sm-3">Tên tỉnh</dt>
+                <dd class="col-sm-9">@Model.TenTinhMoi</dd>
 
-    <dt class="col-sm-3">Tên tỉnh</dt>
-    <dd class="col-sm-9">@Model.TenTinhMoi</dd>
+                <dt class="col-sm-3">Diện tích (km²)</dt>
+                <dd class="col-sm-9">@Model.DienTich</dd>
 
-    <dt class="col-sm-3">Loại tỉnh</dt>
-    <dd class="col-sm-9">@Model.LoaiTinh</dd>
+                <dt class="col-sm-3">Dân số</dt>
+                <dd class="col-sm-9">@Model.DanSo</dd>
 
-    <dt class="col-sm-3">Trạng thái</dt>
-    <dd class="col-sm-9">@Model.TrangThai</dd>
+                <dt class="col-sm-3">Loại tỉnh</dt>
+                <dd class="col-sm-9">@Model.LoaiTinh</dd>
 
-    <dt class="col-sm-3">Ghi chú</dt>
-    <dd class="col-sm-9">@Model.GhiChu</dd>
-</dl>
+                <dt class="col-sm-3">Trạng thái</dt>
+                <dd class="col-sm-9">@Model.TrangThai</dd>
 
-<div class="mt-3">
-    <a asp-action="Edit" asp-route-id="@Model.MaTinhMoi" class="btn btn-warning">Sửa</a>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+                <dt class="col-sm-3">Số huyện</dt>
+                <dd class="col-sm-9">@Model.SLHuyen</dd>
+
+                <dt class="col-sm-3">Số xã</dt>
+                <dd class="col-sm-9">@Model.SLXa</dd>
+
+                <dt class="col-sm-3">Vùng địa lý</dt>
+                <dd class="col-sm-9">@Model.VungDiaLy</dd>
+
+                <dt class="col-sm-3">Ghi chú</dt>
+                <dd class="col-sm-9">@Model.GhiChu</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.MaTinhMoi" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Sửa
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
+    </div>
 </div>

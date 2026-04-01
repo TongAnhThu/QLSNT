@@ -38,10 +38,16 @@ namespace QLSNT.Areas.Admin.Controllers
             if (id == null) return NotFound();
 
             var item = await _repo.GetByIdAsync(id.Value);
+
             if (item == null) return NotFound();
+
+            // Tính tự động số lượng huyện và xã
+            item.SLHuyen = item.HuyenCus?.Count ?? 0;
+            item.SLXa = item.HuyenCus?.Sum(h => h.XaCus?.Count ?? 0) ?? 0;
 
             return View(item);
         }
+
 
         // GET: /Admin/TinhCu/Create
         [HttpGet]

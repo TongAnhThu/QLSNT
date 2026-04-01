@@ -1,0 +1,12 @@
+﻿@model QLSNT.Models.ThuongTru
+
+<h2>Địa chỉ thường trú hiện tại</h2>
+@if (Model != null)
+{
+    <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+    <p><strong>Ngày bắt đầu:</strong> @Model.NgayDangKy</p>
+}
+else
+{
+    <p>Chưa có thông tin thường trú.</p>
+}

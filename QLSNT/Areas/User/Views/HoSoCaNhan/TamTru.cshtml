@@ -1,0 +1,29 @@
+﻿@model IEnumerable<QLSNT.Models.TamTru>
+
+<h2>Danh sách tạm trú còn hiệu lực</h2>
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Địa chỉ</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tt in Model)
+            {
+                <tr>
+                    <td>@tt.DiaChi</td>
+                    <td>@tt.NgayDangKy</td>
+                    <td>@tt.ThoiHan</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có tạm trú còn hiệu lực.</p>
+}

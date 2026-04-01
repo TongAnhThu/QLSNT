@@ -9,4 +9,6 @@ public interface IXaCuRepository
     Task DeleteAsync(int id);
 
     Task<IEnumerable<XaCu>> SearchByNameAsync(string keyword);
+
+    Task<IEnumerable<XaCu>> GetByHuyenAsync(int maHuyen);
 }

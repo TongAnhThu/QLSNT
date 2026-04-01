@@ -1,29 +1,26 @@
 ﻿@model IEnumerable<QLSNT.Models.SuKienHanhChinh>
+
 @{
-    ViewData["Title"] = "Sự kiện hành chính";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Danh sách sự kiện hành chính";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
-<h1 class="mb-3">Sự kiện hành chính</h1>
 
+<h1>@ViewData["Title"]</h1>
+<hr />
 
-<form method="get" class="d-flex mb-3">
-    <input type="text" name="search" value="@ViewBag.Search"
-           class="form-control me-2"
-           placeholder="Tìm theo số nghị định, tên, loại hoặc cơ quan ban hành" />
-    <button class="btn btn-primary">Tìm kiếm</button>
-</form>
-
-<a asp-action="Create" class="btn btn-success mb-3">+ Thêm sự kiện</a>
+<p>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Thêm mới</a>
+</p>
 
 <table class="table table-bordered table-striped">
-    <thead>
+    <thead class="table-light">
         <tr>
-            <th>Số nghị định</th>
+            <th>Số Nghị định</th>
             <th>Tên sự kiện</th>
-            <th>Loại sự kiện</th>
             <th>Ngày ban hành</th>
+            <th>Cơ quan ban hành</th>
             <th>Trạng thái</th>
-            <th width="180">Thao tác</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +29,8 @@
             <tr>
                 <td>@item.SoNghiDinh</td>
                 <td>@item.TenSK</td>
-                <td>@item.NgayBanHanh</td>
+                <td>@item.NgayBanHanh?.ToString("dd/MM/yyyy")</td>
+                <td>@item.CoQuanBanHanh</td>
                 <td>@item.TrangThai</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.SoNghiDinh" class="btn btn-info btn-sm">Chi tiết</a>

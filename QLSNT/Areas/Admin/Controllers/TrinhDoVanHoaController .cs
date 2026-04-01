@@ -49,7 +49,6 @@ namespace QLSNT.Controllers
             return View();
         }
 
-        // POST: /TrinhDoVanHoa/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TrinhDoVanHoa model)
@@ -57,9 +56,25 @@ namespace QLSNT.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Lấy danh sách để tìm mã cuối cùng
+            var all = await _repo.GetAllAsync();
+            var last = all.OrderByDescending(t => t.MaTDVH).FirstOrDefault();
+
+            int nextId = 1;
+            if (last != null)
+            {
+                // giả sử mã dạng TDVH001
+                string lastCode = last.MaTDVH;
+                nextId = int.Parse(lastCode.Substring(4)) + 1;
+            }
+
+            model.MaTDVH = $"TDVH{nextId:D3}";
             await _repo.AddAsync(model);
+            await _repo.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: /TrinhDoVanHoa/Edit/01
         public async Task<IActionResult> Edit(string id)

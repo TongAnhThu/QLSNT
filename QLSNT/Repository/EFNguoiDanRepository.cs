@@ -42,12 +42,13 @@ namespace QLSNT.Repositories
                 .Include(n => n.QuanHeChuHo)
                 .AsQueryable();
 
-            // Tùy model của bạn, ở đây tớ giả sử có HoTen.
-            // Nếu property khác, bạn đổi lại cho đúng là được.
             return await query
                 .Where(n =>
-                    EF.Functions.Like(n.MaCCCD, $"%{keyword}%")
-                    || EF.Functions.Like(n.HoTen, $"%{keyword}%")
+                    EF.Functions.Like(n.MaCCCD, $"%{keyword}%") ||
+                    EF.Functions.Like(
+                        EF.Functions.Collate(n.HoTen, "SQL_Latin1_General_CP1_CI_AI"),
+                        $"%{keyword}%"
+                    )
                 )
                 .AsNoTracking()
                 .OrderBy(n => n.HoTen)

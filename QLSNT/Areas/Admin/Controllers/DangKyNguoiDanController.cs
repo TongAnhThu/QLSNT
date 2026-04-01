@@ -5,6 +5,9 @@ using QLSNT.ViewModels;
 using QLSNT.Repositories;
 using System;
 using System.Threading.Tasks;
+using System.Globalization;
+using System.Text;
+using Microsoft.VisualStudio.TextTemplating;
 
 namespace QLSNT.Areas.Admin.Controllers
 {
@@ -93,7 +96,7 @@ namespace QLSNT.Areas.Admin.Controllers
                 await LoadDropdownsAsync();
                 return View("CreateBasic", nguoiDan);
             }
-
+            nguoiDan.HoTenKhongDau = RemoveDiacritics(nguoiDan.HoTen);
             // 1) Lưu người dân
             await _nguoiDanRepo.AddAsync(nguoiDan);
             string cccd = nguoiDan.MaCCCD;
@@ -221,7 +224,7 @@ namespace QLSNT.Areas.Admin.Controllers
             await LoadDropdownsAsync();
             return View("EditDetails", model);
         }
-        
+
         [HttpPost]
 
         public async Task<IActionResult> EditDetails(NguoiDanCreateViewModel model)
@@ -285,6 +288,7 @@ namespace QLSNT.Areas.Admin.Controllers
                 MaXaMoi = thuongTru?.MaXaMoi,
                 DiaChiThuongTru = thuongTru?.DiaChi,
                 HoTen = nguoiDan.HoTen,
+                HoTenKhongDau = nguoiDan.HoTenKhongDau,   // gán thêm ở đây
                 NgaySinh = nguoiDan.NgaySinh,
                 GioiTinh = nguoiDan.GioiTinh,
                 MaDanToc = nguoiDan.MaDanToc,
@@ -295,6 +299,7 @@ namespace QLSNT.Areas.Admin.Controllers
             };
 
 
+
             await LoadDropdownsAsync();
             return View("Details", model);
         }
@@ -302,7 +307,8 @@ namespace QLSNT.Areas.Admin.Controllers
         public async Task<IActionResult> GetXaByTinh(int maTinhMoi)
         {
             var xaList = await _xaMoiRepo.GetByTinhAsync(maTinhMoi);
-            var result = xaList.Select(x => new {
+            var result = xaList.Select(x => new
+            {
                 maXaMoi = x.MaXaMoi,
                 tenXaMoi = x.TenXaMoi
             });
@@ -320,8 +326,25 @@ namespace QLSNT.Areas.Admin.Controllers
         }
 
 
+        public static string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return text;
 
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
 
+            foreach (var c in normalized)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
     }
+
+
 
 }

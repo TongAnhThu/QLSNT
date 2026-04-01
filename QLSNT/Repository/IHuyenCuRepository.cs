@@ -1,4 +1,5 @@
-﻿using QLSNT.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using QLSNT.Models;
 
 namespace QLSNT.Repositories
 {
@@ -10,5 +11,9 @@ namespace QLSNT.Repositories
         Task UpdateAsync(HuyenCu entity);
         Task DeleteAsync(int id);
         Task<IEnumerable<HuyenCu>> SearchByNameAsync(string keyword);
+        Task<IEnumerable<HuyenCu>> GetByTinhCuAsync(int maTinhCu);
+        
+
+
     }
 }

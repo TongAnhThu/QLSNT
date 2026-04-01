@@ -4,23 +4,31 @@ using QLSNT.Repositories;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using QLSNT.Data;
 
 namespace QLSNT.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class TamTruController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly ITamTruRepository _tamTruRepo;
         private readonly INguoiDanRepository _nguoiDanRepo;
         private readonly IXaMoiRepository _xaMoiRepo;
+        private readonly ITinhMoiRepository _tinhMoiRepo;
 
         public TamTruController(ITamTruRepository tamTruRepo,
                                 INguoiDanRepository nguoiDanRepo,
-                                IXaMoiRepository xaMoiRepo)
+                                IXaMoiRepository xaMoiRepo,
+                                ITinhMoiRepository tinhMoiRepo,
+                                ApplicationDbContext context)
         {
             _tamTruRepo = tamTruRepo;
             _nguoiDanRepo = nguoiDanRepo;
             _xaMoiRepo = xaMoiRepo;
+            _tinhMoiRepo = tinhMoiRepo;
+            _context = context;
         }
 
         // GET: Admin/TamTru/Index
@@ -57,7 +65,9 @@ namespace QLSNT.Areas.Admin.Controllers
         public async Task<IActionResult> Create(string? maCccd)
         {
             ViewBag.NguoiDanList = new SelectList(await _nguoiDanRepo.GetAllAsync(), "MaCCCD", "HoTen", maCccd);
-            ViewBag.XaMoiList = new SelectList(await _xaMoiRepo.GetAllAsync(), "MaXaMoi", "TenXaMoi");
+            ViewBag.TinhMoiList = new SelectList(await _tinhMoiRepo.GetAllAsync(), "MaTinhMoi", "TenTinhMoi");
+            // Xã mới ban đầu để rỗng
+            ViewBag.XaMoiList = new SelectList(Enumerable.Empty<XaMoi>(), "MaXaMoi", "TenXaMoi");
 
             var model = new TamTru
             {
@@ -67,6 +77,7 @@ namespace QLSNT.Areas.Admin.Controllers
             return View(model);
         }
 
+
         // POST: Admin/TamTru/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -75,7 +86,12 @@ namespace QLSNT.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.NguoiDanList = new SelectList(await _nguoiDanRepo.GetAllAsync(), "MaCCCD", "HoTen", model.MaCCCD);
-                ViewBag.XaMoiList = new SelectList(await _xaMoiRepo.GetAllAsync(), "MaXaMoi", "TenXaMoi", model.MaXaMoi);
+                ViewBag.TinhMoiList = new SelectList(await _tinhMoiRepo.GetAllAsync(), "MaTinhMoi", "TenTinhMoi", model.MaTinhMoi);
+
+                // nạp xã theo tỉnh đã chọn
+                var xaMoi = await _xaMoiRepo.GetByTinhAsync(model.MaTinhMoi);
+                ViewBag.XaMoiList = new SelectList(xaMoi, "MaXaMoi", "TenXaMoi", model.MaXaMoi);
+
                 return View(model);
             }
 
@@ -84,17 +100,24 @@ namespace QLSNT.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index), new { maCccd = model.MaCCCD });
         }
 
+
         // GET: Admin/TamTru/Edit
-        public async Task<IActionResult> Edit(int maXaMoi, string maCccd)
+        public async Task<IActionResult> Edit(string maCccd, int maXaMoi)
         {
-            var entity = await _tamTruRepo.GetByIdAsync(maXaMoi, maCccd);
-            if (entity == null) return NotFound();
+            var tamTru = await _context.TamTrus
+                .Include(t => t.XaMoi)
+               
+                .ThenInclude(h => h.TinhMoi)
+                .FirstOrDefaultAsync(t => t.MaCCCD == maCccd && t.MaXaMoi == maXaMoi);
 
-            ViewBag.NguoiDanList = new SelectList(await _nguoiDanRepo.GetAllAsync(), "MaCCCD", "HoTen", entity.MaCCCD);
-            ViewBag.XaMoiList = new SelectList(await _xaMoiRepo.GetAllAsync(), "MaXaMoi", "TenXaMoi", entity.MaXaMoi);
+            if (tamTru == null) return NotFound();
 
-            return View(entity);
+            ViewBag.TenTinhMoi = tamTru.XaMoi?.TinhMoi?.TenTinhMoi;
+            ViewBag.TenXaMoi = tamTru.XaMoi?.TenXaMoi;
+
+            return View(tamTru);
         }
+
 
         // POST: Admin/TamTru/Edit
         [HttpPost]

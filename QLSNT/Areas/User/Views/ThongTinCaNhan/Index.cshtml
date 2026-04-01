@@ -1,0 +1,80 @@
+﻿@model QLSNT.Areas.User.ViewModel.HoSoCaNhanViewModel
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân của tôi";
+    Layout = "~/Areas/User/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-primary mb-3">@ViewData["Title"]</h2>
+
+@if (Model.NguoiDan != null)
+{
+    <!-- Thông tin cơ bản -->
+    <div class="card mb-3">
+        <div class="card-header fw-bold">Thông tin cơ bản</div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">CCCD</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.MaCCCD</dd>
+
+                <dt class="col-sm-3">Họ tên</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.HoTen</dd>
+
+                <dt class="col-sm-3">Ngày sinh</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.NgaySinh?.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3">Giới tính</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.GioiTinh</dd>
+
+                <dt class="col-sm-3">Nghề nghiệp</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.NgheNghiep</dd>
+
+                <dt class="col-sm-3">Nơi làm việc</dt>
+                <dd class="col-sm-9">@Model.NguoiDan.NoiLamViec</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Thường trú -->
+    <div class="card mb-3">
+        <div class="card-header fw-bold">Thường trú hiện tại</div>
+        <div class="card-body">
+            @if (Model.ThuongTruHienTai != null)
+            {
+                <p><strong>Địa chỉ:</strong> @Model.ThuongTruHienTai.DiaChi</p>
+                <p><strong>Ngày đăng ký:</strong> @Model.ThuongTruHienTai.NgayDangKy?.ToString("dd/MM/yyyy")</p>
+            }
+            else
+            {
+                <p>Chưa có thông tin thường trú</p>
+            }
+        </div>
+    </div>
+
+    <!-- Tạm trú -->
+    <div class="card mb-3">
+        <div class="card-header fw-bold">Danh sách tạm trú</div>
+        <div class="card-body">
+            @if (Model.DanhSachTamTru.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var tamTru in Model.DanhSachTamTru)
+                    {
+                        <li class="list-group-item">
+                            <strong>@tamTru.DiaChi</strong> 
+                            (hiệu lực có thơi hạn đến @tamTru.ThoiHan)
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Không có tạm trú hiệu lực</p>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">@ViewBag.Message</div>
+}

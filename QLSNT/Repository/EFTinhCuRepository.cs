@@ -64,5 +64,11 @@ namespace QLSNT.Repositories
                 .OrderBy(t => t.TenTinhCu)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<TinhCu>> GetAllCuAsync()
+        {
+            return await _db.TinhCus.Where(t => t.TrangThai == "Cu").ToListAsync();
+        }
+
+
     }
 }

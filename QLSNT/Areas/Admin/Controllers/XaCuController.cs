@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QLSNT.Models;
 using QLSNT.Repositories;
 
@@ -7,11 +8,13 @@ namespace QLSNT.Areas.Admin.Controllers
     [Area("Admin")]
     public class XaCuController : Controller
     {
-        private readonly IXaCuRepository _repo;
+        private readonly IXaCuRepository _repoXa;
+        private readonly IHuyenCuRepository _repoHuyen;
 
-        public XaCuController(IXaCuRepository repo)
+        public XaCuController(IXaCuRepository repoXa, IHuyenCuRepository repoHuyen)
         {
-            _repo = repo;
+            _repoXa = repoXa;
+            _repoHuyen = repoHuyen;
         }
 
         // GET: /Admin/XaCu?search=Thảo Điền
@@ -21,12 +24,21 @@ namespace QLSNT.Areas.Admin.Controllers
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                list = await _repo.SearchByNameAsync(search);
+                list = await _repoXa.SearchByNameAsync(search);
                 ViewBag.Search = search;
             }
             else
             {
-                list = await _repo.GetAllAsync();
+                list = await _repoXa.GetAllAsync();
+            }
+
+            // include huyện và tỉnh để hiển thị tên
+            foreach (var xa in list)
+            {
+                if (xa.HuyenCu != null)
+                {
+                    xa.HuyenCu = await _repoHuyen.GetByIdAsync(xa.MaHuyenCu);
+                }
             }
 
             return View(list);
@@ -35,21 +47,23 @@ namespace QLSNT.Areas.Admin.Controllers
         // GET: /Admin/XaCu/Details/1
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var item = await _repo.GetByIdAsync(id.Value);
-            if (item == null)
-                return NotFound();
+            var item = await _repoXa.GetByIdAsync(id.Value);
+            if (item == null) return NotFound();
+
+            // load huyện và tỉnh
+            item.HuyenCu = await _repoHuyen.GetByIdAsync(item.MaHuyenCu);
 
             return View(item);
         }
 
         // GET: /Admin/XaCu/Create
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            // Sau này có thể load dropdown Huyện cũ ở đây (ViewBag.HuyenCuList)
+            var huyenCus = await _repoHuyen.GetAllAsync();
+            ViewBag.HuyenCuList = huyenCus;
             return View();
         }
 
@@ -59,25 +73,27 @@ namespace QLSNT.Areas.Admin.Controllers
         public async Task<IActionResult> Create(XaCu model)
         {
             if (!ModelState.IsValid)
+            {
+                var huyenCus = await _repoHuyen.GetAllAsync();
+                ViewBag.HuyenCuList = huyenCus;
                 return View(model);
+            }
 
-            await _repo.AddAsync(model);
+            await _repoXa.AddAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
         // GET: /Admin/XaCu/Edit/1
         [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id == null)
-                return NotFound();
+            var xa = await _repoXa.GetByIdAsync(id);
+            if (xa == null) return NotFound();
 
-            var item = await _repo.GetByIdAsync(id.Value);
-            if (item == null)
-                return NotFound();
+            var huyenCus = await _repoHuyen.GetAllAsync();
+            ViewBag.HuyenCuList = huyenCus;
 
-            // ViewBag.HuyenCuList = ... nếu cần dropdown chọn Huyện
-            return View(item);
+            return View(xa);
         }
 
         // POST: /Admin/XaCu/Edit/1
@@ -85,13 +101,16 @@ namespace QLSNT.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, XaCu model)
         {
-            if (id != model.MaXaCu)   // đảm bảo id route khớp với model
-                return BadRequest();
+            if (id != model.MaXaCu) return BadRequest();
 
             if (!ModelState.IsValid)
+            {
+                var huyenCus = await _repoHuyen.GetAllAsync();
+                ViewBag.HuyenCuList = huyenCus;
                 return View(model);
+            }
 
-            await _repo.UpdateAsync(model);
+            await _repoXa.UpdateAsync(model);
             return RedirectToAction(nameof(Index));
         }
 
@@ -99,12 +118,12 @@ namespace QLSNT.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
-            var item = await _repo.GetByIdAsync(id.Value);
-            if (item == null)
-                return NotFound();
+            var item = await _repoXa.GetByIdAsync(id.Value);
+            if (item == null) return NotFound();
+
+            item.HuyenCu = await _repoHuyen.GetByIdAsync(item.MaHuyenCu);
 
             return View(item);
         }
@@ -114,8 +133,20 @@ namespace QLSNT.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _repo.DeleteAsync(id);
+            await _repoXa.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+       
+
+        [HttpGet]
+        public async Task<IActionResult> GetByHuyen(int maHuyen)
+        {
+            var xas = await _repoXa.GetByHuyenAsync(maHuyen);
+            var result = xas.Select(x => new {
+                maXaCu = x.MaXaCu,
+                tenXaCu = x.TenXaCu
+            });
+            return Json(result);
         }
     }
 }

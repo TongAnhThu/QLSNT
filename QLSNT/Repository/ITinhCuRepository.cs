@@ -12,5 +12,6 @@ namespace QLSNT.Repositories
 
         // Thêm dòng này:
         Task<IEnumerable<TinhCu>> SearchByNameAsync(string keyword);
+        Task<IEnumerable<TinhCu>> GetAllCuAsync();   
     }
 }

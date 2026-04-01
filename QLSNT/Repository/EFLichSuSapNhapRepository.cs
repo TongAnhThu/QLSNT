@@ -36,6 +36,12 @@ namespace QLSNT.Repositories
 
             return await query.ToListAsync();
         }
+        public async Task<LichSuSapNhap?> GetLastAsync()
+        {
+            return await _db.LichSuSapNhaps
+                .OrderByDescending(x => x.MaLSSN)
+                .FirstOrDefaultAsync();
+        }
 
         public async Task<List<LichSuSapNhap>> SearchAsync(string search, bool includeTinhs = false, bool includeXas = false)
         {
